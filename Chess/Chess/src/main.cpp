@@ -11,10 +11,10 @@ int main()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+
 	while (!window.closed())
 	{
 		window.clear();
-		std::cout << window.get_mouse_pos() << std::endl;
 
 		glBegin(GL_QUADS);
 		glVertex2f(-0.5f, -0.5f);

@@ -1,9 +1,9 @@
 #include "chess/maths/Vec3.h"
 
-namespace Chess {
-
+namespace Chess 
+{
 	Vec3::Vec3() :
-		x(0), y(0), z(0) {}
+		x(0.0f), y(0.0f), z(0.0f) {}
 
 	Vec3::Vec3(const float x, const float y, const float z) :
 		x(x), y(y), z(z) {}

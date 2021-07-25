@@ -1,8 +1,8 @@
 #pragma once
 #include <ostream>
 
-namespace Chess {
-
+namespace Chess 
+{
 	struct Vec4
 	{
 		float x, y, z, w;

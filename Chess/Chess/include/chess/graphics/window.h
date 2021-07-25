@@ -4,8 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <chess/maths/vec2.h>
 
-namespace Chess {
-
+namespace Chess 
+{
 	class Window
 	{
 	private:

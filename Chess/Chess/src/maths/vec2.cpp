@@ -1,9 +1,9 @@
 #include "chess/maths/vec2.h"
 
-namespace Chess {
-
+namespace Chess 
+{
 	Vec2::Vec2(): 
-		x(0), y(0) {}
+		x(0.0f), y(0.0f) {}
 
 	Vec2::Vec2(const float x, const float y):
 		x(x), y(y) {}

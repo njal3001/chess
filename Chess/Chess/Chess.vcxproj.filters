@@ -30,6 +30,12 @@
     <ClCompile Include="src\maths\vec4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\maths\mat4x4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\maths\calc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\chess\graphics\window.h">
@@ -38,13 +44,16 @@
     <ClInclude Include="include\chess\maths\vec2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\chess.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\chess\maths\vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\chess\maths\vec4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\maths\mat4x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\maths\calc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
