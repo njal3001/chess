@@ -1,129 +1,126 @@
-#include "window.h"
+#include "chess/graphics/window.h"
 
-namespace chess {
-	namespace graphics {
+namespace Chess {
 
-		void window_resize(GLFWwindow* window, int width, int height);
-		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-		void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+	void window_resize(GLFWwindow* window, int width, int height);
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 
-		Window::Window(const char* title, int width, int height)
-		{
-			m_title = title;
-			m_width = width;
-			m_height = height;
-			if (!init())
-				glfwTerminate();
-		}
-
-		Window::~Window()
-		{
+	Window::Window(const char* title, int width, int height)
+	{
+		m_title = title;
+		m_width = width;
+		m_height = height;
+		if (!init())
 			glfwTerminate();
-		}
+	}
 
-		bool Window::init()
+	Window::~Window()
+	{
+		glfwTerminate();
+	}
+
+	bool Window::init()
+	{
+		if (!glfwInit())
 		{
-			if (!glfwInit())
-			{
-				std::cout << "Failed to initialize GLFW!" << std::endl;
-			}
-
-			m_window = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
-			if (!m_window)
-			{
-				std::cout << "Failed to initialize GLFW window!" << std::endl;
-				return false;
-			}
-
-			glfwMakeContextCurrent(m_window);
-			glfwSetWindowUserPointer(m_window, this);
-			glfwSetWindowSizeCallback(m_window, window_resize);
-			glfwSetKeyCallback(m_window, key_callback);
-			glfwSetMouseButtonCallback(m_window, mouse_button_callback);
-			glfwSetCursorPosCallback(m_window, cursor_position_callback);
-
-			if (glewInit() != GLEW_OK) {
-				std::cout << "Could not initialize GLEW!" << std::endl;
-				return false;
-			}
-
-			std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
-			return true;
+			std::cout << "Failed to initialize GLFW!" << std::endl;
 		}
 
-		void Window::clear() const
+		m_window = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
+		if (!m_window)
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			std::cout << "Failed to initialize GLFW window!" << std::endl;
+			return false;
 		}
 
-		void Window::update()
-		{
-			glfwPollEvents();
-			glfwSwapBuffers(m_window);
+		glfwMakeContextCurrent(m_window);
+		glfwSetWindowUserPointer(m_window, this);
+		glfwSetWindowSizeCallback(m_window, window_resize);
+		glfwSetKeyCallback(m_window, key_callback);
+		glfwSetMouseButtonCallback(m_window, mouse_button_callback);
+		glfwSetCursorPosCallback(m_window, cursor_position_callback);
+
+		if (glewInit() != GLEW_OK) {
+			std::cout << "Could not initialize GLEW!" << std::endl;
+			return false;
 		}
 
-		bool Window::closed() const
-		{
-			return glfwWindowShouldClose(m_window);
-		}
+		std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
+		return true;
+	}
 
-		int Window::get_width() const
-		{
-			return m_width;
-		}
+	void Window::clear() const
+	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
 
-		int Window::get_height() const
-		{
-			return m_height;
-		}
+	void Window::update()
+	{
+		glfwPollEvents();
+		glfwSwapBuffers(m_window);
+	}
 
-		bool Window::key_down(unsigned int keycode) const
-		{
-			if (keycode >= GLFW_KEY_LAST)
-				return false;
+	bool Window::closed() const
+	{
+		return glfwWindowShouldClose(m_window);
+	}
 
-			return m_keys[keycode];
-		}
+	int Window::get_width() const
+	{
+		return m_width;
+	}
 
-		bool Window::mouse_button_down(unsigned int button) const
-		{
-			if (button >= GLFW_MOUSE_BUTTON_LAST)
-				return false;
+	int Window::get_height() const
+	{
+		return m_height;
+	}
 
-			return m_mouse_buttons[button];
-		}
+	bool Window::key_down(unsigned int keycode) const
+	{
+		if (keycode >= GLFW_KEY_LAST)
+			return false;
 
-		void Window::get_mouse_pos(double& x, double& y) const
-		{
-			x = m_cursor_x;
-			y = m_cursor_y;
-		}
+		return m_keys[keycode];
+	}
 
-		void window_resize(GLFWwindow* window, int width, int height)
-		{
-			glViewport(0, 0, width, height);
-			Window* win = (Window*)glfwGetWindowUserPointer(window);
-			win->m_width = width;
-			win->m_width = width;
-		}
+	bool Window::mouse_button_down(unsigned int button) const
+	{
+		if (button >= GLFW_MOUSE_BUTTON_LAST)
+			return false;
 
-		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-		{
-			Window* win = (Window*)glfwGetWindowUserPointer(window);
-			win->m_keys[key] = action != GLFW_RELEASE;
-		}
-		void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-		{
-			Window* win = (Window*)glfwGetWindowUserPointer(window);
-			win->m_mouse_buttons[button] = action != GLFW_RELEASE;
-		}
+		return m_mouse_buttons[button];
+	}
 
-		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-		{
-			Window* win = (Window*)glfwGetWindowUserPointer(window);
-			win->m_cursor_x = xpos;
-			win->m_cursor_y = ypos;
-		}
+	Vec2 Window::get_mouse_pos() const
+	{
+		return Vec2(m_cursor_x, m_cursor_y);
+	}
+
+	void window_resize(GLFWwindow* window, int width, int height)
+	{
+		glViewport(0, 0, width, height);
+		Window* win = (Window*)glfwGetWindowUserPointer(window);
+		win->m_width = width;
+		win->m_width = width;
+	}
+
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		Window* win = (Window*)glfwGetWindowUserPointer(window);
+		win->m_keys[key] = action != GLFW_RELEASE;
+	}
+	void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+	{
+		Window* win = (Window*)glfwGetWindowUserPointer(window);
+		win->m_mouse_buttons[button] = action != GLFW_RELEASE;
+	}
+
+	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+	{
+		Window* win = (Window*)glfwGetWindowUserPointer(window);
+		win->m_cursor_x = xpos;
+		win->m_cursor_y = ypos;
 	}
 }

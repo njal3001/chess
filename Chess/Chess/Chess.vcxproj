@@ -74,6 +74,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Intermediates\</IntDir>
+    <IncludePath>C:\Users\powernjal\source\repos\chess\Chess\Chess\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -146,9 +147,16 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
+    <ClCompile Include="src\maths\vec2.cpp" />
+    <ClCompile Include="src\maths\vec3.cpp" />
+    <ClCompile Include="src\maths\vec4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\graphics\window.h" />
+    <ClInclude Include="include\chess.h" />
+    <ClInclude Include="include\chess\graphics\window.h" />
+    <ClInclude Include="include\chess\maths\vec2.h" />
+    <ClInclude Include="include\chess\maths\vec3.h" />
+    <ClInclude Include="include\chess\maths\vec4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
