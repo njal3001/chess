@@ -152,14 +152,17 @@
     <ClCompile Include="src\maths\vec2.cpp" />
     <ClCompile Include="src\maths\vec3.cpp" />
     <ClCompile Include="src\maths\vec4.cpp" />
+    <ClCompile Include="src\utils\file.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\chess\graphics\window.h" />
     <ClInclude Include="include\chess\maths\calc.h" />
     <ClInclude Include="include\chess\maths\mat4x4.h" />
+    <ClInclude Include="include\chess\maths\maths.h" />
     <ClInclude Include="include\chess\maths\vec2.h" />
     <ClInclude Include="include\chess\maths\vec3.h" />
     <ClInclude Include="include\chess\maths\vec4.h" />
+    <ClInclude Include="include\chess\utils\file.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,8 +3,11 @@
 
 namespace Chess 
 {
-	namespace Calc 
+	namespace Maths 
 	{
-		float to_radians(float degrees);
+		namespace Calc 
+		{
+			float to_radians(float degrees);
+		}
 	}
 }

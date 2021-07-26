@@ -2,9 +2,12 @@
 
 namespace Chess
 {
-	float Calc::to_radians(float degrees)
+	namespace Maths
 	{
-		return degrees * M_PI / 180.0f;
+		float Calc::to_radians(float degrees)
+		{
+			return degrees * M_PI / 180.0f;
+		}
 	}
 }
 
