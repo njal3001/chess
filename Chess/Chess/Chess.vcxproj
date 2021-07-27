@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\maths\calc.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="src\utils\file.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\chess\graphics\shader.h" />
     <ClInclude Include="include\chess\graphics\window.h" />
     <ClInclude Include="include\chess\maths\calc.h" />
     <ClInclude Include="include\chess\maths\mat4x4.h" />
@@ -163,6 +165,10 @@
     <ClInclude Include="include\chess\maths\vec3.h" />
     <ClInclude Include="include\chess\maths\vec4.h" />
     <ClInclude Include="include\chess\utils\file.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\basic.frag" />
+    <None Include="src\shaders\basic.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
