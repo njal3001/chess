@@ -61,6 +61,11 @@ namespace Chess
 
 		void Window::update()
 		{
+			// TODO: Putting here for now, should be done somewhere else
+			GLenum error;
+			if (error = (glGetError() != GL_NO_ERROR))
+				std::cout << "OpenGL Error: " << error << std::endl;
+
 			glfwPollEvents();
 			glfwSwapBuffers(m_window);
 		}
