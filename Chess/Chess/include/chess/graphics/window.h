@@ -2,14 +2,12 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <chess/maths/vec2.h>
+#include "chess/maths/vec2.h"
 
 namespace Chess 
 {
 	namespace Graphics
 	{
-		using namespace Maths;
-
 		class Window
 		{
 		private:
@@ -18,7 +16,7 @@ namespace Chess
 			int m_width, m_height;
 			bool m_keys[GLFW_KEY_LAST];
 			bool m_mouse_buttons[GLFW_MOUSE_BUTTON_LAST];
-			double m_cursor_x, m_cursor_y;
+			Maths::Vec2 m_mouse_pos;
 
 		public:
 			Window(const char* title, int width, int height);
@@ -32,7 +30,7 @@ namespace Chess
 
 			bool key_down(unsigned int keycode) const;
 			bool mouse_button_down(unsigned int button) const;
-			Vec2 get_mouse_pos() const;
+			Maths::Vec2 get_mouse_pos() const;
 
 		private:
 			bool init();

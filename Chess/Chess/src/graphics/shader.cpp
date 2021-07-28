@@ -104,22 +104,22 @@ namespace Chess
 			glUniform1i(getUniformLocation(name), value);
 		}
 
-		void Shader::set_uniform_2f(const GLchar* name, const Vec2& vector)
+		void Shader::set_uniform_2f(const GLchar* name, const Maths::Vec2& vector)
 		{
 			glUniform2f(getUniformLocation(name), vector.x, vector.y);
 		}
 
-		void Shader::set_uniform_3f(const GLchar* name, const Vec3& vector)
+		void Shader::set_uniform_3f(const GLchar* name, const Maths::Vec3& vector)
 		{
 			glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 		}
 
-		void Shader::set_uniform_4f(const GLchar* name, const Vec4& vector)
+		void Shader::set_uniform_4f(const GLchar* name, const Maths::Vec4& vector)
 		{
 			glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 		}
 
-		void Shader::set_uniform_mat4(const GLchar* name, const Mat4x4& matrix)
+		void Shader::set_uniform_mat4(const GLchar* name, const Maths::Mat4x4& matrix)
 		{
 			glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.values);
 		}

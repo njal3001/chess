@@ -10,8 +10,6 @@ namespace Chess
 {
 	namespace Graphics
 	{
-		using namespace Maths;
-
 		class Shader
 		{
 		private:
@@ -28,10 +26,10 @@ namespace Chess
 
 			void set_uniform_1f(const GLchar* name, float value);
 			void set_uniform_1i(const GLchar* name, int value);
-			void set_uniform_2f(const GLchar* name, const Vec2& vector);
-			void set_uniform_3f(const GLchar* name, const Vec3& vector);
-			void set_uniform_4f(const GLchar* name, const Vec4& vector);
-			void set_uniform_mat4(const GLchar* name, const Mat4x4& matrix);
+			void set_uniform_2f(const GLchar* name, const Maths::Vec2& vector);
+			void set_uniform_3f(const GLchar* name, const Maths::Vec3& vector);
+			void set_uniform_4f(const GLchar* name, const Maths::Vec4& vector);
+			void set_uniform_mat4(const GLchar* name, const Maths::Mat4x4& matrix);
 
 		private:
 			GLuint load();

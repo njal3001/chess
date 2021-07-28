@@ -74,7 +74,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Intermediates\</IntDir>
-    <IncludePath>C:\Users\powernjal\source\repos\chess\Chess\Chess\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(Solutiondir)Chess\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -148,7 +148,9 @@
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
     <ClCompile Include="src\graphics\buffers\vertexarray.cpp" />
+    <ClCompile Include="src\graphics\renderable2d.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
+    <ClCompile Include="src\graphics\simplerenderer2d.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\maths\calc.cpp" />
@@ -162,7 +164,10 @@
     <ClInclude Include="include\chess\graphics\buffers\buffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\indexbuffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\vertexarray.h" />
+    <ClInclude Include="include\chess\graphics\renderable2d.h" />
+    <ClInclude Include="include\chess\graphics\renderer2d.h" />
     <ClInclude Include="include\chess\graphics\shader.h" />
+    <ClInclude Include="include\chess\graphics\simplerenderer2d.h" />
     <ClInclude Include="include\chess\graphics\window.h" />
     <ClInclude Include="include\chess\maths\calc.h" />
     <ClInclude Include="include\chess\maths\mat4x4.h" />

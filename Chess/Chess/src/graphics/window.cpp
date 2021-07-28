@@ -4,7 +4,6 @@ namespace Chess
 {
 	namespace Graphics
 	{
-
 		void window_resize(GLFWwindow* window, int width, int height);
 		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 		void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
@@ -101,9 +100,9 @@ namespace Chess
 			return m_mouse_buttons[button];
 		}
 
-		Vec2 Window::get_mouse_pos() const
+		Maths::Vec2 Window::get_mouse_pos() const
 		{
-			return Vec2(m_cursor_x, m_cursor_y);
+			return m_mouse_pos;
 		}
 
 		void window_resize(GLFWwindow* window, int width, int height)
@@ -128,8 +127,8 @@ namespace Chess
 		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 		{
 			Window* win = (Window*)glfwGetWindowUserPointer(window);
-			win->m_cursor_x = xpos;
-			win->m_cursor_y = ypos;
+			win->m_mouse_pos.x = xpos;
+			win->m_mouse_pos.y = ypos;
 		}
 	}
 }
