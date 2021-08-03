@@ -13,6 +13,7 @@ namespace Chess
 		
 		public:
 			Buffer(GLfloat* data, GLsizei count, GLuint component_count);
+			~Buffer();
 
 			void bind() const;
 			void unbind() const;

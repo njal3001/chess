@@ -1,6 +1,7 @@
 #pragma once
 #include <deque>
 #include "renderer2d.h"
+#include "staticsprite.h"
 
 namespace Chess
 {
@@ -9,7 +10,8 @@ namespace Chess
 		class SimpleRenderer2D : public Renderer2D
 		{
 		private:
-			std::deque<const Renderable2D*> m_render_queue;
+			// TODO: Can only use static sprite for now 
+			std::deque<const StaticSprite*> m_render_queue;
 
 		public:
 			void submit(const Renderable2D* renderable) override;

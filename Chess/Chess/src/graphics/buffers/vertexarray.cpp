@@ -13,6 +13,8 @@ namespace Chess
 		{
 			for (int i = 0; i < m_buffers.size(); i++)
 				delete m_buffers[i];
+
+			glDeleteVertexArrays(1, &m_array_id);
 		}
 
 		void VertexArray::add_buffer(Buffer* buffer, GLuint index)

@@ -145,12 +145,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\batchrenderer2d.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
     <ClCompile Include="src\graphics\buffers\vertexarray.cpp" />
     <ClCompile Include="src\graphics\renderable2d.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\simplerenderer2d.cpp" />
+    <ClCompile Include="src\graphics\sprite.cpp" />
+    <ClCompile Include="src\graphics\staticsprite.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\maths\calc.cpp" />
@@ -161,6 +164,7 @@
     <ClCompile Include="src\utils\file.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\chess\graphics\batchrenderer2d.h" />
     <ClInclude Include="include\chess\graphics\buffers\buffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\indexbuffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\vertexarray.h" />
@@ -168,6 +172,8 @@
     <ClInclude Include="include\chess\graphics\renderer2d.h" />
     <ClInclude Include="include\chess\graphics\shader.h" />
     <ClInclude Include="include\chess\graphics\simplerenderer2d.h" />
+    <ClInclude Include="include\chess\graphics\sprite.h" />
+    <ClInclude Include="include\chess\graphics\staticsprite.h" />
     <ClInclude Include="include\chess\graphics\window.h" />
     <ClInclude Include="include\chess\maths\calc.h" />
     <ClInclude Include="include\chess\maths\mat4x4.h" />

@@ -4,8 +4,6 @@ layout (location = 0) out vec4 color;
 
 uniform vec2 light_pos;
 
-in vec4 pos;
-
 in DATA
 {
 	vec4 position;

@@ -13,6 +13,11 @@ namespace Chess
 			unbind();
 		}
 
+		Buffer::~Buffer()
+		{
+			glDeleteBuffers(1, &m_buffer_id);
+		}
+
 		void Buffer::bind() const
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_buffer_id);

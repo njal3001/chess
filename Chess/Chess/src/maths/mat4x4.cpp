@@ -59,11 +59,11 @@ namespace Chess
 			Mat4x4 res = identity;
 		
 			res.values[0 + 0 * 4] = 2.0f / (right - left);
-			res.values[0 + 3 * 4] = (right + left) / (right - left);
+			res.values[0 + 3 * 4] = -(right + left) / (right - left);
 			res.values[1 + 1 * 4] = 2.0f / (top - bottom);
-			res.values[1 + 3 * 4] = (top + bottom) / (top - bottom);
+			res.values[1 + 3 * 4] = -(top + bottom) / (top - bottom);
 			res.values[2 + 2 * 4] = -2.0f / (far - near);
-			res.values[2 + 3 * 4] = (far + near) / (far - near);
+			res.values[2 + 3 * 4] = -(far + near) / (far - near);
 
 			return res;
 		}
