@@ -25,8 +25,8 @@ namespace Chess
 			glBufferData(GL_ARRAY_BUFFER, RENDERER_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
 			glEnableVertexAttribArray(SHADER_POSITION_INDEX);
 			glEnableVertexAttribArray(SHADER_COLOR_INDEX);
-			glVertexAttribPointer(SHADER_POSITION_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const void*)0);
-			glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const void*)(3 * sizeof(GLfloat)));
+			glVertexAttribPointer(SHADER_POSITION_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const void*)(offsetof(VertexData, VertexData::position)));
+			glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, RENDERER_VERTEX_SIZE, (const void*)(offsetof(VertexData, VertexData::color)));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			GLushort* indices = new GLushort[RENDERER_INDICES_SIZE];
@@ -63,20 +63,27 @@ namespace Chess
 			const Maths::Vec2& size = renderable->get_size();
 			const Maths::Vec4& color = renderable->get_color();
 
+			int r = color.x * 255.0f;
+			int g = color.y * 255.0f;
+			int b = color.z * 255.0f;
+			int a = color.w * 255.0f;
+
+			unsigned int c = a << 24 | b << 16 | g << 8 | r;
+
 			m_buffer->position = position;
-			m_buffer->color = color;
+			m_buffer->color = c;
 			m_buffer++;
 
 			m_buffer->position = Maths::Vec3(position.x, position.y + size.y, position.z);
-			m_buffer->color = color;
+			m_buffer->color = c;
 			m_buffer++;
 
 			m_buffer->position = Maths::Vec3(position.x + size.x, position.y + size.y, position.z);
-			m_buffer->color = color;
+			m_buffer->color = c;
 			m_buffer++;
 
 			m_buffer->position = Maths::Vec3(position.x + size.x, position.y, position.z);
-			m_buffer->color = color;
+			m_buffer->color = c;
 			m_buffer++;
 
 			m_index_count += 6;

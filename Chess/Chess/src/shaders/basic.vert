@@ -12,7 +12,7 @@ out DATA
 	vec4 position;
 	vec4 color;
 } vs_out;
-
+	
 void main()
 {
 	gl_Position = pr_matrix * vw_matrix * ml_matrix * position;

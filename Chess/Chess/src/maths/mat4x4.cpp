@@ -39,6 +39,8 @@ namespace Chess
 
 		Mat4x4& Mat4x4::operator*=(const Mat4x4& rhs)
 		{
+			float new_values[16];
+
 			for (int row = 0; row < 4; row++)
 			{
 				for (int col = 0; col < 4; col++)
@@ -47,9 +49,11 @@ namespace Chess
 					for (int i = 0; i < 4; i++)
 						sum += values[row + i * 4] * rhs.values[col * 4 + i];
 
-					values[row + col * 4] = sum;
+					new_values[row + col * 4] = sum;
 				}
 			}
+
+			memcpy(values, new_values, 4 * 4 * sizeof(float));
 
 			return *this;
 		}

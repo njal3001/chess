@@ -10,6 +10,7 @@
 #include "chess/graphics/simplerenderer2d.h"
 #include "chess/graphics/batchrenderer2d.h"
 #include "chess/graphics/sprite.h"
+#include "chess/utils/timer.h"
 
 int main()
 {
@@ -43,8 +44,16 @@ int main()
 		}
 	}
 
+	Utils::Timer timer;
+	float secs = 0;
+	unsigned int frames = 0;
+
 	while (!window.closed())
 	{
+		Mat4x4 mat = Mat4x4::create_translation(Vec3(5, 5, 0));
+		mat *= Mat4x4::create_rotation(timer.elapsed() * 50.0f, Vec3(0, 0, 1));
+		mat *= Mat4x4::create_translation(Vec3(-5, -5, 0));
+		shader.set_uniform_mat4("ml_matrix", mat);
 		window.clear();
 
 		Vec2 mouse_pos = window.get_mouse_pos();
@@ -59,7 +68,14 @@ int main()
 		renderer.end();
 		renderer.flush();
 
-		std::cout << "Sprites: " << sprites.size() << std::endl;
 		window.update();
+
+		frames++;
+		if (timer.elapsed() > secs + 1.0f)
+		{
+			secs++;
+			std::cout << frames << " fps" << std::endl;
+			frames = 0;
+		}
 	}
 }

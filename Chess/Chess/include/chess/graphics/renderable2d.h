@@ -11,7 +11,7 @@ namespace Chess
 		struct VertexData
 		{
 			Maths::Vec3 position;
-			Maths::Vec4 color;
+			unsigned int color;
 		};
 
 		class Renderable2D

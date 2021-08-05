@@ -91,7 +91,13 @@ namespace Chess
 
 		GLint Shader::getUniformLocation(const GLchar* name)
 		{
-			return glGetUniformLocation(m_shader_id, name);
+			if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end())
+				return m_uniform_location_cache[name];
+
+			GLint location = glGetUniformLocation(m_shader_id, name);
+			m_uniform_location_cache[name] = location;
+
+			return location;
 		}
 
 		void Shader::set_uniform_1f(const GLchar* name, float value)

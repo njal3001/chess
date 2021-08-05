@@ -5,6 +5,7 @@
 #include <iostream>
 #include "chess/utils/file.h"
 #include "chess/maths/maths.h"
+#include <unordered_map>
 
 namespace Chess
 {
@@ -16,6 +17,7 @@ namespace Chess
 			GLuint m_shader_id;
 			const char* m_vert_path;
 			const char* m_frag_path;
+			std::unordered_map<std::string, GLint> m_uniform_location_cache;
 
 		public:
 			Shader(const char* vert_path, const char* frag_path);
