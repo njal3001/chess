@@ -7,7 +7,6 @@
 #include "chess/graphics/buffers/vertexarray.h"
 #include "chess/graphics/buffers/indexbuffer.h"
 #include "chess/graphics/renderable2d.h"
-#include "chess/graphics/simplerenderer2d.h"
 #include "chess/graphics/batchrenderer2d.h"
 #include "chess/graphics/sprite.h"
 #include "chess/utils/timer.h"
@@ -40,11 +39,10 @@ int main()
 	}
 
 	Mat4x4 mat = Mat4x4::create_translation(Vec3(0.25f, 0.25f, 0.0f));
-	mat *= Mat4x4::create_rotation(45, Vec3(0, 0, 1));
 		
 	Group* group = new Group(mat);
 	group->add(new Sprite(Vec2(0.0f, 0.0f), Vec2(0.5f, 0.5f), Vec4(0.8f, 0.7f, 0.2f, 1.0f)));
-	group->add(new Sprite(Vec2(0.125f, 0.125f), Vec2(0.25f, 0.25f), Vec4(1.0f, 1.0f, 1.0f, 1.0f)));
+	group->add(new Sprite(Vec2(0.125f, 0.125f), Vec2(0.25f, 0.25f), Vec4(0.4f, 1.0f, 0.7f, 1.0f)));
 
 	layer2.add(group);
 
@@ -60,8 +58,11 @@ int main()
 		Vec2 light_pos = Vec2(mouse_pos.x * (16.0f / 960.0f), 9.0f - mouse_pos.y * (9.0f / 540.0f));
 		shader->enable();
 		shader->set_uniform_2f("light_pos", light_pos);
-
 		layer1.render();
+
+		mat *= Mat4x4::create_translation(Vec3(0.25f, 0.25f, 0.0f));
+		mat *= Mat4x4::create_rotation(0.1f, Vec3(0, 0, 1));
+		mat *= Mat4x4::create_translation(Vec3(-0.25f, -0.25f, 0.0f));
 		layer2.render();
 
 		window.update();

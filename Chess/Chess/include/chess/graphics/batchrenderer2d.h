@@ -27,7 +27,8 @@ namespace Chess
 			BatchRenderer2D();
 			~BatchRenderer2D();
 			void begin() override;
-			void submit(const Renderable2D* renderable) override;
+			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
+				const Maths::Vec2& size, const Maths::Vec4& color) override;
 			void end() override;
 			void flush() override;
 

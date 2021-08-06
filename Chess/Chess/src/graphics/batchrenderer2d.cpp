@@ -57,12 +57,9 @@ namespace Chess
 			m_buffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		}
 
-		void BatchRenderer2D::submit(const Renderable2D* renderable)
+		void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
+			const Maths::Vec2& size, const Maths::Vec4& color)
 		{
-			const Maths::Vec3& position = renderable->get_position();
-			const Maths::Vec2& size = renderable->get_size();
-			const Maths::Vec4& color = renderable->get_color();
-
 			int r = color.x * 255.0f;
 			int g = color.y * 255.0f;
 			int b = color.z * 255.0f;

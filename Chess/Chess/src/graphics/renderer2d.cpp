@@ -5,7 +5,6 @@ namespace Chess
 	namespace Graphics
 	{
 		Renderer2D::Renderer2D()
-			: m_transformation_back(Maths::Mat4x4::identity)
 		{
 			m_transformation_stack.push_back(Maths::Mat4x4::identity);
 			m_transformation_back = Maths::Mat4x4::identity;
