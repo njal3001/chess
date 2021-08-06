@@ -12,6 +12,7 @@
 #include "chess/graphics/sprite.h"
 #include "chess/utils/timer.h"
 #include "chess/graphics/uilayer.h"
+#include "chess/graphics/group.h"
 
 int main()
 {
@@ -38,7 +39,14 @@ int main()
 		}
 	}
 
-	layer2.add(new Sprite(Maths::Vec2(0.25f, 0.25f), Maths::Vec2(0.5f, 0.5f), Maths::Vec4(0.8f, 0.7f, 0.2f, 1.0f)));
+	Mat4x4 mat = Mat4x4::create_translation(Vec3(0.25f, 0.25f, 0.0f));
+	mat *= Mat4x4::create_rotation(45, Vec3(0, 0, 1));
+		
+	Group* group = new Group(mat);
+	group->add(new Sprite(Vec2(0.0f, 0.0f), Vec2(0.5f, 0.5f), Vec4(0.8f, 0.7f, 0.2f, 1.0f)));
+	group->add(new Sprite(Vec2(0.125f, 0.125f), Vec2(0.25f, 0.25f), Vec4(1.0f, 1.0f, 1.0f, 1.0f)));
+
+	layer2.add(group);
 
 	Utils::Timer timer;
 	float secs = 0;

@@ -166,6 +166,7 @@
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
     <ClCompile Include="src\graphics\buffers\vertexarray.cpp" />
+    <ClCompile Include="src\graphics\group.cpp" />
     <ClCompile Include="src\graphics\layer.cpp" />
     <ClCompile Include="src\graphics\renderable2d.cpp" />
     <ClCompile Include="src\graphics\renderer2d.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="include\chess\graphics\buffers\buffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\indexbuffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\vertexarray.h" />
+    <ClInclude Include="include\chess\graphics\group.h" />
     <ClInclude Include="include\chess\graphics\layer.h" />
     <ClInclude Include="include\chess\graphics\renderable2d.h" />
     <ClInclude Include="include\chess\graphics\renderer2d.h" />

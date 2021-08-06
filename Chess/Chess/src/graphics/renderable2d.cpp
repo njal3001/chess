@@ -1,4 +1,5 @@
-#include "chess\graphics\renderable2d.h"
+#include "chess/graphics/renderable2d.h"
+#include "chess/graphics/renderer2d.h"
 
 namespace Chess
 {
@@ -8,6 +9,11 @@ namespace Chess
 			: m_position(position), m_size(size), m_color(color) {}
 
 		Renderable2D::~Renderable2D() {}
+
+		void Renderable2D::submit(Renderer2D* renderer) const 
+		{
+			renderer->submit(this);
+		}
 
 		const Maths::Vec3& Renderable2D::get_position() const
 		{
