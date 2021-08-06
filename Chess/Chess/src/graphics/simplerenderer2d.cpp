@@ -17,7 +17,7 @@ namespace Chess
 				sprite->get_vao()->bind();
 				sprite->get_ibo()->bind();
 				
-				sprite->get_shader().set_uniform_mat4("ml_matrix", Maths::Mat4x4::create_translation(sprite->get_position()));
+				sprite->get_shader().set_uniform_mat4("ml_matrix", Maths::Mat4x4::create_translation(m_transformation_back * sprite->get_position()));
 				glDrawElements(GL_TRIANGLES, sprite->get_ibo()->get_count(), GL_UNSIGNED_SHORT, nullptr);
 
 				sprite->get_ibo()->unbind();

@@ -70,19 +70,19 @@ namespace Chess
 
 			unsigned int c = a << 24 | b << 16 | g << 8 | r;
 
-			m_buffer->position = position;
+			m_buffer->position = m_transformation_back * position;
+			m_buffer->color = c;
+			m_buffer++;
+			
+			m_buffer->position = m_transformation_back * Maths::Vec3(position.x, position.y + size.y, position.z);
 			m_buffer->color = c;
 			m_buffer++;
 
-			m_buffer->position = Maths::Vec3(position.x, position.y + size.y, position.z);
+			m_buffer->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y + size.y, position.z);
 			m_buffer->color = c;
 			m_buffer++;
 
-			m_buffer->position = Maths::Vec3(position.x + size.x, position.y + size.y, position.z);
-			m_buffer->color = c;
-			m_buffer++;
-
-			m_buffer->position = Maths::Vec3(position.x + size.x, position.y, position.z);
+			m_buffer->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y, position.z);
 			m_buffer->color = c;
 			m_buffer++;
 

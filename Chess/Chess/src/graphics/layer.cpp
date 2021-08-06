@@ -18,8 +18,6 @@ namespace Chess
 			delete m_renderer;
 			for (int i = 0; i < m_renderables.size(); i++)
 				delete m_renderables[i];
-
-			std::cout << "called deconstructor" << std::endl;
 		}
 
 		void Layer::add(Renderable2D* renderable)

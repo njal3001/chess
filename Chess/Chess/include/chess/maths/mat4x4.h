@@ -23,6 +23,8 @@ namespace Chess
 
 			Mat4x4 operator *(const Mat4x4& rhs);
 			Mat4x4& operator *=(const Mat4x4& rhs);
+			Vec3 operator *(const Vec3& rhs);
+			Vec4 operator *(const Vec4& rhs);
 
 			static Mat4x4 create_orthographic(float left, float right, float bottom, float top, float near, float far);
 			static Mat4x4 create_perspective(float fov, float ratio, float near, float far);

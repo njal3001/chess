@@ -58,6 +58,25 @@ namespace Chess
 			return *this;
 		}
 
+		Vec3 Mat4x4::operator*(const Vec3& rhs)
+		{
+			return Vec3(
+				columns[0].x * rhs.x + columns[1].x * rhs.y + columns[2].x * rhs.z + columns[3].x,
+				columns[0].y * rhs.x + columns[1].y * rhs.y + columns[2].y * rhs.z + columns[3].x,
+				columns[0].z * rhs.x + columns[1].z * rhs.y + columns[2].z * rhs.z + columns[3].z
+			);
+		}
+
+		Vec4 Mat4x4::operator*(const Vec4& rhs)
+		{
+			return Vec4(
+				columns[0].x * rhs.x + columns[1].x * rhs.y + columns[2].x * rhs.z + columns[3].x * rhs.w,
+				columns[0].y * rhs.x + columns[1].y * rhs.y + columns[2].y * rhs.z + columns[3].x * rhs.w,
+				columns[0].z * rhs.x + columns[1].z * rhs.y + columns[2].z * rhs.z + columns[3].z * rhs.w,
+				columns[0].w * rhs.x + columns[1].w * rhs.y + columns[2].w * rhs.z + columns[3].w * rhs.w
+			);
+		}
+
 		Mat4x4 Mat4x4::create_orthographic(float left, float right, float bottom, float top, float near, float far)
 		{
 			Mat4x4 res = identity;
