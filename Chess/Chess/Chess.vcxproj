@@ -171,6 +171,7 @@
     <ClCompile Include="src\graphics\renderer2d.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
+    <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\uilayer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="src\maths\vec3.cpp" />
     <ClCompile Include="src\maths\vec4.cpp" />
     <ClCompile Include="src\utils\file.cpp" />
+    <ClCompile Include="src\utils\imageload.cpp" />
     <ClCompile Include="src\utils\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +195,7 @@
     <ClInclude Include="include\chess\graphics\renderer2d.h" />
     <ClInclude Include="include\chess\graphics\shader.h" />
     <ClInclude Include="include\chess\graphics\sprite.h" />
+    <ClInclude Include="include\chess\graphics\texture.h" />
     <ClInclude Include="include\chess\graphics\uilayer.h" />
     <ClInclude Include="include\chess\graphics\window.h" />
     <ClInclude Include="include\chess\maths\calc.h" />
@@ -202,7 +205,9 @@
     <ClInclude Include="include\chess\maths\vec3.h" />
     <ClInclude Include="include\chess\maths\vec4.h" />
     <ClInclude Include="include\chess\utils\file.h" />
+    <ClInclude Include="include\chess\utils\imageload.h" />
     <ClInclude Include="include\chess\utils\timer.h" />
+    <ClInclude Include="src\graphics\texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\basic.frag" />

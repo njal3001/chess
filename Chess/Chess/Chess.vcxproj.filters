@@ -72,6 +72,12 @@
     <ClCompile Include="src\graphics\group.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\imageload.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\chess\graphics\window.h">
@@ -132,6 +138,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\chess\graphics\group.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\graphics\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\utils\imageload.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

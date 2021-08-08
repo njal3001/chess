@@ -112,7 +112,7 @@ int main()
 
 	//retrieve the image data
 	bits = FreeImage_GetBits(dib);
-  unsigned int pitch = FreeImage_GetPitch(dib);
+	unsigned int pitch = FreeImage_GetPitch(dib);
 
 	//get the image width and height
 	width = FreeImage_GetWidth(dib);
