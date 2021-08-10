@@ -16,11 +16,13 @@ namespace Chess
         }
 
         Texture::~Texture()
-        {}
+        {
+            glDeleteTextures(1, &m_texture_id);
+        }
 
         GLuint Texture::load()
         {
-            BYTE* pixels = Utils::load_image(m_filename.c_str(), m_width, m_height);
+            BYTE* pixels = Utils::load_image(m_filename.c_str(), &m_width, &m_height);
 
             GLuint result;
             glGenTextures(1, &result);

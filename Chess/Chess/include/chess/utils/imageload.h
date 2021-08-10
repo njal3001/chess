@@ -6,6 +6,6 @@ namespace Chess
 {
     namespace Utils
     {
-        BYTE* load_image(const char* filename, GLsizei& width, GLsizei& height);
+        BYTE* load_image(const char* filename, GLsizei* width, GLsizei* height);
     }
 }

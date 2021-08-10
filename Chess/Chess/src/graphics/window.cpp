@@ -1,5 +1,6 @@
 #include "chess/graphics/window.h"
 
+
 namespace Chess 
 {
 	namespace Graphics
@@ -8,6 +9,8 @@ namespace Chess
 		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 		void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+		void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,
+			GLenum severity, GLsizei length, const GLchar* message, const void* user_param);
 
 		Window::Window(const char* title, int width, int height)
 		{
@@ -30,6 +33,7 @@ namespace Chess
 				std::cout << "Failed to initialize GLFW!" << std::endl;
 			}
 
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 			m_window = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
 			if (!m_window)
 			{
@@ -45,10 +49,13 @@ namespace Chess
 			glfwSetCursorPosCallback(m_window, cursor_position_callback);
 			glfwSwapInterval(0.0); // Disable VSync
 
+
 			if (glewInit() != GLEW_OK) {
 				std::cout << "Could not initialize GLEW!" << std::endl;
 				return false;
 			}
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(gl_debug_callback, NULL);
 
 			std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 			return true;
@@ -61,11 +68,6 @@ namespace Chess
 
 		void Window::update()
 		{
-			// TODO: Putting here for now, should be done somewhere else
-			GLenum error;
-			if (error = (glGetError() != GL_NO_ERROR))
-				std::cout << "OpenGL Error: " << error << std::endl;
-
 			glfwPollEvents();
 			glfwSwapBuffers(m_window);
 		}
@@ -130,6 +132,14 @@ namespace Chess
 			Window* win = (Window*)glfwGetWindowUserPointer(window);
 			win->m_mouse_pos.x = xpos;
 			win->m_mouse_pos.y = ypos;
+		}
+
+		void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,
+			GLenum severity, GLsizei length, const GLchar* message, const void* user_param)
+		{
+			fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+				(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+				type, severity, message);
 		}
 	}
 }

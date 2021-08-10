@@ -7,11 +7,21 @@ namespace Chess
 	{
 		Sprite::Sprite(const Maths::Vec2& position, const Maths::Vec2& size, const Maths::Vec4& color)
 			: m_position(Maths::Vec3(position.x, position.y, 0)), m_size(size), m_color(color)
-		{}
+		{
+            set_uv_defaults(); 
+        }
+
+        void Sprite::set_uv_defaults()
+        {
+            m_uv.push_back(Maths::Vec2(0, 0));            
+            m_uv.push_back(Maths::Vec2(0, 1));            
+            m_uv.push_back(Maths::Vec2(1, 1));            
+            m_uv.push_back(Maths::Vec2(1, 0));            
+        }
 
 		void Sprite::submit(Renderer2D* renderer) const
 		{
-			renderer->submit(this, m_position, m_size, m_color);
+			renderer->submit(this, m_position, m_size, m_uv, m_color);
 		}
 
 		const Maths::Vec3& Sprite::get_position() const
@@ -24,10 +34,14 @@ namespace Chess
 			return m_size;
 		}
 
+        const std::vector<Maths::Vec2>& Sprite::get_uv() const
+        {
+            return m_uv;
+        }
+
 		const Maths::Vec4& Sprite::get_color() const
 		{
 			return m_color;
 		}
-
 	}
 }

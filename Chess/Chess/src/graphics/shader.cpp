@@ -129,6 +129,5 @@ namespace Chess
 		{
 			glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.values);
 		}
-
 	}
 }
