@@ -27,7 +27,7 @@ namespace Chess
                 return;
             }
 
-            m_elements.push_back({ count, type, normalized, offset });
+            m_elements.push_back({ count, type, normalized, (unsigned int)m_stride });
             m_stride += offset;
         }
 

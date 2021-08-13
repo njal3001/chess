@@ -15,7 +15,6 @@ namespace Chess
             delete m_vbo;
 			delete m_ibo;
             delete m_vao;
-			/* glDeleteBuffers(1, &m_vbo); */
 		}
 
 		void BatchRenderer2D::init()
@@ -29,28 +28,6 @@ namespace Chess
 			layout.push(GL_UNSIGNED_BYTE, 4, GL_TRUE); // Color
 
 			m_vao->add_buffer(*m_vbo, layout);
-
-				/* glGenVertexArrays(1, &m_vao); */
-			/* glGenBuffers(1, &m_vbo); */
-
-			/*
-			glBindVertexArray(m_vao);
-			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-			glBufferData(GL_ARRAY_BUFFER, RENDERER_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
-
-			glEnableVertexAttribArray(SHADER_POSITION_INDEX);
-			glEnableVertexAttribArray(SHADER_UV_INDEX);
-			glEnableVertexAttribArray(SHADER_COLOR_INDEX);
-
-			glVertexAttribPointer(SHADER_POSITION_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, 
-                    (const void*)(offsetof(VertexData, VertexData::position)));
-			glVertexAttribPointer(SHADER_UV_INDEX, 2, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, 
-                    (const void*)(offsetof(VertexData, VertexData::uv)));
-			glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, RENDERER_VERTEX_SIZE,
-                    (const void*)(offsetof(VertexData, VertexData::color)));
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			*/
 
 			GLushort* indices = new GLushort[RENDERER_INDICES_SIZE];
 
@@ -69,17 +46,11 @@ namespace Chess
 			}
 
 			m_ibo = new IndexBuffer(indices, RENDERER_INDICES_SIZE);
-
-			// glBindVertexArray(0);
 		}
 
 		void BatchRenderer2D::begin()
 		{
 			m_buffer_map = (VertexData*)m_vbo->map(GL_WRITE_ONLY);
-			/*
-			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-			m_buffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-			*/
 		}
 
 		void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
@@ -118,20 +89,11 @@ namespace Chess
 		void BatchRenderer2D::end()
 		{
 
-			/*
-			glUnmapBuffer(GL_ARRAY_BUFFER);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			*/
 			m_vbo->unmap();
 		}
 
 		void BatchRenderer2D::flush()
 		{
-			/*
-			glBindVertexArray(m_vao);
-			m_ibo->bind();
-			*/
-
 			m_vao->bind();
 			m_ibo->bind();
 
@@ -139,11 +101,6 @@ namespace Chess
 
 			m_ibo->unbind();
 			m_vao->unbind();
-
-			/*
-			m_ibo->unbind();
-			glBindVertexArray(0);
-			*/
 
 			m_index_count = 0;
 		}
