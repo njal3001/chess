@@ -11,21 +11,23 @@ namespace Chess
 
 		VertexArray::~VertexArray()
 		{
-			for (int i = 0; i < m_buffers.size(); i++)
-				delete m_buffers[i];
-
 			glDeleteVertexArrays(1, &m_array_id);
 		}
 
-		void VertexArray::add_buffer(Buffer* buffer, GLuint index)
+		void VertexArray::add_buffer(const Buffer& buffer, const BufferLayout& layout)
 		{
 			bind();
-			buffer->bind();
+			buffer.bind();
 
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, buffer->get_component_count(), GL_FLOAT, GL_FALSE, 0, 0);
+            const auto& elements = layout.get_elements();
+            for (int i = 0; i < elements.size(); i++)
+            {
+                const auto& element = elements[i];
+                glEnableVertexAttribArray(i);
+                glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.get_stride(), (const void*)element.offset);
+            } 
 
-			buffer->unbind();
+			buffer.unbind();
 			unbind();
 		}
 

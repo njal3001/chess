@@ -4,12 +4,11 @@ namespace Chess
 {
 	namespace Graphics
 	{
-		Buffer::Buffer(GLfloat* data, GLsizei count, GLuint component_count)
-			: m_component_count(component_count)
+		Buffer::Buffer(const GLvoid* data, GLsizei size, GLenum usage)
 		{
 			glGenBuffers(1, &m_buffer_id);
 			bind();
-			glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), data, GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 			unbind();
 		}
 
@@ -28,9 +27,16 @@ namespace Chess
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 
-		GLuint Buffer::get_component_count() const
+		void* Buffer::map(GLenum access) const
 		{
-			return m_component_count;
+			bind();
+			return glMapBuffer(GL_ARRAY_BUFFER, access);
+		}
+
+		void Buffer::unmap() const
+		{
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+			unbind();
 		}
 	}
 }

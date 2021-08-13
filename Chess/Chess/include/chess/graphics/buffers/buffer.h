@@ -12,13 +12,14 @@ namespace Chess
 			GLuint m_component_count;
 		
 		public:
-			Buffer(GLfloat* data, GLsizei count, GLuint component_count);
+			Buffer(const GLvoid* data, GLsizei size, GLenum usage);
 			~Buffer();
 
 			void bind() const;
 			void unbind() const;
 
-			GLuint get_component_count() const;
+			void* map(GLenum access) const;
+			void unmap() const;
 		};
 	}
 }

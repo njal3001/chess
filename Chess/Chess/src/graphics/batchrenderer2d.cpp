@@ -5,21 +5,35 @@ namespace Chess
 	namespace Graphics
 	{
 		BatchRenderer2D::BatchRenderer2D()
+			: m_index_count(0)
 		{
 			init();
 		}
 
 		BatchRenderer2D::~BatchRenderer2D()
 		{
+            delete m_vbo;
 			delete m_ibo;
-			glDeleteBuffers(1, &m_vbo);
+            delete m_vao;
+			/* glDeleteBuffers(1, &m_vbo); */
 		}
 
 		void BatchRenderer2D::init()
 		{
-			glGenVertexArrays(1, &m_vao);
-			glGenBuffers(1, &m_vbo);
+            m_vao = new VertexArray();
+            m_vbo = new Buffer((const GLvoid*)NULL, RENDERER_BUFFER_SIZE, GL_DYNAMIC_DRAW);
 
+			BufferLayout layout;
+			layout.push(GL_FLOAT, 3, GL_FALSE); // Position
+			layout.push(GL_FLOAT, 2, GL_FALSE); // UV
+			layout.push(GL_UNSIGNED_BYTE, 4, GL_TRUE); // Color
+
+			m_vao->add_buffer(*m_vbo, layout);
+
+				/* glGenVertexArrays(1, &m_vao); */
+			/* glGenBuffers(1, &m_vbo); */
+
+			/*
 			glBindVertexArray(m_vao);
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 			glBufferData(GL_ARRAY_BUFFER, RENDERER_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
@@ -36,6 +50,7 @@ namespace Chess
                     (const void*)(offsetof(VertexData, VertexData::color)));
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			*/
 
 			GLushort* indices = new GLushort[RENDERER_INDICES_SIZE];
 
@@ -55,13 +70,16 @@ namespace Chess
 
 			m_ibo = new IndexBuffer(indices, RENDERER_INDICES_SIZE);
 
-			glBindVertexArray(0);
+			// glBindVertexArray(0);
 		}
 
 		void BatchRenderer2D::begin()
 		{
+			m_buffer_map = (VertexData*)m_vbo->map(GL_WRITE_ONLY);
+			/*
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 			m_buffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+			*/
 		}
 
 		void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
@@ -74,44 +92,58 @@ namespace Chess
 
 			unsigned int c = a << 24 | b << 16 | g << 8 | r;
 
-			m_buffer->position = m_transformation_back * position;
-            m_buffer->uv = uv[0];
-			m_buffer->color = c;
-			m_buffer++;
+			m_buffer_map->position = m_transformation_back * position;
+			m_buffer_map->uv = uv[0];
+			m_buffer_map->color = c;
+			m_buffer_map++;
 			
-			m_buffer->position = m_transformation_back * Maths::Vec3(position.x, position.y + size.y, position.z);
-            m_buffer->uv = uv[1];
-			m_buffer->color = c;
-			m_buffer++;
+			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x, position.y + size.y, position.z);
+			m_buffer_map->uv = uv[1];
+			m_buffer_map->color = c;
+			m_buffer_map++;
 
-			m_buffer->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y + size.y, position.z);
-            m_buffer->uv = uv[2];
-			m_buffer->color = c;
-			m_buffer++;
+			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y + size.y, position.z);
+			m_buffer_map->uv = uv[2];
+			m_buffer_map->color = c;
+			m_buffer_map++;
 
-			m_buffer->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y, position.z);
-            m_buffer->uv = uv[3];
-			m_buffer->color = c;
-			m_buffer++;
+			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y, position.z);
+			m_buffer_map->uv = uv[3];
+			m_buffer_map->color = c;
+			m_buffer_map++;
 
 			m_index_count += 6;
 		}
 
 		void BatchRenderer2D::end()
 		{
+
+			/*
 			glUnmapBuffer(GL_ARRAY_BUFFER);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			*/
+			m_vbo->unmap();
 		}
 
 		void BatchRenderer2D::flush()
 		{
+			/*
 			glBindVertexArray(m_vao);
+			m_ibo->bind();
+			*/
+
+			m_vao->bind();
 			m_ibo->bind();
 
 			glDrawElements(GL_TRIANGLES, m_index_count, GL_UNSIGNED_SHORT, NULL);
 
 			m_ibo->unbind();
+			m_vao->unbind();
+
+			/*
+			m_ibo->unbind();
 			glBindVertexArray(0);
+			*/
 
 			m_index_count = 0;
 		}

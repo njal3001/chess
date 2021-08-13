@@ -78,6 +78,9 @@
     <ClCompile Include="src\utils\imageload.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\buffers\bufferlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\chess\graphics\window.h">
@@ -147,6 +150,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\chess\utils\imageload.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\graphics\buffers\bufferlayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,11 +19,11 @@ namespace Chess
 		class BatchRenderer2D : public Renderer2D
 		{
 		private:
-			GLuint m_vao;
-			GLuint m_vbo;
+			VertexArray* m_vao;
+			Buffer* m_vbo;
 			IndexBuffer* m_ibo;
 			GLsizei m_index_count;
-			VertexData* m_buffer;
+			VertexData* m_buffer_map;
 
 		public:
 			BatchRenderer2D();
