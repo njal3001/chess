@@ -28,6 +28,7 @@ namespace Chess
 
 			void set_uniform_1f(const GLchar* name, float value);
 			void set_uniform_1i(const GLchar* name, int value);
+            void set_uniform_1iv(const GLchar* name, int* value, int count);
 			void set_uniform_2f(const GLchar* name, const Maths::Vec2& vector);
 			void set_uniform_3f(const GLchar* name, const Maths::Vec3& vector);
 			void set_uniform_4f(const GLchar* name, const Maths::Vec4& vector);
@@ -35,7 +36,7 @@ namespace Chess
 
 		private:
 			GLuint load();
-			GLint getUniformLocation(const GLchar* name);
+			GLint get_uniform_location(const GLchar* name);
 		};
 
 	}

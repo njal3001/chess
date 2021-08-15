@@ -14,7 +14,8 @@ namespace Chess
 
 #define SHADER_POSITION_INDEX 0
 #define SHADER_UV_INDEX 1
-#define SHADER_COLOR_INDEX 2
+#define SHADER_TID_INDEX 2
+#define SHADER_COLOR_INDEX 3
 
 		class BatchRenderer2D : public Renderer2D
 		{
@@ -24,13 +25,14 @@ namespace Chess
 			IndexBuffer* m_ibo;
 			GLsizei m_index_count;
 			VertexData* m_buffer_map;
+            std::vector<GLuint> m_texture_slots;
 
 		public:
 			BatchRenderer2D();
 			~BatchRenderer2D();
 			void begin() override;
 			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
-				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color) override;
+				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color, const GLuint tid) override;
 			void end() override;
 			void flush() override;
 

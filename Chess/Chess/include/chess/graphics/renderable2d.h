@@ -15,6 +15,7 @@ namespace Chess
 		{
 			Maths::Vec3 position;
             Maths::Vec2 uv;
+            float texture_slot;
 			unsigned int color;
 		};
 	

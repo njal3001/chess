@@ -21,6 +21,7 @@ namespace Chess
             void bind() const;
             void unbind() const;
 
+            const GLuint get_id() const;
             const GLsizei get_width() const;
             const GLsizei get_height() const;
 

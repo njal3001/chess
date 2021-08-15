@@ -45,6 +45,11 @@ namespace Chess
             glBindTexture(GL_TEXTURE_2D, 0);
         } 
 
+        const GLuint Texture::get_id() const
+        {
+            return m_texture_id;
+        }
+
         const GLsizei Texture::get_width() const
         {
             return m_width;

@@ -9,7 +9,7 @@
 #include "chess/graphics/renderable2d.h"
 #include "chess/graphics/batchrenderer2d.h"
 #include "chess/graphics/sprite.h"
-#include "chess/utils/timer.h"
+/* #include "chess/utils/timer.h" */
 #include "chess/graphics/uilayer.h"
 #include "chess/graphics/group.h"
 #include "chess/graphics/texture.h"
@@ -28,25 +28,32 @@ int main()
 	UILayer layer1(shader, -16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f);
 
 	srand(time(NULL));
+    Texture* textures[] =
+    {
+        new Texture("res/textures/test.png"),
+        new Texture("res/textures/test2.png"),
+        /* new Texture("res/textures/test3.png") */
+    };
 
-	for (float y = -9.0f; y < 9.0f; y++ )
+	for (float y = -9.0f; y < 9.0f; y++)
 	{
 		for (float x = -16.0f; x < 16.0f; x++)
 		{
-			layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(0.9f, 0.9f), Maths::Vec4((float)rand() / RAND_MAX, 0, 1, 1)));
+			layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(0.9f, 0.9f), textures[rand() % 2]));
 		}
 	}
-    
-    glActiveTexture(GL_TEXTURE0);
-    Texture texture("res/textures/test.png");
-    texture.bind();
+
+    GLint tex_ids[] = 
+    {
+        0, 1, 2
+    };
 
     shader->enable();
-    shader->set_uniform_1i("tex", 0);
+    shader->set_uniform_1iv("textures", tex_ids, 2);
 
-	Utils::Timer timer;
-	float secs = 0;
-	unsigned int frames = 0;
+	/* Utils::Timer timer; */
+	/* float secs = 0; */
+	/* unsigned int frames = 0; */
 
 	while (!window.closed())
 	{
@@ -60,12 +67,15 @@ int main()
 
         window.update();
 
-		frames++;
-		if (timer.elapsed() > secs + 1.0f)
-		{
-			secs++;
-			std::cout << frames << " fps" << std::endl;
-			frames = 0;
-		}
+		/* frames++; */
+		/* if (timer.elapsed() > secs + 1.0f) */
+		/* { */
+		/* 	secs++; */
+		/* 	std::cout << frames << " fps" << std::endl; */
+		/* 	frames = 0; */
+		/* } */
 	}
+
+    for (int i = 0; i < 2; i++)
+        delete textures[i];
 }

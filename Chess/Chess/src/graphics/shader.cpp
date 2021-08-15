@@ -89,7 +89,7 @@ namespace Chess
 			glUseProgram(0);
 		}
 
-		GLint Shader::getUniformLocation(const GLchar* name)
+		GLint Shader::get_uniform_location(const GLchar* name)
 		{
 			if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end())
 				return m_uniform_location_cache[name];
@@ -102,32 +102,37 @@ namespace Chess
 
 		void Shader::set_uniform_1f(const GLchar* name, float value)
 		{
-			glUniform1f(getUniformLocation(name), value);
+			glUniform1f(get_uniform_location(name), value);
 		}
 
 		void Shader::set_uniform_1i(const GLchar* name, int value)
 		{
-			glUniform1i(getUniformLocation(name), value);
+			glUniform1i(get_uniform_location(name), value);
 		}
+
+        void Shader::set_uniform_1iv(const GLchar* name, int* value, int count)
+        {
+            glUniform1iv(get_uniform_location(name), count, value);
+        }
 
 		void Shader::set_uniform_2f(const GLchar* name, const Maths::Vec2& vector)
 		{
-			glUniform2f(getUniformLocation(name), vector.x, vector.y);
+			glUniform2f(get_uniform_location(name), vector.x, vector.y);
 		}
 
 		void Shader::set_uniform_3f(const GLchar* name, const Maths::Vec3& vector)
 		{
-			glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
+			glUniform3f(get_uniform_location(name), vector.x, vector.y, vector.z);
 		}
 
 		void Shader::set_uniform_4f(const GLchar* name, const Maths::Vec4& vector)
 		{
-			glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
+			glUniform4f(get_uniform_location(name), vector.x, vector.y, vector.z, vector.w);
 		}
 
 		void Shader::set_uniform_mat4(const GLchar* name, const Maths::Mat4x4& matrix)
 		{
-			glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.values);
+			glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, matrix.values);
 		}
 	}
 }
