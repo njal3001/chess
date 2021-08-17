@@ -30,7 +30,7 @@ namespace Chess
 
 			bool key_down(unsigned int keycode) const;
 			bool mouse_button_down(unsigned int button) const;
-			Maths::Vec2 get_mouse_pos() const;
+			const Maths::Vec2 get_mouse_pos() const;
 
 		private:
 			bool init();

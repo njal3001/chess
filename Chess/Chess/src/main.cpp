@@ -32,14 +32,17 @@ int main()
     {
         new Texture("res/textures/test.png"),
         new Texture("res/textures/test2.png"),
-        /* new Texture("res/textures/test3.png") */
+        new Texture("res/textures/test3.png")
     };
 
 	for (float y = -9.0f; y < 9.0f; y++)
 	{
 		for (float x = -16.0f; x < 16.0f; x++)
 		{
-			layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(0.9f, 0.9f), textures[rand() % 2]));
+			if (rand() % 4)
+				layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(0.9f, 0.9f), textures[rand() % 3]));
+			else
+				layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(0.9f, 0.9f), Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f)));
 		}
 	}
 
@@ -49,7 +52,7 @@ int main()
     };
 
     shader->enable();
-    shader->set_uniform_1iv("textures", tex_ids, 2);
+    shader->set_uniform_1iv("textures", tex_ids, 3);
 
 	/* Utils::Timer timer; */
 	/* float secs = 0; */
@@ -76,6 +79,6 @@ int main()
 		/* } */
 	}
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
         delete textures[i];
 }

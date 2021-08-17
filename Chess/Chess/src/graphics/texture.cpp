@@ -3,7 +3,7 @@
 #include <FreeImage.h>
 #include <string>
 #include <GL/glew.h>
-#include "chess/utils/imageload.h"
+#include "chess/graphics/image.h"
 
 namespace Chess
 {
@@ -22,14 +22,15 @@ namespace Chess
 
         GLuint Texture::load()
         {
-            BYTE* pixels = Utils::load_image(m_filename.c_str(), &m_width, &m_height);
+            Image image(m_filename.c_str());
 
             GLuint result;
             glGenTextures(1, &result);
             glBindTexture(GL_TEXTURE_2D, result);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.get_width(), image.get_height(), 0, GL_BGR,
+                    GL_UNSIGNED_BYTE, image.get_bits());
             glBindTexture(GL_TEXTURE_2D, 0);
 
             return result;

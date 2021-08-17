@@ -3,7 +3,7 @@
 
 namespace Chess
 {
-    BYTE* Utils::load_image(const char* filename, GLsizei* width, GLsizei* height)
+    FIBITMAP* Utils::load_image(const char* filename)
     {
         FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
         FIBITMAP* dib = nullptr;
@@ -18,10 +18,6 @@ namespace Chess
         if (!dib)
             return nullptr;
 
-        BYTE* result = FreeImage_GetBits(dib);
-        *width = FreeImage_GetWidth(dib);
-        *height = FreeImage_GetHeight(dib);
-
-        return result;
+        return dib;
     }
 }

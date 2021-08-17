@@ -103,7 +103,7 @@ namespace Chess
 			return m_mouse_buttons[button];
 		}
 
-		Maths::Vec2 Window::get_mouse_pos() const
+		const Maths::Vec2 Window::get_mouse_pos() const
 		{
 			return m_mouse_pos;
 		}
