@@ -26,7 +26,7 @@ int main()
 	glClearColor(0, 0, 0, 1);
 
 	Shader* shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
-	UILayer layer1(shader, -16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f);
+	UILayer layer1(shader, 0.0f, 320.0f, 0.0f, 180.0f, -1.0f, 1.0f);
 
     Graphics::TextureArray texture_array(32, Maths::Vec2(8, 8));
     GLuint texture_array_id = texture_array.get_id();
@@ -39,21 +39,16 @@ int main()
 
 	srand(time(NULL));
 
-	for (float y = -9.0f; y < 9.0f; y++)
+	for (float y = 0.0f; y < 180.0f; y+= 8.0f)
 	{
-		for (float x = -16.0f; x < 16.0f; x++)
+		for (float x = 0.0f; x < 320.0f; x += 8.0f)
 		{
 			if (rand() % 4)
-				layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(0.9f, 0.9f), textures[rand() % 3]));
+				layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(8.0f, 8.0f), textures[rand() % 3]));
 			else
-				layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(0.9f, 0.9f), Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+				layer1.add(new Sprite(Maths::Vec2(x, y), Maths::Vec2(8.0f, 8.0f), Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f)));
 		}
 	}
-
-    /* GLint tex_ids[] = */ 
-    /* { */
-    /*     0, 1, 2 */
-    /* }; */
 
     shader->enable();
     shader->set_uniform_1i("textures", 0);

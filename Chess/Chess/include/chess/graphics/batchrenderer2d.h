@@ -41,7 +41,7 @@ namespace Chess
 		private:
 			void init();
             void submit(const Renderable2D* renderable, const Maths::Vec3& position, const Maths::Vec2& size,
-                    const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const float uv_offset);
+                    const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const Maths::Vec2& uv_scale);
 		};
 	}
 }

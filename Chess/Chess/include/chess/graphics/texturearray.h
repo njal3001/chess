@@ -14,6 +14,7 @@ namespace Chess
             {
                 GLuint array_id;
                 unsigned int layer;
+                Maths::Vec2 uv_scale;
             };
 
         private:

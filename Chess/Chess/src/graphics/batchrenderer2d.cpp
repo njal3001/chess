@@ -65,7 +65,7 @@ namespace Chess
 
             unsigned int c = a << 24 | b << 16 | g << 8 | r;
 
-            submit(renderable, position, size, uv, c, -1, 0);   
+            submit(renderable, position, size, uv, c, -1, Maths::Vec2(1.0f, 1.0f));   
         }
 
         void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
@@ -79,33 +79,32 @@ namespace Chess
             
             m_texture_array_id = texture.array_id; 
 
-			submit(renderable, position, size, uv, 0, texture.layer, 0.5f / 8.0f);   
+			submit(renderable, position, size, uv, 0, texture.layer, texture.uv_scale);   
 		}
-
+			
 		void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
-			const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const float uv_offset)
+			const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const Maths::Vec2& uv_scale)
 		{
-
 			m_buffer_map->position = m_transformation_back * position;
-			m_buffer_map->uv = uv[0] + Maths::Vec2(uv_offset, uv_offset);
+			m_buffer_map->uv = uv[0] * uv_scale;
             m_buffer_map->texture_layer = texture_layer;
 			m_buffer_map->color = color;
 			m_buffer_map++;
 			
 			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x, position.y + size.y, position.z);
-			m_buffer_map->uv = uv[1] + Maths::Vec2(uv_offset, -uv_offset);
+			m_buffer_map->uv = uv[1] * uv_scale;
             m_buffer_map->texture_layer = texture_layer;
 			m_buffer_map->color = color;
 			m_buffer_map++;
 
 			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y + size.y, position.z);
-			m_buffer_map->uv = uv[2] + Maths::Vec2(-uv_offset, -uv_offset);
+			m_buffer_map->uv = uv[2] * uv_scale;
             m_buffer_map->texture_layer = texture_layer;
 			m_buffer_map->color = color;
 			m_buffer_map++;
 
 			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y, position.z);
-			m_buffer_map->uv = uv[3] + Maths::Vec2(-uv_offset, uv_offset);
+			m_buffer_map->uv = uv[3] * uv_scale;
             m_buffer_map->texture_layer = texture_layer;
 			m_buffer_map->color = color;
 			m_buffer_map++;

@@ -6,7 +6,7 @@ namespace Chess
     namespace Graphics
     {
         TextureArray::TextureArray(const unsigned int max_layers, const Maths::Vec2& max_size)
-            : m_layers(0)
+            : m_layers(0), m_max_size(max_size)
         {
             glGenTextures(1, &m_id);
             bind();
@@ -16,8 +16,8 @@ namespace Chess
             
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP);
-            glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP);
+            glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             unbind(); 
         }
 
@@ -29,6 +29,8 @@ namespace Chess
         const TextureArray::Element TextureArray::add(const std::string& filename)
         {
             Image image(filename);
+            const int width = image.get_width();
+            const int height = image.get_height();
             unsigned int layers = m_layers;
             m_layers++;
             bind();
@@ -36,7 +38,9 @@ namespace Chess
                     image.get_height(), 1, GL_BGR, GL_UNSIGNED_BYTE, image.get_bits());
             unbind();
 
-            return { m_id, layers };
+            const Maths::Vec2 uv_scale = Maths::Vec2(width / m_max_size.x, height / m_max_size.y);
+
+            return { m_id, layers, uv_scale };
         }
 
         void TextureArray::bind() const
