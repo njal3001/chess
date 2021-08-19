@@ -5,7 +5,7 @@ namespace Chess
 	namespace Graphics
 	{
 		BatchRenderer2D::BatchRenderer2D()
-			: m_index_count(0)
+			: m_index_count(0), m_texture_array_id(0)
 		{
 			init();
 		}
@@ -25,7 +25,7 @@ namespace Chess
 			BufferLayout layout;
 			layout.push(GL_FLOAT, 3, GL_FALSE); // Position
 			layout.push(GL_FLOAT, 2, GL_FALSE); // UV
-            layout.push(GL_FLOAT, 1, GL_FALSE); // Texture slot
+            layout.push(GL_INT, 1, GL_FALSE); // Texture layer
 			layout.push(GL_UNSIGNED_BYTE, 4, GL_TRUE); // Color
 
 			m_vao->add_buffer(*m_vbo, layout);
@@ -52,72 +52,62 @@ namespace Chess
 		void BatchRenderer2D::begin()
 		{
 			m_buffer_map = (VertexData*)m_vbo->map(GL_WRITE_ONLY);
+            m_texture_array_id = 0;
+		}
+        
+        void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
+            const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color)
+        {
+            int r = color.x * 255.0f;
+            int g = color.y * 255.0f;
+            int b = color.z * 255.0f;
+            int a = color.w * 255.0f;
+
+            unsigned int c = a << 24 | b << 16 | g << 8 | r;
+
+            submit(renderable, position, size, uv, c, -1, 0);   
+        }
+
+        void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
+            const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const TextureArray::Element& texture)
+        {
+            if (m_texture_array_id != 0 && m_texture_array_id != texture.array_id)
+            {
+                std::cout << "Can't use multiple texture arrays in the same batch!" << std::endl;
+                return;
+            }
+            
+            m_texture_array_id = texture.array_id; 
+
+			submit(renderable, position, size, uv, 0, texture.layer, 0.5f / 8.0f);   
 		}
 
 		void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
-			const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color, const GLuint tid)
+			const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const float uv_offset)
 		{
-            unsigned int c = 0;
-            float texture_slot = 0.0f;
-
-            if (tid > 0)
-            {
-                bool found = false;
-                for (int i = 0; i < m_texture_slots.size(); i++)
-                {
-                    if (m_texture_slots[i] == tid)
-                    {
-                        texture_slot = (float)(i + 1);
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found)
-                {
-                    if (m_texture_slots.size() >= 32)
-                    {
-                        end();
-                        flush();
-                        begin();
-                    }
-
-                    m_texture_slots.push_back(tid);
-                    texture_slot = (float)m_texture_slots.size();
-                }
-            } 
-            else
-            {
-                int r = color.x * 255.0f;
-                int g = color.y * 255.0f;
-                int b = color.z * 255.0f;
-                int a = color.w * 255.0f;
-
-                c = a << 24 | b << 16 | g << 8 | r;
-            }
 
 			m_buffer_map->position = m_transformation_back * position;
-			m_buffer_map->uv = uv[0];
-            m_buffer_map->texture_slot = texture_slot;
-			m_buffer_map->color = c;
+			m_buffer_map->uv = uv[0] + Maths::Vec2(uv_offset, uv_offset);
+            m_buffer_map->texture_layer = texture_layer;
+			m_buffer_map->color = color;
 			m_buffer_map++;
 			
 			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x, position.y + size.y, position.z);
-			m_buffer_map->uv = uv[1];
-            m_buffer_map->texture_slot = texture_slot;
-			m_buffer_map->color = c;
+			m_buffer_map->uv = uv[1] + Maths::Vec2(uv_offset, -uv_offset);
+            m_buffer_map->texture_layer = texture_layer;
+			m_buffer_map->color = color;
 			m_buffer_map++;
 
 			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y + size.y, position.z);
-			m_buffer_map->uv = uv[2];
-            m_buffer_map->texture_slot = texture_slot;
-			m_buffer_map->color = c;
+			m_buffer_map->uv = uv[2] + Maths::Vec2(-uv_offset, -uv_offset);
+            m_buffer_map->texture_layer = texture_layer;
+			m_buffer_map->color = color;
 			m_buffer_map++;
 
 			m_buffer_map->position = m_transformation_back * Maths::Vec3(position.x + size.x, position.y, position.z);
-			m_buffer_map->uv = uv[3];
-            m_buffer_map->texture_slot = texture_slot;
-			m_buffer_map->color = c;
+			m_buffer_map->uv = uv[3] + Maths::Vec2(-uv_offset, uv_offset);
+            m_buffer_map->texture_layer = texture_layer;
+			m_buffer_map->color = color;
 			m_buffer_map++;
 
 			m_index_count += 6;
@@ -130,11 +120,8 @@ namespace Chess
 
 		void BatchRenderer2D::flush()
 		{
-            for (int i = 0; i < m_texture_slots.size(); i++)
-            {
-                glActiveTexture(GL_TEXTURE0 + i);
-                glBindTexture(GL_TEXTURE_2D, m_texture_slots[i]);
-            }
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D_ARRAY, m_texture_array_id);
 
 			m_vao->bind();
 			m_ibo->bind();
@@ -144,6 +131,7 @@ namespace Chess
 			m_ibo->unbind();
 			m_vao->unbind();
 
+			glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 			m_index_count = 0;
 		}
 	}

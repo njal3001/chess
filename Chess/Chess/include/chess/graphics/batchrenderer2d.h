@@ -25,19 +25,23 @@ namespace Chess
 			IndexBuffer* m_ibo;
 			GLsizei m_index_count;
 			VertexData* m_buffer_map;
-            std::vector<GLuint> m_texture_slots;
+            GLuint m_texture_array_id;
 
 		public:
 			BatchRenderer2D();
 			~BatchRenderer2D();
 			void begin() override;
 			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
-				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color, const GLuint tid) override;
+				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color) override;
+			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
+				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const TextureArray::Element& texture) override;
 			void end() override;
 			void flush() override;
 
 		private:
 			void init();
+            void submit(const Renderable2D* renderable, const Maths::Vec3& position, const Maths::Vec2& size,
+                    const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const float uv_offset);
 		};
 	}
 }

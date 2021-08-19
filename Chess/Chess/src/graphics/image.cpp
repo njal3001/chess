@@ -4,9 +4,9 @@ namespace Chess
 {
     namespace Graphics
     {
-        Image::Image(const char* filename)
+        Image::Image(const std::string& filename)
         {
-            m_dib = Utils::load_image(filename);
+            m_dib = Utils::load_image(filename.c_str());
         }
 
         Image::~Image()

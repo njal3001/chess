@@ -1,3 +1,4 @@
+#pragma once
 #include <GL/glew.h>
 #include <string>
 #include "chess/maths/maths.h"
@@ -11,9 +12,8 @@ namespace Chess
         public:
             const struct Element
             {
-                TextureArray* array;
-                unsigned int index;
-                Maths::Vec2 uv;
+                GLuint array_id;
+                unsigned int layer;
             };
 
         private:
@@ -30,6 +30,7 @@ namespace Chess
             void bind() const;
             void unbind() const;
             
+            const GLuint get_id() const;
             const unsigned int get_layers() const;
         };
     }

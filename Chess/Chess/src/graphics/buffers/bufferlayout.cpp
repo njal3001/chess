@@ -19,6 +19,9 @@ namespace Chess
             case GL_UNSIGNED_INT: 
                 offset = sizeof(GLuint) * count; 
                 break;
+            case GL_INT:
+                offset = sizeof(GLint) * count;
+                break;
             case GL_UNSIGNED_BYTE: 
                 offset = sizeof(GLubyte) * count; 
                 break;

@@ -1,8 +1,5 @@
-#pragma once
 #include "chess/graphics/texture.h"
 #include <FreeImage.h>
-#include <string>
-#include <GL/glew.h>
 #include "chess/graphics/image.h"
 
 namespace Chess
@@ -22,7 +19,7 @@ namespace Chess
 
         GLuint Texture::load()
         {
-            Image image(m_filename.c_str());
+            Image image(m_filename);
 
             GLuint result;
             glGenTextures(1, &result);

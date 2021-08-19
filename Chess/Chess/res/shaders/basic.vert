@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec2 uv;
-layout (location = 2) in float texture_slot;
+layout (location = 2) in int texture_layer;
 layout (location = 3) in vec4 color;
 
 uniform mat4 pr_matrix;
@@ -13,7 +13,7 @@ out DATA
 {
 	vec4 position;
     vec2 uv;
-    float texture_slot;
+    flat int texture_layer;
 	vec4 color;
 } vs_out;
 
@@ -21,7 +21,7 @@ void main()
 {
 	gl_Position = pr_matrix * vw_matrix * ml_matrix * position;
 	vs_out.position = ml_matrix * position;
-    vs_out.texture_slot = texture_slot;
     vs_out.uv = uv;
+    vs_out.texture_layer = texture_layer;
 	vs_out.color = color;
 }

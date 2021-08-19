@@ -13,6 +13,7 @@
 #include "chess/graphics/uilayer.h"
 #include "chess/graphics/group.h"
 #include "chess/graphics/texture.h"
+#include "chess/graphics/texturearray.h"
 #include <FreeImage.h>
 
 int main()
@@ -27,13 +28,16 @@ int main()
 	Shader* shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
 	UILayer layer1(shader, -16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f);
 
-	srand(time(NULL));
-    Texture* textures[] =
+    Graphics::TextureArray texture_array(32, Maths::Vec2(8, 8));
+    GLuint texture_array_id = texture_array.get_id();
+    TextureArray::Element textures[] = 
     {
-        new Texture("res/textures/test.png"),
-        new Texture("res/textures/test2.png"),
-        new Texture("res/textures/test3.png")
+        texture_array.add("res/textures/test.png"),
+        texture_array.add("res/textures/test2.png"),
+        texture_array.add("res/textures/test3.png")
     };
+
+	srand(time(NULL));
 
 	for (float y = -9.0f; y < 9.0f; y++)
 	{
@@ -46,17 +50,18 @@ int main()
 		}
 	}
 
-    GLint tex_ids[] = 
-    {
-        0, 1, 2
-    };
+    /* GLint tex_ids[] = */ 
+    /* { */
+    /*     0, 1, 2 */
+    /* }; */
 
     shader->enable();
-    shader->set_uniform_1iv("textures", tex_ids, 3);
+    shader->set_uniform_1i("textures", 0);
 
 	/* Utils::Timer timer; */
 	/* float secs = 0; */
 	/* unsigned int frames = 0; */
+
 
 	while (!window.closed())
 	{
@@ -67,6 +72,8 @@ int main()
 		shader->enable();
 		shader->set_uniform_2f("light_pos", light_pos);
 		layer1.render();
+
+
 
         window.update();
 
@@ -79,6 +86,6 @@ int main()
 		/* } */
 	}
 
-    for (int i = 0; i < 3; i++)
-        delete textures[i];
+    /* for (int i = 0; i < 3; i++) */
+    /*     delete textures[i]; */
 }

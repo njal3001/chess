@@ -1,6 +1,6 @@
 #pragma once
 #include "renderable2d.h"
-#include "texture.h"
+#include "texturearray.h"
 #include <vector>
 
 namespace Chess
@@ -19,7 +19,9 @@ namespace Chess
 		public:
 			virtual void begin() {}
 			virtual void submit(const Renderable2D* renderable, const Maths::Vec3& position,
-				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color, const GLuint tid) = 0;
+				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color) = 0;
+			virtual void submit(const Renderable2D* renderable, const Maths::Vec3& position,
+				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const TextureArray::Element& texture) = 0;
 			virtual void end() {}
 			virtual void flush() = 0;
 			void push_transformation(Maths::Mat4x4 matrix, bool absolute = false);

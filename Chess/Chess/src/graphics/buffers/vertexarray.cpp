@@ -24,7 +24,12 @@ namespace Chess
             {
                 const auto& element = elements[i];
                 glEnableVertexAttribArray(i);
-                glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.get_stride(), (const void*)element.offset);
+
+				// TODO: Hardcoded for now
+				if (element.type == GL_INT)
+					glVertexAttribIPointer(i, element.count, element.type, layout.get_stride(), (const void*)element.offset);
+				else
+					glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.get_stride(), (const void*)element.offset);
             } 
 
 			buffer.unbind();

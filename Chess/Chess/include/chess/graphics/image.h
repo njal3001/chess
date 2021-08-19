@@ -1,4 +1,5 @@
 #include "chess/utils/imageload.h"
+#include <string>
 
 namespace Chess
 {
@@ -10,7 +11,7 @@ namespace Chess
             FIBITMAP* m_dib;
 
         public:
-            Image(const char* filename);
+            Image(const std::string& filename);
             ~Image();
 
             const BYTE* get_bits() const;
