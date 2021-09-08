@@ -74,8 +74,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Intermediates\</IntDir>
-    <IncludePath>$(Solutiondir)Chess\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\FreeImage\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Solutiondir)Chess\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\FreeType\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\FreeType\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -105,7 +105,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;FreeImage.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,11 +162,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\chess.cpp" />
     <ClCompile Include="src\graphics\batchrenderer2d.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\bufferlayout.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
     <ClCompile Include="src\graphics\buffers\vertexarray.cpp" />
+    <ClCompile Include="src\graphics\fontmanager.cpp" />
     <ClCompile Include="src\graphics\group.cpp" />
     <ClCompile Include="src\graphics\image.cpp" />
     <ClCompile Include="src\graphics\layer.cpp" />
@@ -188,11 +190,13 @@
     <ClCompile Include="src\utils\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\chess\game\chess.h" />
     <ClInclude Include="include\chess\graphics\batchrenderer2d.h" />
     <ClInclude Include="include\chess\graphics\buffers\buffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\bufferlayout.h" />
     <ClInclude Include="include\chess\graphics\buffers\indexbuffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\vertexarray.h" />
+    <ClInclude Include="include\chess\graphics\fontmanager.h" />
     <ClInclude Include="include\chess\graphics\group.h" />
     <ClInclude Include="include\chess\graphics\image.h" />
     <ClInclude Include="include\chess\graphics\layer.h" />
@@ -202,6 +206,7 @@
     <ClInclude Include="include\chess\graphics\sprite.h" />
     <ClInclude Include="include\chess\graphics\texture.h" />
     <ClInclude Include="include\chess\graphics\texturearray.h" />
+    <ClInclude Include="include\chess\graphics\textureatlas.h" />
     <ClInclude Include="include\chess\graphics\uilayer.h" />
     <ClInclude Include="include\chess\graphics\window.h" />
     <ClInclude Include="include\chess\maths\calc.h" />
@@ -218,6 +223,9 @@
   <ItemGroup>
     <None Include="res\shaders\basic.frag" />
     <None Include="res\shaders\basic.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\fonts\39335_UniversCondensed.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

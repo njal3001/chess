@@ -87,6 +87,12 @@
     <ClCompile Include="src\graphics\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\chess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\fontmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\chess\graphics\window.h">
@@ -167,9 +173,21 @@
     <ClInclude Include="include\chess\graphics\texturearray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\chess\graphics\fontmanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\game\chess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\graphics\textureatlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.vert" />
     <None Include="res\shaders\basic.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\fonts\39335_UniversCondensed.ttf" />
   </ItemGroup>
 </Project>
