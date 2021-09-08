@@ -168,7 +168,7 @@
     <ClCompile Include="src\graphics\buffers\bufferlayout.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
     <ClCompile Include="src\graphics\buffers\vertexarray.cpp" />
-    <ClCompile Include="src\graphics\fontmanager.cpp" />
+    <ClCompile Include="src\graphics\fontatlas.cpp" />
     <ClCompile Include="src\graphics\group.cpp" />
     <ClCompile Include="src\graphics\image.cpp" />
     <ClCompile Include="src\graphics\layer.cpp" />
@@ -196,7 +196,7 @@
     <ClInclude Include="include\chess\graphics\buffers\bufferlayout.h" />
     <ClInclude Include="include\chess\graphics\buffers\indexbuffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\vertexarray.h" />
-    <ClInclude Include="include\chess\graphics\fontmanager.h" />
+    <ClInclude Include="include\chess\graphics\fontatlas.h" />
     <ClInclude Include="include\chess\graphics\group.h" />
     <ClInclude Include="include\chess\graphics\image.h" />
     <ClInclude Include="include\chess\graphics\layer.h" />
@@ -226,6 +226,11 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\fonts\39335_UniversCondensed.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\test.png" />
+    <Image Include="res\textures\test2.png" />
+    <Image Include="res\textures\test3.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

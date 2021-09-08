@@ -90,7 +90,7 @@
     <ClCompile Include="src\game\chess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\fontmanager.cpp">
+    <ClCompile Include="src\graphics\fontatlas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,7 +173,7 @@
     <ClInclude Include="include\chess\graphics\texturearray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\chess\graphics\fontmanager.h">
+    <ClInclude Include="include\chess\graphics\fontatlas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\chess\game\chess.h">
@@ -189,5 +189,16 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\fonts\39335_UniversCondensed.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\test2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\test3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

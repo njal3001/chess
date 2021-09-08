@@ -1,4 +1,4 @@
-#include "chess/graphics/fontmanager.h"
+#include "chess/graphics/fontatlas.h"
 #include <iostream>
 #include <algorithm>
 
@@ -6,11 +6,11 @@ namespace Chess
 {
     namespace Graphics
     {
-        FontManager::FontManager(const std::string& font_path, unsigned int font_height)
-            : m_font_path(font_path), m_font_height(font_height), m_library(0), m_face(0)
+        FontAtlas::FontAtlas(const std::string& font_path, unsigned int font_height, unsigned int atlas_height)
+            : m_font_path(font_path), m_font_height(font_height), m_atlas_heigth(atlas_height), m_library(0), m_face(0), m_texture(nullptr)
         {}
 
-        bool FontManager::init()
+        bool FontAtlas::init()
         {
             if (FT_Init_FreeType(&m_library))
             {
@@ -30,29 +30,31 @@ namespace Chess
             unsigned int w = 0;
             unsigned int h = 0;
 
-            for (char c = 32; c < 128; c++)
+            for (int c = 32; c < 128; c++)
             {
                 if (FT_Load_Char(m_face, c, FT_LOAD_RENDER))
                 {
                     std::cout << "Failed to load character: " << c << std::endl;
                     continue;
                 }
-                
+
                 w += g->bitmap.width;
                 h = std::max(h, g->bitmap.rows);
 
                 Character character =
                 {
-                    Maths::Vec2(g->bitmap.width, g->bitmap.rows),
-                    Maths::Vec2(g->bitmap_left, g->bitmap_top),
-                    g->advance.x
-                }
+                    Maths::Vec2((float)g->bitmap.width, (float)g->bitmap.rows),
+                    Maths::Vec2((float)g->bitmap_left, (float)g->bitmap_top),
+                    (unsigned int)g->advance.x
+                };
+
+                m_characters[(char)c] = character;
             }
 
             return true;
         }
 
-        FontManager::~FontManager()
+        FontAtlas::~FontAtlas()
         {
             FT_Done_Face(m_face);
             FT_Done_FreeType(m_library);

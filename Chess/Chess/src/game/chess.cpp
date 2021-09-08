@@ -26,7 +26,7 @@ namespace Chess
 			GLenum severity, GLsizei length, const GLchar* message, const void* user_param);
 
         Chess::Chess()
-            : m_window(nullptr)
+            : m_window(nullptr), m_font_atlas(nullptr)
         {}
 
         bool Chess::init()
@@ -59,8 +59,8 @@ namespace Chess
 
 			std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 
-            m_font_manager = new Graphics::FontManager("res/fonts/39335_UniversCondensed.ttf", 8);
-            if (!m_font_manager->init())
+            m_font_atlas = new Graphics::FontAtlas("res/fonts/39335_UniversCondensed.ttf", 8, 512);
+            if (!m_font_atlas->init())
             {
                 std::cout << "Could not initialize FontManager!" << std::endl;
                 return false;
@@ -72,6 +72,7 @@ namespace Chess
         Chess::~Chess()
         {
             delete m_window;
+            delete m_font_atlas;
 			glfwTerminate();
         }
 
@@ -91,7 +92,7 @@ namespace Chess
                 texture_array.add("res/textures/test3.png")
             };
 
-            srand(time(NULL));
+            srand((unsigned int)time(NULL));
 
             for (float y = 0.0f; y < 180.0f; y+= 8.0f)
             {
@@ -127,7 +128,7 @@ namespace Chess
                 m_window->update();
 
                 frames++;
-                if (timer.elapsed() > secs + 1.0f)
+                if (timer.elapsed() / 1000.0f > secs + 1.0f)
                 {
                     secs++;
                     std::cout << frames << " fps" << std::endl;
@@ -139,9 +140,11 @@ namespace Chess
 		void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,
 			GLenum severity, GLsizei length, const GLchar* message, const void* user_param)
 		{
-			fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-				(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-				type, severity, message);
+            if (type == GL_DEBUG_TYPE_ERROR)
+            {
+			    fprintf(stderr, "GL CALLBACK: ** GL ERROR ** type = 0x%x, severity = 0x%x, message = %s\n",
+				    type, severity, message);
+            }
 		}
     }
 }

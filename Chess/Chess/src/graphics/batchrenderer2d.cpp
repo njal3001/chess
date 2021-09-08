@@ -58,10 +58,10 @@ namespace Chess
         void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
             const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color)
         {
-            int r = color.x * 255.0f;
-            int g = color.y * 255.0f;
-            int b = color.z * 255.0f;
-            int a = color.w * 255.0f;
+            int r = (int)(color.x * 255.0f);
+            int g = (int)(color.y * 255.0f);
+            int b = (int)(color.z * 255.0f);
+            int a = (int)(color.w * 255.0f);
 
             unsigned int c = a << 24 | b << 16 | g << 8 | r;
 

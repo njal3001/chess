@@ -1,7 +1,7 @@
 #pragma once
-#include "vec3.h";
+#include "vec3.h"
 #include "vec4.h"
-#include "calc.h";
+#include "calc.h"
 
 namespace Chess 
 {

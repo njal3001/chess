@@ -2,6 +2,7 @@
 #include <FreeImage.h>
 #include <string>
 #include <GL/glew.h>
+#include "chess/maths/maths.h"
 
 namespace Chess
 {
@@ -16,6 +17,7 @@ namespace Chess
 
         public:
             Texture(const std::string& filename);
+            Texture(const Maths::Vec2& size, const void* pixels);
             ~Texture();
 
             void bind() const;
@@ -26,7 +28,7 @@ namespace Chess
             const GLsizei get_height() const;
 
         private:
-            GLuint load();
+            GLuint load(const void* pixels);
         };
     }
 }

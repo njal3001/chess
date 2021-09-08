@@ -1,6 +1,5 @@
 #pragma once
-#include <Windows.h>
-
+#include <ctime>
 namespace Chess
 {
 	namespace Utils
@@ -8,8 +7,7 @@ namespace Chess
 		class Timer
 		{
 		private:
-			LARGE_INTEGER m_start;
-			double m_frequency;
+			clock_t m_start;
 
 		public:
 			Timer();

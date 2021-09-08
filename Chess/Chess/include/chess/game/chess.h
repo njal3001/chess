@@ -1,5 +1,5 @@
 #include "chess/graphics/window.h"
-#include "chess/graphics/fontmanager.h"
+#include "chess/graphics/fontatlas.h"
 
 namespace Chess
 {
@@ -9,7 +9,7 @@ namespace Chess
         {
         private:
             Graphics::Window* m_window;
-            Graphics::FontManager* m_font_manager;
+            Graphics::FontAtlas* m_font_atlas;
 
         public:
             Chess();

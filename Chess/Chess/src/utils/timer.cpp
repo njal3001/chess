@@ -6,23 +6,18 @@ namespace Chess
 	{
 		Timer::Timer()
 		{
-			LARGE_INTEGER frequency;
-			QueryPerformanceFrequency(&frequency);
-			m_frequency = frequency.QuadPart;
-			QueryPerformanceCounter(&m_start);
+			reset();
 		}
 
 		void Timer::reset()
 		{
-			QueryPerformanceCounter(&m_start);
+			m_start = clock();
 		}
 
 		float Timer::elapsed()
 		{
-			LARGE_INTEGER current;
-			QueryPerformanceCounter(&current);
-			unsigned __int64 cycles = current.QuadPart - m_start.QuadPart;
-			return (float)(cycles * (1.0 / m_frequency));
+			clock_t ticks = clock() - m_start;
+			return (ticks / (float)CLOCKS_PER_SEC) * 1000;
 		}
 	}
 }
