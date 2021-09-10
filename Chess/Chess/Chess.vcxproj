@@ -206,7 +206,6 @@
     <ClInclude Include="include\chess\graphics\sprite.h" />
     <ClInclude Include="include\chess\graphics\texture.h" />
     <ClInclude Include="include\chess\graphics\texturearray.h" />
-    <ClInclude Include="include\chess\graphics\textureatlas.h" />
     <ClInclude Include="include\chess\graphics\uilayer.h" />
     <ClInclude Include="include\chess\graphics\window.h" />
     <ClInclude Include="include\chess\maths\calc.h" />

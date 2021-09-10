@@ -25,7 +25,7 @@ namespace Chess
             FT_Library m_library;
             const std::string m_font_path;
             const unsigned int m_font_height;
-            const unsigned int m_atlas_heigth;
+            const unsigned int m_atlas_height;
             FT_Face m_face;
             std::unordered_map<char, Character> m_characters;
             Texture* m_texture;
