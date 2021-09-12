@@ -22,7 +22,7 @@ namespace Chess
 			Window(const char* title, int width, int height);
 
             bool init();
-			void clear() const;
+			void clear() const;	
 			void update();
 			bool closed() const;
 

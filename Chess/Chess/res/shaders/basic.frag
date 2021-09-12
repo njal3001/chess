@@ -21,7 +21,7 @@ void main()
     if (fs_in.texture_layer >= 0)
     {
         ivec3 texture_size = textureSize(textures, 0);
-        frag_color = texture(textures, vec3(fs_in.uv, fs_in.texture_layer));
+        frag_color *= texture(textures, vec3(fs_in.uv, fs_in.texture_layer));
     }
 	color = frag_color;
 }

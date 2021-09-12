@@ -1,4 +1,5 @@
 #include "chess/graphics/group.h"
+#include "chess/graphics/batchrenderer2d.h"
 
 namespace Chess
 {
@@ -10,7 +11,7 @@ namespace Chess
 
 		Group::~Group()
 		{
-			for (int i = 0; i < m_renderables.size(); i++)
+			for (unsigned int i = 0; i < m_renderables.size(); i++)
 				delete m_renderables[i];
 		}
 
@@ -19,7 +20,7 @@ namespace Chess
 			m_renderables.push_back(renderable);
 		}
 
-		void Group::submit(Renderer2D* renderer) const
+		void Group::submit(BatchRenderer2D* renderer) const
 		{
 			renderer->push_transformation(m_transformation_matrix);
 

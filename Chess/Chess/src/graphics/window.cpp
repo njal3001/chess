@@ -11,8 +11,17 @@ namespace Chess
 		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 
 		Window::Window(const char* title, int width, int height)
-            : m_title(title), m_width(width), m_height(height)
-		{}
+            : m_title(title), m_width(width), m_height(height), m_window(nullptr)
+		{
+			for (int i = 0; i < GLFW_KEY_LAST; i++)
+				m_keys[i] = false;
+
+			for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; i++)
+				m_mouse_buttons[i] = false;
+
+			for (int i = 0; i < GLFW_KEY_LAST; i++)
+				m_keys[i] = false;
+		}
 
 		bool Window::init()
 		{
@@ -29,7 +38,7 @@ namespace Chess
 			glfwSetKeyCallback(m_window, key_callback);
 			glfwSetMouseButtonCallback(m_window, mouse_button_callback);
 			glfwSetCursorPosCallback(m_window, cursor_position_callback);
-			glfwSwapInterval(0.0); // Disable VSync
+			glfwSwapInterval(0); // Disable VSync
 
 			return true;
 		}
@@ -103,8 +112,8 @@ namespace Chess
 		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 		{
 			Window* win = (Window*)glfwGetWindowUserPointer(window);
-			win->m_mouse_pos.x = xpos;
-			win->m_mouse_pos.y = ypos;
+			win->m_mouse_pos.x = (float)xpos;
+			win->m_mouse_pos.y = (float)ypos;
 		}
 	}
 }

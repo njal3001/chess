@@ -1,5 +1,6 @@
 #include "chess/graphics/texturearray.h"
 #include "chess/graphics/image.h"
+#include <iostream>
 
 namespace Chess
 {
@@ -8,10 +9,11 @@ namespace Chess
         TextureArray::TextureArray(const unsigned int max_layers, const Maths::Vec2& max_size)
             : m_layers(0), m_max_size(max_size)
         {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
             glGenTextures(1, &m_id);
             bind();
 
-            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, max_size.x, max_size.y, max_layers,
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, (GLsizei)max_size.x, (GLsizei)max_size.y, max_layers,
                     0, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
             
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

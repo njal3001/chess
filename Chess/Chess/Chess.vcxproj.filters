@@ -63,12 +63,6 @@
     <ClCompile Include="src\graphics\layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\uilayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\graphics\renderer2d.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\group.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -134,9 +128,6 @@
     <ClInclude Include="include\chess\graphics\renderable2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\chess\graphics\renderer2d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\chess\graphics\sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -147,9 +138,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\chess\graphics\layer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\chess\graphics\uilayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\chess\graphics\group.h">

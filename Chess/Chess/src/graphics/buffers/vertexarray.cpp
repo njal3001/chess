@@ -20,7 +20,7 @@ namespace Chess
 			buffer.bind();
 
             const auto& elements = layout.get_elements();
-            for (int i = 0; i < elements.size(); i++)
+            for (unsigned i = 0; i < elements.size(); i++)
             {
                 const auto& element = elements[i];
                 glEnableVertexAttribArray(i);

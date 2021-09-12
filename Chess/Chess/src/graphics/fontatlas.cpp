@@ -6,8 +6,8 @@ namespace Chess
 {
     namespace Graphics
     {
-        FontAtlas::FontAtlas(const std::string& font_path, unsigned int font_height, unsigned int atlas_height)
-            : m_font_path(font_path), m_font_height(font_height), m_atlas_height(atlas_height), m_library(0), m_face(0), m_texture(nullptr)
+        FontAtlas::FontAtlas(const std::string& font_path, unsigned int font_height)
+            : m_font_path(font_path), m_font_height(font_height), m_library(0), m_face(0), m_texture(nullptr)
         {}
 
         bool FontAtlas::init()
@@ -26,13 +26,17 @@ namespace Chess
 
             FT_Set_Pixel_Sizes(m_face, 0, m_font_height);
 
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+
             FT_GlyphSlot g = m_face->glyph;
 
-            unsigned int tex_w = m_atlas_height;
-            unsigned int tex_h = m_atlas_height;
+            // TODO: Calculate dimensions needed to fit all characters
+
+            unsigned int tex_w = 512;
+            unsigned int tex_h = 512;
             unsigned int p_font_height = (m_face->size->metrics.height >> 6) + 1;
             
-            char* pixels = new char[tex_w * tex_h];
+            unsigned char* pixels = new unsigned char[tex_w * tex_h];
             unsigned int px = 0;
             unsigned int py = 0;
 
@@ -50,6 +54,12 @@ namespace Chess
                 {
                     px = 0;
                     py += p_font_height;
+                }
+
+                if (py + bmp->rows > tex_h)
+                {
+                    std::cout << "Font atlas size exceeded at character: " << c << std::endl;
+                    break;
                 }
                 
                 for (unsigned int row = 0; row < bmp->rows; row++)
@@ -74,7 +84,7 @@ namespace Chess
                 m_characters[(char)c] = character;
             }
 
-            m_texture = new Texture(Maths::Vec2((float)tex_w, (float)tex_h), pixels);
+            m_texture = new Texture(Maths::Vec2((float)tex_w, (float)tex_h), pixels, GL_RED, GL_RED);
 
             delete[] pixels;
             
@@ -83,8 +93,19 @@ namespace Chess
 
         FontAtlas::~FontAtlas()
         {
+            delete m_texture;
             FT_Done_Face(m_face);
             FT_Done_FreeType(m_library);
+        }
+
+        void FontAtlas::bind() const
+        {
+            m_texture->bind();
+        }
+
+        void FontAtlas::unbind() const
+        {
+            m_texture->unbind();
         }
     }
 }

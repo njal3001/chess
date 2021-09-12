@@ -1,5 +1,10 @@
 #pragma once
-#include "renderer2d.h"
+#include "buffers/vertexarray.h"
+#include "buffers/indexbuffer.h"
+#include "buffers/indexbuffer.h"
+#include "renderable2d.h"
+#include "texturearray.h"
+#include "fontatlas.h"
 #include <vector>
 
 namespace Chess
@@ -17,7 +22,7 @@ namespace Chess
 #define SHADER_TID_INDEX 2
 #define SHADER_COLOR_INDEX 3
 
-		class BatchRenderer2D : public Renderer2D
+		class BatchRenderer2D
 		{
 		private:
 			VertexArray* m_vao;
@@ -27,16 +32,26 @@ namespace Chess
 			VertexData* m_buffer_map;
             GLuint m_texture_array_id;
 
+			std::vector<Maths::Mat4x4> m_transformation_stack;
+			Maths::Mat4x4 m_transformation_back;
+
 		public:
-			BatchRenderer2D();
+			BatchRenderer2D(GLuint texture_array_id);
 			~BatchRenderer2D();
-			void begin() override;
+			void begin();
 			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
-				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color) override;
+				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, 
+                const Maths::Vec4& color);
 			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
-				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const TextureArray::Element& texture) override;
-			void end() override;
-			void flush() override;
+				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, 
+                const Maths::Vec4& color, const TextureArray::Element& texture);
+			void end();
+			void flush();
+
+			void push_transformation(Maths::Mat4x4 matrix, bool absolute = false);
+			Maths::Mat4x4 pop_transformation();
+			Maths::Mat4x4 peek_transformation();
+
 
 		private:
 			void init();

@@ -1,4 +1,4 @@
-#include "chess/utils/file.h";
+#include "chess/utils/file.h"
 #include <iostream>
 #include <sstream>
 

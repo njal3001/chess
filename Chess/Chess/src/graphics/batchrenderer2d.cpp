@@ -4,9 +4,11 @@ namespace Chess
 {
 	namespace Graphics
 	{
-		BatchRenderer2D::BatchRenderer2D()
-			: m_index_count(0), m_texture_array_id(0)
+		BatchRenderer2D::BatchRenderer2D(GLuint texture_array_id)
+			: m_index_count(0), m_texture_array_id(texture_array_id)
 		{
+			m_transformation_stack.push_back(Maths::Mat4x4::identity);
+			m_transformation_back = Maths::Mat4x4::identity;
 			init();
 		}
 
@@ -52,11 +54,22 @@ namespace Chess
 		void BatchRenderer2D::begin()
 		{
 			m_buffer_map = (VertexData*)m_vbo->map(GL_WRITE_ONLY);
-            m_texture_array_id = 0;
 		}
         
         void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
             const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color)
+        {
+			TextureArray::Element texture =
+			{
+				(unsigned int)0, (unsigned int)-1
+			};
+
+            submit(renderable, position, size, uv, color, texture);   
+        }
+
+        void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
+            const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, 
+            const Maths::Vec4& color, const TextureArray::Element& texture)
         {
             int r = (int)(color.x * 255.0f);
             int g = (int)(color.y * 255.0f);
@@ -65,23 +78,9 @@ namespace Chess
 
             unsigned int c = a << 24 | b << 16 | g << 8 | r;
 
-            submit(renderable, position, size, uv, c, -1, Maths::Vec2(1.0f, 1.0f));   
-        }
-
-        void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
-            const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const TextureArray::Element& texture)
-        {
-            if (m_texture_array_id != 0 && m_texture_array_id != texture.array_id)
-            {
-                std::cout << "Can't use multiple texture arrays in the same batch!" << std::endl;
-                return;
-            }
-            
-            m_texture_array_id = texture.array_id; 
-
-			submit(renderable, position, size, uv, 0, texture.layer, texture.uv_scale);   
+			submit(renderable, position, size, uv, c, texture.layer, texture.uv_scale);   
 		}
-			
+
 		void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
 			const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const Maths::Vec2& uv_scale)
 		{
@@ -132,6 +131,30 @@ namespace Chess
 
 			glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 			m_index_count = 0;
+		}
+
+		void BatchRenderer2D::push_transformation(Maths::Mat4x4 matrix, bool absolute)
+		{
+			m_transformation_stack.push_back(matrix);
+			if (absolute)
+				m_transformation_back = matrix;
+			else
+				m_transformation_back = m_transformation_back * matrix;
+		}
+
+		Maths::Mat4x4 BatchRenderer2D::pop_transformation()
+		{
+			Maths::Mat4x4 prev_matrix = m_transformation_back;
+			if (m_transformation_stack.size() > 1) {
+				m_transformation_stack.pop_back();
+				m_transformation_back = m_transformation_stack.back();
+			}
+			return prev_matrix;
+		}
+
+		Maths::Mat4x4 BatchRenderer2D::peek_transformation()
+		{
+			return m_transformation_back;
 		}
 	}
 }

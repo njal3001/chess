@@ -9,7 +9,7 @@ namespace Chess
 {
 	namespace Graphics
 	{
-		class Renderer2D;
+		class BatchRenderer2D;
 
 		struct VertexData
 		{
@@ -24,7 +24,7 @@ namespace Chess
 		public:
 			virtual ~Renderable2D() {};
 
-			virtual void submit(Renderer2D* renderer) const = 0;
+			virtual void submit(BatchRenderer2D* renderer) const = 0;
 		};
 	}
 }

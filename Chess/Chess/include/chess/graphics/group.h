@@ -1,6 +1,5 @@
 #pragma once
 #include "renderable2d.h"
-#include "renderer2d.h"
 
 namespace Chess
 {
@@ -17,7 +16,7 @@ namespace Chess
 			~Group();
 
 			void add(Renderable2D* renderable);
-			void submit(Renderer2D* renderer) const override;
+			void submit(BatchRenderer2D* renderer) const override;
 
 			Maths::Mat4x4& get_transformation_matrix() const;
 		};

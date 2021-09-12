@@ -1,22 +1,11 @@
 #include "chess/game/chess.h"
 #include <iostream> 
-#include "chess/utils/file.h"
-#include "chess/graphics/shader.h"
 #include "chess/maths/maths.h"
-#include "chess/graphics/buffers/buffer.h"
-#include "chess/graphics/buffers/vertexarray.h"
-#include "chess/graphics/buffers/indexbuffer.h"
-#include "chess/graphics/renderable2d.h"
 #include "chess/graphics/batchrenderer2d.h"
 #include "chess/graphics/sprite.h"
 #include "chess/utils/timer.h"
-#include "chess/graphics/uilayer.h"
-#include "chess/graphics/group.h"
-#include "chess/graphics/texture.h"
-#include "chess/graphics/texturearray.h"
-#include <FreeImage.h>
-#include <ft2build.h>
-#include <freetype/freetype.h>
+#include "chess/graphics/layer.h"
+#include "chess/graphics/fontatlas.h"
 
 namespace Chess
 {
@@ -59,10 +48,10 @@ namespace Chess
 
 			std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 
-            m_font_atlas = new Graphics::FontAtlas("res/fonts/39335_UniversCondensed.ttf", 8, 512);
+            m_font_atlas = new Graphics::FontAtlas("res/fonts/39335_UniversCondensed.ttf", 8);
             if (!m_font_atlas->init())
             {
-                std::cout << "Could not initialize FontManager!" << std::endl;
+                std::cout << "Could not initialize font atlas!" << std::endl;
                 return false;
             }
 
@@ -81,16 +70,17 @@ namespace Chess
 
             Graphics::Shader* shader = new Graphics::Shader("res/shaders/basic.vert",
                     "res/shaders/basic.frag");
-            Graphics::UILayer layer1(shader, 0.0f, 320.0f, 0.0f, 180.0f, -1.0f, 1.0f);
 
             Graphics::TextureArray texture_array(32, Maths::Vec2(8, 8));
-            GLuint texture_array_id = texture_array.get_id();
             Graphics::TextureArray::Element textures[] = 
             {
                 texture_array.add("res/textures/test.png"),
                 texture_array.add("res/textures/test2.png"),
                 texture_array.add("res/textures/test3.png")
             };
+
+            Graphics::Layer layer1(texture_array.get_id(), shader, 
+                    Maths::Mat4x4::create_orthographic(0.0f, 320.0f, 0.0f, 180.0f, -1.0f, 1.0f));
 
             srand((unsigned int)time(NULL));
 

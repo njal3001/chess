@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <unordered_map>
 #include "chess/maths/maths.h"
@@ -25,14 +26,16 @@ namespace Chess
             FT_Library m_library;
             const std::string m_font_path;
             const unsigned int m_font_height;
-            const unsigned int m_atlas_height;
             FT_Face m_face;
             std::unordered_map<char, Character> m_characters;
             Texture* m_texture;
 
         public:
-            FontAtlas(const std::string& font_path, unsigned int font_size, unsigned int atlas_height);
+            FontAtlas(const std::string& font_path, unsigned int font_size);
             ~FontAtlas();
+
+            void bind() const;
+            void unbind() const;
 
             bool init();
 

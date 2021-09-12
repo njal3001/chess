@@ -16,8 +16,8 @@ namespace Chess
             GLsizei m_width, m_height;
 
         public:
-            Texture(const std::string& filename);
-            Texture(const Maths::Vec2& size, const void* pixels);
+            Texture(const std::string& filename, GLuint internal_format, GLuint format);
+            Texture(const Maths::Vec2& size, const void* pixels, GLuint internal_format, GLuint format);
             ~Texture();
 
             void bind() const;
@@ -28,7 +28,7 @@ namespace Chess
             const GLsizei get_height() const;
 
         private:
-            GLuint load(const void* pixels);
+            GLuint load(const void* pixels, GLuint internal_format, GLuint format);
         };
     }
 }

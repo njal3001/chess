@@ -19,8 +19,9 @@ namespace Chess
 		public:
 			Sprite(const Maths::Vec2& position, const Maths::Vec2& size, const Maths::Vec4& color);
 			Sprite(const Maths::Vec2& position, const Maths::Vec2& size, const TextureArray::Element& texture);
+			Sprite(const Maths::Vec2& position, const Maths::Vec2& size, const Maths::Vec4& color, const TextureArray::Element& texture);
 
-			void submit(Renderer2D* renderer) const override;
+			void submit(BatchRenderer2D* renderer) const override;
 
 			const Maths::Vec3& get_position() const;
 			const Maths::Vec2& get_size() const;
