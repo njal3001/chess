@@ -6,10 +6,11 @@ namespace Chess
 {
     namespace Graphics
     {
-        FontAtlas::FontAtlas(const std::string& font_path, unsigned int font_height)
-            : m_font_path(font_path), m_font_height(font_height), m_library(0), m_face(0), m_texture(nullptr)
+        FontAtlas::FontAtlas(const std::string& font_path, unsigned int font_height, const Maths::Vec2& size)
+            : m_font_path(font_path), m_font_height(font_height), m_size(size), m_library(0), m_face(0), m_pixels(nullptr)
         {}
 
+        // TODO: Maybe just make a utils function that creates a font atlas instead
         bool FontAtlas::init()
         {
             if (FT_Init_FreeType(&m_library))
@@ -26,17 +27,14 @@ namespace Chess
 
             FT_Set_Pixel_Sizes(m_face, 0, m_font_height);
 
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
-
             FT_GlyphSlot g = m_face->glyph;
 
-            // TODO: Calculate dimensions needed to fit all characters
+            // TODO: Calculate dimensions needed to fit all characters, hardcoded for now
 
-            unsigned int tex_w = 512;
-            unsigned int tex_h = 512;
-            unsigned int p_font_height = (m_face->size->metrics.height >> 6) + 1;
+            unsigned int tex_w = (unsigned int)m_size.x;
+            unsigned int tex_h = (unsigned int)m_size.y;
             
-            unsigned char* pixels = new unsigned char[tex_w * tex_h];
+            m_pixels = new unsigned char[tex_w * tex_h];
             unsigned int px = 0;
             unsigned int py = 0;
 
@@ -53,7 +51,7 @@ namespace Chess
                 if (px + bmp->width >= tex_w)
                 {
                     px = 0;
-                    py += p_font_height;
+                    py += m_font_height;
                 }
 
                 if (py + bmp->rows > tex_h)
@@ -68,44 +66,55 @@ namespace Chess
                     {
                         int x = px + col;
                         int y = py + row;
-                        pixels[y * tex_w + x] = bmp->buffer[row * bmp->pitch + col];
+
+                        // TODO: Fix warning
+                        m_pixels[y * tex_w + x] = bmp->buffer[row * bmp->pitch + col];
                     }
                 }
+
+                std::cout << "Character: " << (char)c << std::endl;
+                std::cout << "UV0: " << Maths::Vec2(px / (float)tex_w, py / (float)tex_h) << std::endl;
+                std::cout << "UV1: " << Maths::Vec2((px + bmp->width) / (float)tex_w, (py + bmp->rows) / (float)tex_h)
+                    << std::endl;
 
                 Character character =
                 {
                     Maths::Vec2((float)g->bitmap.width, (float)g->bitmap.rows),
                     Maths::Vec2((float)g->bitmap_left, (float)g->bitmap_top),
                     (unsigned int)g->advance.x,
-                    Maths::Vec2(px / (float)tex_w, py / (float)tex_h),
+                    Maths::Vec2(px / (float)tex_w, 1 - py / (float)tex_h),
                     Maths::Vec2((px + bmp->width) / (float)tex_w, (py + bmp->rows) / (float)tex_h)
                 };
 
                 m_characters[(char)c] = character;
+
+                px += bmp->width + 1;
             }
 
-            m_texture = new Texture(Maths::Vec2((float)tex_w, (float)tex_h), pixels, GL_RED, GL_RED);
 
-            delete[] pixels;
-            
             return true;
         }
 
         FontAtlas::~FontAtlas()
         {
-            delete m_texture;
+            delete m_pixels;
             FT_Done_Face(m_face);
             FT_Done_FreeType(m_library);
         }
 
-        void FontAtlas::bind() const
+        const Maths::Vec2& FontAtlas::get_size() const
         {
-            m_texture->bind();
+            return m_size;
         }
 
-        void FontAtlas::unbind() const
+        unsigned char* FontAtlas::get_pixels() const
         {
-            m_texture->unbind();
+            return m_pixels;
+        }
+
+        const Character& FontAtlas::get_character(const char c) const
+        {
+            return m_characters.at(c);
         }
     }
 }

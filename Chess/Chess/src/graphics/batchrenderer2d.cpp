@@ -56,7 +56,7 @@ namespace Chess
 			m_buffer_map = (VertexData*)m_vbo->map(GL_WRITE_ONLY);
 		}
         
-        void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
+        void BatchRenderer2D::submit(const Maths::Vec3& position,
             const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const Maths::Vec4& color)
         {
 			TextureArray::Element texture =
@@ -64,10 +64,10 @@ namespace Chess
 				(unsigned int)0, (unsigned int)-1
 			};
 
-            submit(renderable, position, size, uv, color, texture);   
+            submit(position, size, uv, color, texture);   
         }
 
-        void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
+        void BatchRenderer2D::submit(const Maths::Vec3& position,
             const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, 
             const Maths::Vec4& color, const TextureArray::Element& texture)
         {
@@ -78,10 +78,10 @@ namespace Chess
 
             unsigned int c = a << 24 | b << 16 | g << 8 | r;
 
-			submit(renderable, position, size, uv, c, texture.layer, texture.uv_scale);   
+			submit(position, size, uv, c, texture.layer, texture.uv_scale);   
 		}
 
-		void BatchRenderer2D::submit(const Renderable2D* renderable, const Maths::Vec3& position,
+		void BatchRenderer2D::submit(const Maths::Vec3& position,
 			const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const Maths::Vec2& uv_scale)
 		{
 			m_buffer_map->position = m_transformation_back * position;

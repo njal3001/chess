@@ -14,7 +14,6 @@ namespace Chess
 
 		Layer::~Layer()
 		{
-			delete m_shader;
 			delete m_renderer;
 			for (unsigned int i = 0; i < m_renderables.size(); i++)
 				delete m_renderables[i];

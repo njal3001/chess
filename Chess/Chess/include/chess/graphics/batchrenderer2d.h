@@ -39,10 +39,10 @@ namespace Chess
 			BatchRenderer2D(GLuint texture_array_id);
 			~BatchRenderer2D();
 			void begin();
-			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
+			void submit(const Maths::Vec3& position,
 				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, 
                 const Maths::Vec4& color);
-			void submit(const Renderable2D* renderable, const Maths::Vec3& position,
+			void submit(const Maths::Vec3& position,
 				const Maths::Vec2& size, const std::vector<Maths::Vec2>& uv, 
                 const Maths::Vec4& color, const TextureArray::Element& texture);
 			void end();
@@ -55,7 +55,7 @@ namespace Chess
 
 		private:
 			void init();
-            void submit(const Renderable2D* renderable, const Maths::Vec3& position, const Maths::Vec2& size,
+            void submit(const Maths::Vec3& position, const Maths::Vec2& size,
                     const std::vector<Maths::Vec2>& uv, const unsigned int color, const int texture_layer, const Maths::Vec2& uv_scale);
 		};
 	}

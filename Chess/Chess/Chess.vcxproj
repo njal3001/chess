@@ -171,6 +171,7 @@
     <ClCompile Include="src\graphics\fontatlas.cpp" />
     <ClCompile Include="src\graphics\group.cpp" />
     <ClCompile Include="src\graphics\image.cpp" />
+    <ClCompile Include="src\graphics\label.cpp" />
     <ClCompile Include="src\graphics\layer.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="include\chess\graphics\fontatlas.h" />
     <ClInclude Include="include\chess\graphics\group.h" />
     <ClInclude Include="include\chess\graphics\image.h" />
+    <ClInclude Include="include\chess\graphics\label.h" />
     <ClInclude Include="include\chess\graphics\layer.h" />
     <ClInclude Include="include\chess\graphics\renderable2d.h" />
     <ClInclude Include="include\chess\graphics\shader.h" />
@@ -216,11 +218,13 @@
     <ClInclude Include="src\graphics\texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\basic.frag" />
-    <None Include="res\shaders\basic.vert" />
+    <None Include="res\shaders\sprite.frag" />
+    <None Include="res\shaders\sprite.vert" />
+    <None Include="res\shaders\text.frag" />
+    <None Include="res\shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="res\fonts\39335_UniversCondensed.ttf" />
+    <Font Include="res\fonts\upheavtt.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\test.png" />

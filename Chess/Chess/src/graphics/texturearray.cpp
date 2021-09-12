@@ -6,15 +6,15 @@ namespace Chess
 {
     namespace Graphics
     {
-        TextureArray::TextureArray(const unsigned int max_layers, const Maths::Vec2& max_size)
-            : m_layers(0), m_max_size(max_size)
+        TextureArray::TextureArray(const unsigned int max_layers, const Maths::Vec2& max_size, GLuint internal_format, GLuint format, const GLuint alignment)
+            : m_layers(0), m_max_size(max_size), m_format(format)
         {
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, alignment);
             glGenTextures(1, &m_id);
             bind();
 
-            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, (GLsizei)max_size.x, (GLsizei)max_size.y, max_layers,
-                    0, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, internal_format, (GLsizei)max_size.x, (GLsizei)max_size.y, max_layers,
+                    0, format, GL_UNSIGNED_BYTE, nullptr);
             
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -36,8 +36,22 @@ namespace Chess
             unsigned int layers = m_layers;
             m_layers++;
             bind();
-            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layers, image.get_width(),
-                    image.get_height(), 1, GL_BGR, GL_UNSIGNED_BYTE, image.get_bits());
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layers, width,
+                    height, 1, m_format, GL_UNSIGNED_BYTE, image.get_bits());
+            unbind();
+
+            const Maths::Vec2 uv_scale = Maths::Vec2(width / m_max_size.x, height / m_max_size.y);
+
+            return { m_id, layers, uv_scale };
+        }
+
+        const TextureArray::Element TextureArray::add(const void* pixels, const int width, const int height)
+        {
+            unsigned int layers = m_layers;
+            m_layers++;
+            bind();
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layers, width,
+                    height, 1, m_format, GL_UNSIGNED_BYTE, pixels);
             unbind();
 
             const Maths::Vec2 uv_scale = Maths::Vec2(width / m_max_size.x, height / m_max_size.y);

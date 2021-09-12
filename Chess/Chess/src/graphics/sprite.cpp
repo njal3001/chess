@@ -32,9 +32,9 @@ namespace Chess
 		void Sprite::submit(BatchRenderer2D* renderer) const
 		{
             if (m_texture.array_id != 0)
-			    renderer->submit(this, m_position, m_size, m_uv, m_color, m_texture);
+			    renderer->submit(m_position, m_size, m_uv, m_color, m_texture);
             else
-			    renderer->submit(this, m_position, m_size, m_uv, m_color);
+			    renderer->submit(m_position, m_size, m_uv, m_color);
 		}
 
 		const Maths::Vec3& Sprite::get_position() const
