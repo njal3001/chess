@@ -23,5 +23,5 @@ void main()
         ivec3 texture_size = textureSize(textures, 0);
         frag_color *= texture(textures, vec3(fs_in.uv, fs_in.texture_layer));
     }
-	color = frag_color;
+    color = frag_color;
 }

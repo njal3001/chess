@@ -29,7 +29,6 @@ namespace Chess
 
             FT_GlyphSlot g = m_face->glyph;
 
-            // TODO: Calculate dimensions needed to fit all characters, hardcoded for now
 
             unsigned int tex_w = (unsigned int)m_size.x;
             unsigned int tex_h = (unsigned int)m_size.y;
@@ -72,19 +71,13 @@ namespace Chess
                     }
                 }
 
-                std::cout << "Character: " << (char)c << std::endl;
-                std::cout << "UV0: " << Maths::Vec2(px / (float)tex_w, py / (float)tex_h) << std::endl;
-                std::cout << "UV1: " << Maths::Vec2((px + bmp->width) / (float)tex_w, (py + bmp->rows) / (float)tex_h)
-                    << std::endl;
 
-                Character character =
-                {
-                    Maths::Vec2((float)g->bitmap.width, (float)g->bitmap.rows),
-                    Maths::Vec2((float)g->bitmap_left, (float)g->bitmap_top),
-                    (unsigned int)g->advance.x,
-                    Maths::Vec2(px / (float)tex_w, 1 - py / (float)tex_h),
-                    Maths::Vec2((px + bmp->width) / (float)tex_w, (py + bmp->rows) / (float)tex_h)
-                };
+                Character character;
+                character.size = Maths::Vec2((float)g->bitmap.width, (float)g->bitmap.rows);
+                character.bearing = Maths::Vec2((float)g->bitmap_left, (float)g->bitmap_top);
+                character.advance = (unsigned int)g->advance.x;
+                character.uv0 = Maths::Vec2(px  / (float)tex_w, (py + bmp->rows) / (float)tex_h);
+                character.uv1 = Maths::Vec2((px + bmp->width) / (float)tex_w, py / (float)tex_h);
 
                 m_characters[(char)c] = character;
 

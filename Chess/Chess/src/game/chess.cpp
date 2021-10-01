@@ -78,6 +78,7 @@ namespace Chess
             Graphics::Shader* text_shader = new Graphics::Shader("res/shaders/text.vert",
                 "res/shaders/text.frag");
 
+            
             Graphics::TextureArray sprite_array(3, Maths::Vec2(8, 8), GL_RGB, GL_BGR, 4);
             Graphics::TextureArray::Element textures[] = 
             {
@@ -89,6 +90,7 @@ namespace Chess
             Graphics::Layer sprite_layer(sprite_array.get_id(), sprite_shader, 
                     Maths::Mat4x4::create_orthographic(0.0f, 320.0f, 0.0f, 180.0f, -1.0f, 1.0f));
 
+
             Maths::Vec2 atlas_size = m_font_atlas->get_size();
             unsigned char* atlas_pixels = m_font_atlas->get_pixels();
             Graphics::TextureArray text_array(1, atlas_size, GL_RED, GL_RED, 1);
@@ -99,20 +101,20 @@ namespace Chess
 
             srand((unsigned int)time(NULL));
 
-            /* for (float y = 0.0f; y < 180.0f; y+= 8.0f) */
-            /* { */
-            /*     for (float x = 0.0f; x < 320.0f; x += 8.0f) */
-            /*     { */
-            /*         if (rand() % 4) */
-            /*             sprite_layer.add(new Graphics::Sprite(Maths::Vec2(x, y), Maths::Vec2(8.0f, 8.0f), */ 
-            /*                         textures[rand() % 3])); */
-            /*         else */
-            /*             sprite_layer.add(new Graphics::Sprite(Maths::Vec2(x, y), Maths::Vec2(8.0f, 8.0f), */ 
-            /*                         Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f))); */
-            /*     } */
-            /* } */
+            for (float y = 0.0f; y < 180.0f; y+= 8.0f) 
+            { 
+                for (float x = 0.0f; x < 320.0f; x += 8.0f) 
+                { 
+                    if (rand() % 4) 
+                    sprite_layer.add(new Graphics::Sprite(Maths::Vec2(x, y), Maths::Vec2(8.0f, 8.0f), 
+                    textures[rand() % 3])); 
+                    else 
+                    sprite_layer.add(new Graphics::Sprite(Maths::Vec2(x, y), Maths::Vec2(8.0f, 8.0f), 
+                    Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f))); 
+                } 
+            }  
 
-            Graphics::Label* l1 = new Graphics::Label(m_font_atlas, font_texture, "test", Maths::Vec2(50.0f, 50.0f), Maths::Vec2(20.0f, 20.0f), Maths::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            Graphics::Label* l1 = new Graphics::Label(m_font_atlas, font_texture, "abcde\nqrst", Maths::Vec2(10.0f, 50.0f), Maths::Vec2(20.0f, 20.0f), Maths::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
             text_layer.add(l1);
 
@@ -131,7 +133,7 @@ namespace Chess
                 Maths::Vec2 light_pos = Maths::Vec2(-16.0f + mouse_pos.x * (16.0f / 480.0f), 
                         9.0f - mouse_pos.y * (9.0f / 270.0f));
                 sprite_shader->enable();
-                sprite_shader->set_uniform_2f("light_pos", light_pos);
+                //sprite_shader->set_uniform_2f("light_pos", light_pos);
                 sprite_layer.render();
                 text_layer.render();
                 m_window->update();
@@ -140,10 +142,10 @@ namespace Chess
                 if (timer.elapsed() / 1000.0f > secs + 1.0f)
                 {
                     secs++;
-                    //std::cout << frames << " fps" << std::endl;
+                    std::cout << frames << " fps" << std::endl;
                     frames = 0;
                 }
-            }
+            } 
 
             delete sprite_shader;
             delete text_shader;

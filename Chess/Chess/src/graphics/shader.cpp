@@ -1,4 +1,4 @@
-#include "chess/graphics/shader.h";
+#include "chess/graphics/shader.h"
 
 namespace Chess 
 {
@@ -26,6 +26,7 @@ namespace Chess
 
 			const char* vert_source = vert_source_str.c_str();
 			const char* frag_source = frag_source_str.c_str();
+
 
 			glShaderSource(vertex, 1, &vert_source, NULL);
 			glCompileShader(vertex);
@@ -61,20 +62,29 @@ namespace Chess
 
 				std::cout << "Failed to compile fragment shader!" << std::endl <<
 					&error[0] << std::endl;
-
+				
 				glDeleteShader(vertex);
 				glDeleteShader(fragment);
 				return 0;
 			}
-
+			
 			glAttachShader(program, vertex);
 			glAttachShader(program, fragment);
 
 			glLinkProgram(program);
 			glValidateProgram(program);
 
+			int params = -1;
+			glGetProgramiv(program, GL_LINK_STATUS, &params);
+
 			glDeleteShader(vertex);
 			glDeleteShader(fragment);
+
+			if (params == GL_FALSE)
+			{
+				std::cout << "Shader linking failed!" << std::endl;
+				return 0;
+			}
 
 			return program;
 		}
