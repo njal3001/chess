@@ -12,7 +12,7 @@ namespace Chess
 			Maths::Mat4x4& m_transformation_matrix;
 
 		public:
-			Group(Maths::Mat4x4& transformation_matrix);
+			Group(const Maths::Mat4x4& transformation_matrix);
 			~Group();
 
 			void add(Renderable2D* renderable);

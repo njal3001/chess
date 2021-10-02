@@ -16,7 +16,7 @@ namespace Chess
 
 
 		Sprite::Sprite(const Maths::Vec2& position, const Maths::Vec2& size, const Maths::Vec4& color, const TextureArray::Element& texture)
-			: m_position(Maths::Vec3(position.x, position.y, 0)), m_size(size), m_color(color), m_texture(texture)
+			: position(Maths::Vec3(position.x, position.y, 0)), size(size), color(color), m_texture(texture)
         {
             set_uv_defaults(); 
         }
@@ -32,29 +32,14 @@ namespace Chess
 		void Sprite::submit(BatchRenderer2D* renderer) const
 		{
             if (m_texture.array_id != 0)
-			    renderer->submit(m_position, m_size, m_uv, m_color, m_texture);
+			    renderer->submit(position, size, m_uv, color, m_texture);
             else
-			    renderer->submit(m_position, m_size, m_uv, m_color);
-		}
-
-		const Maths::Vec3& Sprite::get_position() const
-		{
-			return m_position;
-		}
-
-		const Maths::Vec2& Sprite::get_size() const
-		{
-			return m_size;
+			    renderer->submit(position, size, m_uv, color);
 		}
 
         const std::vector<Maths::Vec2>& Sprite::get_uv() const
         {
             return m_uv;
         }
-
-		const Maths::Vec4& Sprite::get_color() const
-		{
-			return m_color;
-		}
 	}
 }

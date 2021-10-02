@@ -90,6 +90,15 @@
     <ClCompile Include="src\graphics\label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\piece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\pieces.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\chess\graphics\window.h">
@@ -173,6 +182,15 @@
     <ClInclude Include="include\chess\graphics\label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\chess\game\board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\game\piece.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\chess\game\pieces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\sprite.vert" />
@@ -191,6 +209,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\test3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Pawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Board.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\King.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

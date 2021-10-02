@@ -5,7 +5,7 @@ namespace Chess
 {
 	namespace Graphics 
 	{
-		Group::Group(Maths::Mat4x4& transformation_matrix)
+		Group::Group(const Maths::Mat4x4& transformation_matrix)
 			: m_transformation_matrix(transformation_matrix)
 		{}
 

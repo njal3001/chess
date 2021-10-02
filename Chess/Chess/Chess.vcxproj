@@ -162,7 +162,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\board.cpp" />
     <ClCompile Include="src\game\chess.cpp" />
+    <ClCompile Include="src\game\piece.cpp" />
+    <ClCompile Include="src\game\pieces.cpp" />
     <ClCompile Include="src\graphics\batchrenderer2d.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\bufferlayout.cpp" />
@@ -189,7 +192,10 @@
     <ClCompile Include="src\utils\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\chess\game\board.h" />
     <ClInclude Include="include\chess\game\chess.h" />
+    <ClInclude Include="include\chess\game\piece.h" />
+    <ClInclude Include="include\chess\game\pieces.h" />
     <ClInclude Include="include\chess\graphics\batchrenderer2d.h" />
     <ClInclude Include="include\chess\graphics\buffers\buffer.h" />
     <ClInclude Include="include\chess\graphics\buffers\bufferlayout.h" />
@@ -227,6 +233,9 @@
     <Font Include="res\fonts\upheavtt.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\Board.png" />
+    <Image Include="res\textures\King.png" />
+    <Image Include="res\textures\Pawn.png" />
     <Image Include="res\textures\test.png" />
     <Image Include="res\textures\test2.png" />
     <Image Include="res\textures\test3.png" />
