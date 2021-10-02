@@ -1,3 +1,4 @@
+#pragma once
 #include "piece.h"
 
 namespace Chess

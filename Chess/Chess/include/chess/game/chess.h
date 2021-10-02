@@ -1,3 +1,4 @@
+#pragma once
 #include "chess/graphics/window.h"
 #include "chess/graphics/fontatlas.h"
 

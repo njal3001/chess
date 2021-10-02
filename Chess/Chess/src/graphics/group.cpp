@@ -30,7 +30,7 @@ namespace Chess
 			renderer->pop_transformation();
 		}
 
-		Maths::Mat4x4& Group::get_transformation_matrix() const
+		const Maths::Mat4x4& Group::get_transformation_matrix() const
 		{
 			return m_transformation_matrix;
 		}

@@ -9,7 +9,7 @@ namespace Chess
 		{
 		private:
 			std::vector<Renderable2D*> m_renderables;
-			Maths::Mat4x4& m_transformation_matrix;
+			Maths::Mat4x4 m_transformation_matrix;
 
 		public:
 			Group(const Maths::Mat4x4& transformation_matrix);
@@ -18,7 +18,7 @@ namespace Chess
 			void add(Renderable2D* renderable);
 			void submit(BatchRenderer2D* renderer) const override;
 
-			Maths::Mat4x4& get_transformation_matrix() const;
+			const Maths::Mat4x4& get_transformation_matrix() const;
 		};
 	}
 }

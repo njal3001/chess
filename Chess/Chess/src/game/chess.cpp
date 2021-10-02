@@ -80,7 +80,7 @@ namespace Chess
                 "res/shaders/text.frag");
 
             
-            auto* sprite_array = new Graphics::TextureArray(3, Maths::Vec2(8, 8), GL_RGB, GL_BGR, 4);
+            auto* sprite_array = new Graphics::TextureArray(3, Maths::Vec2(64, 64), GL_RGB, GL_RGBA, 4);
             Graphics::Layer game_layer(sprite_array->get_id(), sprite_shader, 
                     Maths::Mat4x4::create_orthographic(0.0f, 320.0f, 0.0f, 180.0f, -1.0f, 1.0f));
 

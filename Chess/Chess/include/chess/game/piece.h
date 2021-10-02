@@ -1,3 +1,4 @@
+#pragma once
 #include "chess/maths/maths.h"
 #include "chess/graphics/sprite.h"
 

@@ -1,4 +1,5 @@
 #include "chess/game/pieces.h"
+#include "chess/game/piece.h"
 #include "chess/game/board.h"
 
 namespace Chess
@@ -23,6 +24,8 @@ namespace Chess
                         moves.push_back(new_pos);
                 }
             }
+
+            return moves;
         }
 
         Pawn::Pawn(Piece::Color color, Board* board)
@@ -49,6 +52,8 @@ namespace Chess
                 if (m_board->in_bound(new_pos)  && m_board->has_color(new_pos, opposite(m_color)))
                     moves.push_back(new_pos);
             }
+
+            return moves;
         }
     }
 }
