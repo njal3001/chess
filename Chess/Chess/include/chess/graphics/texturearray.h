@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <string>
 #include "chess/maths/maths.h"
+#include <map>
 
 namespace Chess
 {
@@ -23,6 +24,7 @@ namespace Chess
             unsigned int m_layers;
             Maths::Vec2 m_max_size;
             GLuint m_format;
+            std::map<std::string, Element> m_textures;
 
         public:
             TextureArray(const unsigned int max_layers, const Maths::Vec2& max_size, GLuint internal_format, GLuint format, const GLuint alignment);

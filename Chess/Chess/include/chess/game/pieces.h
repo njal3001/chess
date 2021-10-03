@@ -8,43 +8,43 @@ namespace Chess
         class King : public Piece
         {
         public:
-            King(Piece::Color color, Board* board);
-            const std::vector<Maths::Vec2i>& valid_moves(Maths::Vec2i pos) const override;
+            King(Maths::Vec2i pos, Piece::Color color, Board* board);
+            std::vector<Maths::Vec2i> valid_moves() const override;
         };
 
         class Rook : public Piece
         {
         public:
-            Rook(Piece::Color color, Board* board);
-            const std::vector<Maths::Vec2i>& valid_moves(Maths::Vec2i pos) const override;
+            Rook(Maths::Vec2i pos, Piece::Color color, Board* board);
+            std::vector<Maths::Vec2i> valid_moves() const override;
         };
         
         class Bishop : public Piece
         {
         public:
-            Bishop(Piece::Color color, Board* board);
-            const std::vector<Maths::Vec2i>& valid_moves(Maths::Vec2i pos) const override;
+            Bishop(Maths::Vec2i pos, Piece::Color color, Board* board);
+            std::vector<Maths::Vec2i> valid_moves() const override;
         };
 
         class Queen : public Piece
         {
         public:
-            Queen(Piece::Color color, Board* board);
-            const std::vector<Maths::Vec2i>& valid_moves(Maths::Vec2i pos) const override;
+            Queen(Maths::Vec2i pos, Piece::Color color, Board* board);
+            std::vector<Maths::Vec2i> valid_moves() const override;
         };
 
         class Knight : public Piece
         {
         public:
-            Knight(Piece::Color color, Board* board);
-            const std::vector<Maths::Vec2i>& valid_moves(Maths::Vec2i pos) const override;
+            Knight(Maths::Vec2i pos, Piece::Color color, Board* board);
+            std::vector<Maths::Vec2i> valid_moves() const override;
         };
         
         class Pawn : public Piece
         {
         public:
-            Pawn(Piece::Color color, Board* board);
-            const std::vector<Maths::Vec2i>& valid_moves(Maths::Vec2i pos) const override;
+            Pawn(Maths::Vec2i pos, Piece::Color color, Board* board);
+            std::vector<Maths::Vec2i> valid_moves() const override;
         };
     }
 }

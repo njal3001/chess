@@ -20,6 +20,7 @@ namespace Chess
             static Color opposite(Color color);
 
         protected:
+            Maths::Vec2i m_pos;
             Color m_color;
             const Board* m_board;
 
@@ -27,12 +28,15 @@ namespace Chess
             Graphics::Sprite* m_sprite;
 
         protected:
-            Piece(Color color, const Board* board, const std::string& sprite_path);
+            Piece(const Maths::Vec2i& pos, Color color, const Board* board, const std::string& sprite_path);
         
         public:
-            virtual const std::vector<Maths::Vec2i>& valid_moves(Maths::Vec2i pos) const = 0;
+            virtual std::vector<Maths::Vec2i> valid_moves() const = 0;
 
             void render(Maths::Vec2i pos, Graphics::BatchRenderer2D* renderer);
+
+            void set_pos(const Maths::Vec2i& pos);
+            const Maths::Vec2i&  get_pos() const;
 
             Color get_color() const;
             Graphics::Sprite* get_sprite() const;

@@ -30,6 +30,10 @@ namespace Chess
 
         const TextureArray::Element TextureArray::add(const std::string& filename)
         {
+            // TODO: Bit of a quick fix, should have a resource manager maybe
+            if (m_textures.find(filename) != m_textures.end())
+                return m_textures[filename];
+
             Image image(filename);
             const int width = image.get_width();
             const int height = image.get_height();
@@ -42,7 +46,9 @@ namespace Chess
 
             const Maths::Vec2 uv_scale = Maths::Vec2(width / m_max_size.x, height / m_max_size.y);
 
-            return { m_id, layers, uv_scale };
+            m_textures[filename] = { m_id, layers, uv_scale };
+
+            return m_textures[filename];
         }
 
         const TextureArray::Element TextureArray::add(const void* pixels, const int width, const int height)

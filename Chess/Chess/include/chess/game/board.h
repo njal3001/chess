@@ -20,7 +20,7 @@ namespace Chess
             King* m_black_king;
         
         public:
-            Board(Maths::Vec2 pos, Graphics::TextureArray* texture_array);
+            Board(Maths::Vec2 pos, Maths::Vec2 size, Graphics::TextureArray* texture_array);
             ~Board();
 
             bool in_bound(Maths::Vec2i pos) const;
@@ -29,6 +29,9 @@ namespace Chess
             bool valid_move(Maths::Vec2i old_pos, Maths::Vec2i new_pos) const;
             bool is_threatened(Maths::Vec2i pos, Piece::Color color) const;
 
+            bool move_piece(Maths::Vec2i old_pos, Maths::Vec2i new_pos);
+
+            const Piece* get_piece(Maths::Vec2i pos) const;
             Graphics::TextureArray* get_texture_array() const;
             Graphics::Group* get_group() const;
         
