@@ -22,6 +22,11 @@ namespace Chess
 		class Renderable2D
 		{
 		public:
+			bool hidden;
+
+			Renderable2D()
+				: hidden(false) {};
+
 			virtual ~Renderable2D() {};
 
 			virtual void submit(BatchRenderer2D* renderer) const = 0;

@@ -11,7 +11,6 @@ namespace Chess
         {
         private:
             Maths::Vec2 m_pos;
-            std::vector<Piece*> m_pieces;
             Piece* m_board[8][8];
             Graphics::TextureArray* m_texture_array;
             Graphics::Sprite* m_sprite;
@@ -27,6 +26,7 @@ namespace Chess
             bool has_color(Maths::Vec2i pos, Piece::Color color) const;
             bool can_move_from(Maths::Vec2i pos) const;
             bool valid_move(Maths::Vec2i old_pos, Maths::Vec2i new_pos) const;
+            bool is_vacant(Maths::Vec2i pos) const;
             bool is_threatened(Maths::Vec2i pos, Piece::Color color) const;
 
             bool move_piece(Maths::Vec2i old_pos, Maths::Vec2i new_pos);

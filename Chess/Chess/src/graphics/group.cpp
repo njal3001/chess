@@ -22,6 +22,8 @@ namespace Chess
 
 		void Group::submit(BatchRenderer2D* renderer) const
 		{
+			if (hidden) return;
+
 			renderer->push_transformation(m_transformation_matrix);
 
 			for (const Renderable2D* renderable : m_renderables)

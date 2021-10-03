@@ -37,19 +37,20 @@ namespace Chess
         {
             std::vector<Maths::Vec2i> moves;
             int dir = m_color == Color::white ? -1 : 1;
-            int max_dist = m_pos.y == (m_color == Color::white ? 1 : 6) ? 2 : 1;
+            int max_dist = (m_pos.y == (m_color == Color::white ? 6 : 1)) ? 2 : 1;
+            std::cout << m_pos << std::endl;
 
             for (int dist = 1; dist <= max_dist; dist++) 
             {
                 auto new_pos = Maths::Vec2i(m_pos.x, m_pos.y + dir * dist);
-                if (m_board->in_bound(new_pos) && !m_board->has_color(new_pos, m_color))
+                if (m_board->is_vacant(new_pos))
                     moves.push_back(new_pos);
             }
 
-            for (int x = -1; x <- 1; x += 2)
+            for (int x = -1; x <= 1; x += 2)
             {
                 auto new_pos = Maths::Vec2i(m_pos.x + x, m_pos.y + dir);
-                if (m_board->in_bound(new_pos)  && m_board->has_color(new_pos, opposite(m_color)))
+                if (m_board->has_color(new_pos, opposite(m_color)))
                     moves.push_back(new_pos);
             }
 

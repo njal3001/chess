@@ -20,15 +20,18 @@ namespace Chess
 
             create_pieces(Piece::Color::black);
             create_pieces(Piece::Color::white);
-
-            for (Piece* piece : m_pieces)
-                m_group->add(piece->get_sprite());
         }
 
         Board::~Board()
         {
-            for (auto piece : m_pieces)
-                delete piece;
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    if (m_board[y][x])
+                        delete m_board[y][x];
+                }
+            }
         }
 
         void Board::create_pieces(Piece::Color color)
@@ -51,7 +54,7 @@ namespace Chess
             {
                 Pawn* pawn = new Pawn(Maths::Vec2i(x, start + dir), color, this);
                 m_board[start + dir][x] = pawn;
-                m_pieces.push_back(pawn);
+                m_group->add(pawn->get_sprite());
             }
         }
 
@@ -78,6 +81,8 @@ namespace Chess
 
         bool Board::has_color(Maths::Vec2i pos, Piece::Color color) const
         {
+            if (!in_bound(pos)) return false;
+
             Piece* piece = m_board[pos.y][pos.x];
             return piece && piece->get_color() == color;
         }
@@ -97,6 +102,11 @@ namespace Chess
             return true;
         }
 
+        bool Board::is_vacant(Maths::Vec2i pos) const
+        {
+            return in_bound(pos) && !m_board[pos.y][pos.x];
+        }
+
         bool Board::move_piece(Maths::Vec2i old_pos, Maths::Vec2i new_pos)
         {
             Piece* piece = m_board[old_pos.y][old_pos.x];
@@ -107,9 +117,20 @@ namespace Chess
 
             if (std::find(valid_moves.begin(), valid_moves.end(), new_pos) != valid_moves.end())
             {
-                m_board[old_pos.y][old_pos.x] = nullptr;
+
+                Piece* old_piece = m_board[new_pos.y][new_pos.x];
+                if (old_piece)
+                {
+                    // TODO: Quick fix, very error prone way of removing pieces
+                    old_piece->get_sprite()->hidden = true;
+                    delete old_piece;
+                }
+
                 m_board[new_pos.y][new_pos.x] = piece;
                 piece->set_pos(new_pos);
+
+                m_board[old_pos.y][old_pos.x] = nullptr;
+
                 return true;
             }
 

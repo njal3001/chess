@@ -31,6 +31,8 @@ namespace Chess
 
 		void Sprite::submit(BatchRenderer2D* renderer) const
 		{
+            if (hidden) return;
+
             if (m_texture.array_id != 0)
 			    renderer->submit(position, size, m_uv, color, m_texture);
             else

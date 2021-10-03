@@ -30,7 +30,8 @@ namespace Chess
 
 			m_renderer->begin();
 			for (const Renderable2D* renderable : m_renderables)
-				renderable->submit(m_renderer);
+					renderable->submit(m_renderer);
+
 			m_renderer->end();
 
 			m_renderer->flush();
