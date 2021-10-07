@@ -49,6 +49,46 @@ namespace Chess
                 dir = 1;
             }
 
+            // Bishops
+            for (int x = 2; x <= 5; x += 3)
+            {
+                Bishop* bishop = new Bishop(Maths::Vec2i(x, start), color, this);
+                m_board[start][x] = bishop;
+                m_group->add(bishop->get_sprite());
+            }
+
+            // Knights
+            for (int x = 1; x <= 6; x += 5)
+            {
+                Knight* knight = new Knight(Maths::Vec2i(x, start), color, this);
+                m_board[start][x] = knight;
+                m_group->add(knight->get_sprite());
+            }
+
+            // Rooks
+            for (int x = 0; x <= 7; x += 7)
+            {
+                Rook* rook = new Rook(Maths::Vec2i(x, start), color, this);
+                m_board[start][x] = rook;
+                m_group->add(rook->get_sprite());
+            }
+
+            // Queen
+            Queen* queen = new Queen(Maths::Vec2i(3, start), color, this);
+            m_board[start][3] = queen;
+            m_group->add(queen->get_sprite());
+
+
+            // King
+            King* king = new King(Maths::Vec2i(4, start), color, this);
+            m_board[start][4] = king;
+            m_group->add(king->get_sprite());
+
+            if (color == Piece::white)
+                m_white_king = king;
+            if (color == Piece::white)
+                m_black_king = king;
+
             // Pawns
             for (int x = 0; x < 8; x++)
             {
@@ -99,7 +139,22 @@ namespace Chess
         
         bool Board::is_threatened(Maths::Vec2i pos, Piece::Color color) const
         {
-            return true;
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    std::cout << Maths::Vec2i(x, y) << std::endl;
+                    Piece* piece = m_board[y][x];
+                    if (piece && (piece->get_color() != color))
+                    {
+                        auto moves = piece->valid_moves();
+                        if (std::find(moves.begin(), moves.end(), pos) != moves.end())
+                            return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         bool Board::is_vacant(Maths::Vec2i pos) const
@@ -115,9 +170,9 @@ namespace Chess
 
             auto valid_moves = piece->valid_moves();
 
+
             if (std::find(valid_moves.begin(), valid_moves.end(), new_pos) != valid_moves.end())
             {
-
                 Piece* old_piece = m_board[new_pos.y][new_pos.x];
                 if (old_piece)
                 {

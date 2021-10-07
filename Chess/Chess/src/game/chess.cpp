@@ -94,15 +94,21 @@ namespace Chess
                     Maths::Vec2i pos = moused_square();
                     const Piece* clicked_piece = m_board->get_piece(pos);
 
+                    std::cout << "Turn: " << m_turn << std::endl;
+                    std::cout << "Clicked square: " << pos << std::endl;
+
                     if (clicked_piece && clicked_piece->get_color() == m_turn)
                     {
                         select_piece(clicked_piece);
+
+                        std::cout << "Valid moves: " << std::endl;
+                        for (auto move : clicked_piece->valid_moves()) 
+                            std::cout << move << std::endl;
                     }
                     else if (m_selected)
                     {
                         if (m_board->move_piece(m_selected->get_pos(), pos)) {
                             m_turn = Piece::opposite(m_turn);
-                            std::cout << m_turn << std::endl;
                         }
 
                         select_piece(nullptr);

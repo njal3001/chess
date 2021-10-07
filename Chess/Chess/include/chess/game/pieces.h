@@ -5,6 +5,9 @@ namespace Chess
 {
     namespace Game
     {
+        std::vector<Maths::Vec2i> get_moves(const Board* board, const Piece* piece, 
+            const std::vector<Maths::Vec2i>& step_dirs);
+
         class King : public Piece
         {
         public:
