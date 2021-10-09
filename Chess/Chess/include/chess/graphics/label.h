@@ -4,24 +4,21 @@
 #include "fontatlas.h"
 #include "chess/maths/maths.h"
 
-namespace Chess
+namespace Game
 {
-    namespace Graphics
+    class Label : public Renderable2D
     {
-        class Label : public Renderable2D
-        {
-        private:
-            const FontAtlas* m_font_atlas;
-            const TextureArray::Element m_texture;
-            std::string m_text;
-            Maths::Vec2 m_position;
-            Maths::Vec2 m_size;
-            Maths::Vec4 m_color;
+    private:
+        const FontAtlas* m_font_atlas;
+        const TextureArray::Element m_texture;
+        std::string m_text;
+        Vec2 m_position;
+        Vec2 m_size;
+        Vec4 m_color;
 
-        public:
-            Label(const FontAtlas* font_atlas, const TextureArray::Element& texture, const std::string& text, const Maths::Vec2& position, const Maths::Vec2& size, const Maths::Vec4& color);
+    public:
+        Label(const FontAtlas* font_atlas, const TextureArray::Element& texture, const std::string& text, const Vec2& position, const Vec2& size, const Vec4& color);
 
-			void submit(BatchRenderer2D* renderer) const override;
-        };
-    }
+        void submit(BatchRenderer2D* renderer) const override;
+    };
 }

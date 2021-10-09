@@ -5,31 +5,28 @@
 #include "shader.h"
 
 
-namespace Chess
+namespace Game
 {
-	namespace Graphics
+	class BatchRenderer2D;
+
+	struct VertexData
 	{
-		class BatchRenderer2D;
+		Vec3 position;
+		Vec2 uv;
+		int texture_layer;
+		unsigned int color;
+	};
 
-		struct VertexData
-		{
-			Maths::Vec3 position;
-            Maths::Vec2 uv;
-            int texture_layer;
-			unsigned int color;
-		};
-	
-		class Renderable2D
-		{
-		public:
-			bool hidden;
+	class Renderable2D
+	{
+	public:
+		bool hidden;
 
-			Renderable2D()
-				: hidden(false) {};
+		Renderable2D()
+			: hidden(false) {};
 
-			virtual ~Renderable2D() {};
+		virtual ~Renderable2D() {};
 
-			virtual void submit(BatchRenderer2D* renderer) const = 0;
-		};
-	}
+		virtual void submit(BatchRenderer2D* renderer) const = 0;
+	};
 }

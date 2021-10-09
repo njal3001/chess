@@ -2,7 +2,9 @@
 
 int main()
 {
-    Chess::Game::Chess chess;
+    using namespace Game;
+    Chess chess;
+
     if (chess.init())
         chess.run();
     else

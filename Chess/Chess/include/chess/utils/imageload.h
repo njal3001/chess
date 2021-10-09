@@ -2,7 +2,7 @@
 #include <FreeImage.h>
 #include <GL/glew.h>
 
-namespace Chess
+namespace Game
 {
     namespace Utils
     {

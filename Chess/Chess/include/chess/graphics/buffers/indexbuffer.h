@@ -1,24 +1,21 @@
 #pragma once
 #include <GL/glew.h>
 
-namespace Chess
+namespace Game
 {
-	namespace Graphics
+	class IndexBuffer
 	{
-		class IndexBuffer
-		{
-		private:
-			GLuint m_buffer_id;
-			GLuint m_count;
+	private:
+		GLuint m_buffer_id;
+		GLuint m_count;
 
-		public:
-			IndexBuffer(GLushort* data, GLsizei count);
-			~IndexBuffer();
+	public:
+		IndexBuffer(GLushort* data, GLsizei count);
+		~IndexBuffer();
 
-			void bind() const;
-			void unbind() const;
+		void bind() const;
+		void unbind() const;
 
-			GLuint get_count() const;
-		};
-	}
+		GLuint get_count() const;
+	};
 }

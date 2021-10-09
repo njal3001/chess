@@ -4,7 +4,7 @@
 #include <fstream>
 #include <streambuf>
 
-namespace Chess
+namespace Game
 {
 	namespace Utils
 	{

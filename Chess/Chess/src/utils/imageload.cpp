@@ -1,7 +1,7 @@
 #include "chess/utils/imageload.h"
 #include <iostream>
 
-namespace Chess
+namespace Game
 {
     FIBITMAP* Utils::load_image(const char* filename)
     {

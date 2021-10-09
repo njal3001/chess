@@ -1,13 +1,10 @@
 #include "chess\maths\calc.h"
 
-namespace Chess
+namespace Game
 {
-	namespace Maths
+	float Calc::to_radians(float degrees)
 	{
-		float Calc::to_radians(float degrees)
-		{
-			return (float)(degrees * M_PI / 180.0f);
-		}
+		return (float)(degrees * M_PI / 180.0f);
 	}
 }
 

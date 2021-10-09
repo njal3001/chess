@@ -1,13 +1,10 @@
 #define _USE_MATH_DEFINES
 #include "math.h"
 
-namespace Chess 
+namespace Game 
 {
-	namespace Maths 
+	namespace Calc 
 	{
-		namespace Calc 
-		{
-			float to_radians(float degrees);
-		}
+		float to_radians(float degrees);
 	}
 }

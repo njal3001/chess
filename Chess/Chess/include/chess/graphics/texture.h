@@ -4,31 +4,28 @@
 #include <GL/glew.h>
 #include "chess/maths/maths.h"
 
-namespace Chess
+namespace Game
 {
-    namespace Graphics
+    class Texture
     {
-        class Texture
-        {
-        private:
-            std::string m_filename;
-            GLuint m_texture_id;
-            GLsizei m_width, m_height;
+    private:
+        std::string m_filename;
+        GLuint m_texture_id;
+        GLsizei m_width, m_height;
 
-        public:
-            Texture(const std::string& filename, GLuint internal_format, GLuint format);
-            Texture(const Maths::Vec2& size, const void* pixels, GLuint internal_format, GLuint format);
-            ~Texture();
+    public:
+        Texture(const std::string& filename, GLuint internal_format, GLuint format);
+        Texture(const Vec2& size, const void* pixels, GLuint internal_format, GLuint format);
+        ~Texture();
 
-            void bind() const;
-            void unbind() const;
+        void bind() const;
+        void unbind() const;
 
-            const GLuint get_id() const;
-            const GLsizei get_width() const;
-            const GLsizei get_height() const;
+        const GLuint get_id() const;
+        const GLsizei get_width() const;
+        const GLsizei get_height() const;
 
-        private:
-            GLuint load(const void* pixels, GLuint internal_format, GLuint format);
-        };
-    }
+    private:
+        GLuint load(const void* pixels, GLuint internal_format, GLuint format);
+    };
 }

@@ -4,21 +4,18 @@
 #include "buffer.h"
 #include "bufferlayout.h"
 
-namespace Chess
+namespace Game
 {
-	namespace Graphics
+	class VertexArray
 	{
-		class VertexArray
-		{
-			GLuint m_array_id;
-		
-		public:
-			VertexArray();
-			~VertexArray();
+		GLuint m_array_id;
+	
+	public:
+		VertexArray();
+		~VertexArray();
 
-			void add_buffer(const Buffer& buffer, const BufferLayout& layout);
-			void bind() const;
-			void unbind() const;
-		};
-	}
+		void add_buffer(const Buffer& buffer, const BufferLayout& layout);
+		void bind() const;
+		void unbind() const;
+	};
 }

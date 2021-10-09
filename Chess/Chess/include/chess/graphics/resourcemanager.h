@@ -4,35 +4,32 @@
 #include "texturearray.h"
 #include "layer.h"
 
-namespace Chess
+namespace Game
 {
-    namespace Graphics
+    class ResourceManager
     {
-        class ResourceManager
-        {
-        private:
-            FontAtlas* m_font_atlas;
-            Shader* m_sprite_shader;
-            Shader* m_text_shader;
-            TextureArray* m_sprite_array;
-            TextureArray* m_text_array;
-            Layer* m_game_layer;
-            Layer* m_text_layer;
+    private:
+        FontAtlas* m_font_atlas;
+        Shader* m_sprite_shader;
+        Shader* m_text_shader;
+        TextureArray* m_sprite_array;
+        TextureArray* m_text_array;
+        Layer* m_game_layer;
+        Layer* m_text_layer;
 
-        public:
-            ResourceManager();
-            ~ResourceManager();
+    public:
+        ResourceManager();
+        ~ResourceManager();
 
-            bool init();
+        bool init();
 
-            Shader* get_sprite_shader() const;
-            Shader* get_text_shader() const;
+        Shader* get_sprite_shader() const;
+        Shader* get_text_shader() const;
 
-            TextureArray* get_sprite_array() const;
-            TextureArray* get_text_array() const;
+        TextureArray* get_sprite_array() const;
+        TextureArray* get_text_array() const;
 
-            Layer* get_game_layer() const;
-            Layer* get_text_layer() const;
-        };
-    }
+        Layer* get_game_layer() const;
+        Layer* get_text_layer() const;
+    };
 }

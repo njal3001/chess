@@ -1,24 +1,21 @@
 #pragma once
 #include "renderable2d.h"
 
-namespace Chess
+namespace Game
 {
-	namespace Graphics
+	class Group : public Renderable2D
 	{
-		class Group : public Renderable2D
-		{
-		private:
-			std::vector<Renderable2D*> m_renderables;
-			Maths::Mat4x4 m_transformation_matrix;
+	private:
+		std::vector<Renderable2D*> m_renderables;
+		Mat4x4 m_transformation_matrix;
 
-		public:
-			Group(const Maths::Mat4x4& transformation_matrix);
-			~Group();
+	public:
+		Group(const Mat4x4& transformation_matrix);
+		~Group();
 
-			void add(Renderable2D* renderable);
-			void submit(BatchRenderer2D* renderer) const override;
+		void add(Renderable2D* renderable);
+		void submit(BatchRenderer2D* renderer) const override;
 
-			const Maths::Mat4x4& get_transformation_matrix() const;
-		};
-	}
+		const Mat4x4& get_transformation_matrix() const;
+	};
 }

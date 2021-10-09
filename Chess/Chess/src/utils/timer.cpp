@@ -1,23 +1,20 @@
 #include "chess/utils/timer.h"
 
-namespace Chess
+namespace Game
 {
-	namespace Utils
+	Timer::Timer()
 	{
-		Timer::Timer()
-		{
-			reset();
-		}
+		reset();
+	}
 
-		void Timer::reset()
-		{
-			m_start = clock();
-		}
+	void Timer::reset()
+	{
+		m_start = clock();
+	}
 
-		float Timer::elapsed()
-		{
-			clock_t ticks = clock() - m_start;
-			return (ticks / (float)CLOCKS_PER_SEC) * 1000;
-		}
+	float Timer::elapsed()
+	{
+		clock_t ticks = clock() - m_start;
+		return (ticks / (float)CLOCKS_PER_SEC) * 1000;
 	}
 }

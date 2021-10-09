@@ -1,19 +1,15 @@
 #pragma once
 #include <ctime>
-namespace Chess
+namespace Game
 {
-	namespace Utils
+	class Timer
 	{
-		class Timer
-		{
-		private:
-			clock_t m_start;
+	private:
+		clock_t m_start;
 
-		public:
-			Timer();
-			void reset();
-			float elapsed();
-		};
-
-	}
+	public:
+		Timer();
+		void reset();
+		float elapsed();
+	};
 }

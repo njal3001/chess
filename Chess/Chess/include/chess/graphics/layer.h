@@ -4,23 +4,20 @@
 #include "chess/maths/maths.h"
 #include <vector>
 
-namespace Chess
+namespace Game
 {
-	namespace Graphics
+	class Layer
 	{
-		class Layer
-		{
-		private:
-			BatchRenderer2D* m_renderer;
-			std::vector<Renderable2D*> m_renderables;
-			Shader* m_shader;
-			Maths::Mat4x4 m_projection_matrix;
-		
-		public:
-			Layer(GLuint texture_array_id, Shader* shader, Maths::Mat4x4 projection_matrix);
-			~Layer();
-			void add(Renderable2D* renderable);
-			void render();
-		};
-	}
+	private:
+		BatchRenderer2D* m_renderer;
+		std::vector<Renderable2D*> m_renderables;
+		Shader* m_shader;
+		Mat4x4 m_projection_matrix;
+	
+	public:
+		Layer(GLuint texture_array_id, Shader* shader, Mat4x4 projection_matrix);
+		~Layer();
+		void add(Renderable2D* renderable);
+		void render();
+	};
 }
