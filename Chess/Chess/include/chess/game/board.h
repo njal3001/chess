@@ -21,19 +21,19 @@ namespace Game
         ~Board();
 
         bool in_bound(Vec2i pos) const;
-        bool has_color(Vec2i pos, Piece::Color color) const;
+        bool has_color(Vec2i pos, Color color) const;
         bool can_move_from(Vec2i pos) const;
         bool valid_move(Vec2i old_pos, Vec2i new_pos) const;
         bool is_vacant(Vec2i pos) const;
-        bool is_threatened(Vec2i pos, Piece::Color color) const;
+        bool is_threatened(Vec2i pos, Color color) const;
 
         bool move_piece(Vec2i old_pos, Vec2i new_pos);
 
-        const Piece* get_piece(Vec2i pos) const;
+        Piece* get_piece(Vec2i pos) const;
         TextureArray* get_texture_array() const;
         Group* get_group() const;
     
     private:
-        void create_pieces(Piece::Color color);
+        void create_pieces(Color color);
     };
 }

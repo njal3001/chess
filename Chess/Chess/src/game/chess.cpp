@@ -16,7 +16,7 @@ namespace Game
         GLenum severity, GLsizei length, const GLchar* message, const void* user_param);
 
     Chess::Chess()
-        :  m_turn(Piece::Color::white), m_window(nullptr), m_resource_manager(nullptr), 
+        :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
             m_board(nullptr), m_selected(nullptr)
     {}
 
@@ -92,7 +92,7 @@ namespace Game
                 Vec2i pos = moused_square();
                 const Piece* clicked_piece = m_board->get_piece(pos);
 
-                std::cout << "Turn: " << m_turn << std::endl;
+                std::cout << "Turn: " << (int)m_turn << std::endl;
                 std::cout << "Clicked square: " << pos << std::endl;
 
                 if (clicked_piece && clicked_piece->get_color() == m_turn)
@@ -101,12 +101,12 @@ namespace Game
 
                     std::cout << "Valid moves: " << std::endl;
                     for (auto move : clicked_piece->valid_moves()) 
-                        std::cout << move << std::endl;
+                        std::cout << move.new_pos << std::endl;
                 }
                 else if (m_selected)
                 {
                     if (m_board->move_piece(m_selected->get_pos(), pos)) {
-                        m_turn = Piece::opposite(m_turn);
+                        m_turn = opposite(m_turn);
                     }
 
                     select_piece(nullptr);

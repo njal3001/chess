@@ -11,10 +11,10 @@ namespace Game
         Window* m_window;
         ResourceManager* m_resource_manager;
 
-        Piece::Color m_turn;
+        Color m_turn;
         Board* m_board;
         const Piece* m_selected;
-        std::vector<Vec2i> m_valid_moves;
+        std::vector<Move> m_valid_moves;
         
         bool m_prev_mouse_pressed;
 

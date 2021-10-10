@@ -3,48 +3,47 @@
 
 namespace Game
 {
-    std::vector<Vec2i> get_moves(const Board* board, const Piece* piece, 
-        const std::vector<Vec2i>& step_dirs);
 
     class King : public Piece
     {
     public:
-        King(Vec2i pos, Piece::Color color, Board* board);
-        std::vector<Vec2i> valid_moves() const override;
+        King(Vec2i pos, Color color, Board* board);
+        std::vector<Move> valid_moves() const override;
     };
 
     class Rook : public Piece
     {
     public:
-        Rook(Vec2i pos, Piece::Color color, Board* board);
-        std::vector<Vec2i> valid_moves() const override;
+        Rook(Vec2i pos, Color color, Board* board);
+        std::vector<Move> valid_moves() const override;
     };
     
     class Bishop : public Piece
     {
     public:
-        Bishop(Vec2i pos, Piece::Color color, Board* board);
-        std::vector<Vec2i> valid_moves() const override;
+        Bishop(Vec2i pos, Color color, Board* board);
+        std::vector<Move> valid_moves() const override;
     };
 
     class Queen : public Piece
     {
     public:
-        Queen(Vec2i pos, Piece::Color color, Board* board);
-        std::vector<Vec2i> valid_moves() const override;
+        Queen(Vec2i pos, Color color, Board* board);
+        std::vector<Move> valid_moves() const override;
     };
 
     class Knight : public Piece
     {
     public:
-        Knight(Vec2i pos, Piece::Color color, Board* board);
-        std::vector<Vec2i> valid_moves() const override;
+        Knight(Vec2i pos, Color color, Board* board);
+        std::vector<Move> valid_moves() const override;
     };
     
     class Pawn : public Piece
     {
     public:
-        Pawn(Vec2i pos, Piece::Color color, Board* board);
-        std::vector<Vec2i> valid_moves() const override;
+        Pawn(Vec2i pos, Color color, Board* board);
+        std::vector<Move> valid_moves() const override;
+        bool check_en_passant() const override;
     };
 }

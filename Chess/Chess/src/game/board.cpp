@@ -16,8 +16,8 @@ namespace Game
             for (int x = 0; x < 8; x++)
                 m_board[y][x] = nullptr;
 
-        create_pieces(Piece::Color::black);
-        create_pieces(Piece::Color::white);
+        create_pieces(Color::Black);
+        create_pieces(Color::White);
     }
 
     Board::~Board()
@@ -32,12 +32,12 @@ namespace Game
         }
     }
 
-    void Board::create_pieces(Piece::Color color)
+    void Board::create_pieces(Color color)
     {
         int start; 
         int dir = 0;
 
-        if (color == Piece::Color::white)
+        if (color == Color::White)
         {
             start = 7;
             dir = -1;
@@ -82,9 +82,9 @@ namespace Game
         m_board[start][4] = king;
         m_group->add(king->get_sprite());
 
-        if (color == Piece::white)
+        if (color == Color::White)
             m_white_king = king;
-        if (color == Piece::white)
+        if (color == Color::White)
             m_black_king = king;
 
         // Pawns
@@ -96,7 +96,7 @@ namespace Game
         }
     }
 
-    const Piece* Board::get_piece(Vec2i pos) const
+    Piece* Board::get_piece(Vec2i pos) const
     {
         return m_board[pos.y][pos.x];
     }
@@ -117,7 +117,7 @@ namespace Game
         return pos.x >= 0 && pos.x < 8 && pos.y >= 0 && pos.y < 8;
     }
 
-    bool Board::has_color(Vec2i pos, Piece::Color color) const
+    bool Board::has_color(Vec2i pos, Color color) const
     {
         if (!in_bound(pos)) return false;
 
@@ -135,19 +135,24 @@ namespace Game
         return true;
     }
     
-    bool Board::is_threatened(Vec2i pos, Piece::Color color) const
+    bool Board::is_threatened(Vec2i pos, Color color) const
     {
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
             {
-                std::cout << Vec2i(x, y) << std::endl;
                 Piece* piece = m_board[y][x];
                 if (piece && (piece->get_color() != color))
                 {
                     auto moves = piece->valid_moves();
-                    if (std::find(moves.begin(), moves.end(), pos) != moves.end())
-                        return true;
+                    for (const auto& move : moves)
+                    {
+                        if (move.new_pos == pos)
+                        {
+                            std::cout << "Threat by: " << piece->get_pos() << std::endl;
+                            return true;
+                        }
+                    }
                 }
             }
         }
@@ -166,25 +171,66 @@ namespace Game
         if (!piece)
             return false;
 
-        auto valid_moves = piece->valid_moves();
+        std::vector<Move> valid_moves = piece->valid_moves();
 
-
-        if (std::find(valid_moves.begin(), valid_moves.end(), new_pos) != valid_moves.end())
+        for (auto move: valid_moves)
         {
-            Piece* old_piece = m_board[new_pos.y][new_pos.x];
-            if (old_piece)
+            if (move.new_pos == new_pos)
             {
-                // TODO: Quick fix, very error prone way of removing pieces
-                old_piece->get_sprite()->hidden = true;
-                delete old_piece;
+                if (move.captured)
+                {
+                    Vec2i captured_pos = move.captured->get_pos();
+                    m_board[captured_pos.y][captured_pos.x] = nullptr;
+                }
+
+                m_board[new_pos.y][new_pos.x] = piece;
+
+                m_board[old_pos.y][old_pos.x] = nullptr;
+
+                King* king;
+                if (piece->get_color() == Color::White)
+                    king = m_black_king;
+                else 
+                    king = m_white_king;
+                
+                if (is_threatened(king->get_pos(), king->get_color()))
+                {
+                    std::cout << "Illegal move!" << std::endl;
+                    // Undo move
+                    m_board[old_pos.y][old_pos.x] = piece;
+                    m_board[new_pos.y][new_pos.x] = nullptr;
+
+                    if (move.captured)
+                    {
+                        Vec2i captured_pos = move.captured->get_pos();
+                        m_board[captured_pos.y][captured_pos.x] = move.captured;
+                    }
+
+                    return false;
+                }
+                else 
+                {
+                    piece->move(new_pos);
+                    if (move.captured)
+                    {
+                        // Delete captured piece 
+                        move.captured->get_sprite()->hidden = true;
+                        delete move.captured;
+                    }
+                }
+
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        Piece* curr_piece = m_board[y][x];
+                        if (curr_piece && curr_piece != piece && curr_piece->get_color() == piece->get_color())
+                            curr_piece->pass();
+                    }
+                }
+
+                return true;
             }
-
-            m_board[new_pos.y][new_pos.x] = piece;
-            piece->set_pos(new_pos);
-
-            m_board[old_pos.y][old_pos.x] = nullptr;
-
-            return true;
         }
 
         return false;
