@@ -14,7 +14,7 @@ namespace Game
     Piece::Piece(const Vec2i& pos, Color color, const Board* board, const std::string& sprite_path)
         :  m_color(color), m_board(board), m_prev_pos(pos), m_has_moved(false), m_was_moved_prev_turn(false), m_dead(false)
     {
-        TextureArray::Element texture = board->get_texture_array()->add(sprite_path);
+        TextureArray::Element texture = board->get_resource_manager()->get_sprite_array()->add(sprite_path);
         m_sprite = new Sprite(Vec2(), Vec2(8, 8),
             color == Color::White ? Vec4(1, 1, 1, 1) : Vec4(0, 0, 0, 1),  texture);
 

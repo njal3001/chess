@@ -2,14 +2,15 @@
 
 namespace Game
 {
-    Board::Board(const Vec2& pos, const Vec2& size, TextureArray* texture_array)
-        :m_pos(pos), m_texture_array(texture_array), m_sprite(nullptr)
+    Board::Board(const Vec2& pos, const Vec2& size, ResourceManager* resource_manager)
+        :m_pos(pos), m_resource_manager(resource_manager), m_sprite(nullptr)
     {
         m_group = new Group(Mat4x4::create_translation(
             Vec3(pos.x, pos.y, 0)) * Mat4x4::create_scale(Vec3(size.x, size.y, 1)));
-        auto texture = m_texture_array->add("res/textures/Board.png");
+        auto texture = m_resource_manager->get_sprite_array()->add("res/textures/Board.png");
         m_sprite = new Sprite(Vec2(), Vec2(64, 64), texture);
         m_group->add(m_sprite);
+        m_resource_manager->get_game_layer()->add(m_group);
 
 
         for (int y = 0; y < 8; y++)
@@ -97,9 +98,9 @@ namespace Game
         return m_board[pos.y][pos.x];
     }
 
-    TextureArray* Board::get_texture_array() const
+    ResourceManager* Board::get_resource_manager() const
     {
-        return m_texture_array;
+        return m_resource_manager;
     }
 
     Group* Board::get_group() const

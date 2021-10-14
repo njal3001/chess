@@ -60,8 +60,7 @@ namespace Game
             return false;
         }
 
-        m_board = new Board(Vec2(0, 0), Vec2(1, 1), m_resource_manager->get_sprite_array());
-        m_resource_manager->get_game_layer()->add(m_board->get_group());
+        m_board = new Board(Vec2(0, 0), Vec2(1, 1), m_resource_manager);
 
         srand((unsigned int)time(NULL));
 
