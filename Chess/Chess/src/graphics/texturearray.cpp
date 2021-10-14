@@ -30,7 +30,7 @@ namespace Game
     {
         // TODO: Bit of a quick fix, should have a resource manager maybe
         if (m_textures.find(filename) != m_textures.end())
-            return m_textures[filename];
+             return m_textures[filename];
 
         Image image(filename);
         const int width = image.get_width();

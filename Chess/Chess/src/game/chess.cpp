@@ -90,7 +90,7 @@ namespace Game
             if (check_click())
             {
                 Vec2i pos = moused_square();
-                const Piece* clicked_piece = m_board->get_piece(pos);
+                Piece* clicked_piece = m_board->get_piece(pos);
 
                 std::cout << "Turn: " << (int)m_turn << std::endl;
                 std::cout << "Clicked square: " << pos << std::endl;
@@ -100,16 +100,26 @@ namespace Game
                     select_piece(clicked_piece);
 
                     std::cout << "Valid moves: " << std::endl;
-                    for (auto move : clicked_piece->valid_moves()) 
+                    for (auto& move : clicked_piece->valid_moves()) 
                         std::cout << move.new_pos << std::endl;
                 }
                 else if (m_selected)
                 {
-                    if (m_board->move_piece(m_selected->get_pos(), pos)) {
-                        m_turn = opposite(m_turn);
-                    }
+                    for (auto& move : m_valid_moves) 
+                    {
+                        if (move.new_pos == pos)
+                        {
+                            std::string hash = create_state_hash();
+                            if (m_board->move_piece(m_selected, move))
+                            {
+                                m_turn = opposite(m_turn);
+                                select_piece(nullptr);
+                                m_history.push_back(hash);
+                            }
 
-                    select_piece(nullptr);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -154,13 +164,27 @@ namespace Game
         return val;
     }
 
-    void Chess::select_piece(const Piece* piece)
+    void Chess::select_piece(Piece* piece)
     {
         m_selected = piece;
         if (piece)
             m_valid_moves = piece->valid_moves();
-        else
-            m_valid_moves.clear();
+    }
+
+    std::string Chess::create_state_hash()
+    {
+        std::string hash;
+        for (int y = 0; y < 8; y++)
+            for (int x = 0; x < 8; x++)
+            {
+                Piece* piece = m_board->get_piece(Vec2i(x, y));
+                if (piece)
+                    hash += piece->get_id();
+                else
+                    hash += (char)0;
+            }
+        
+        return hash;
     }
 
     void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,

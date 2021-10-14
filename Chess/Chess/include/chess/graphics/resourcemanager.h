@@ -9,7 +9,6 @@ namespace Game
     class ResourceManager
     {
     private:
-        FontAtlas* m_font_atlas;
         Shader* m_sprite_shader;
         Shader* m_text_shader;
         TextureArray* m_sprite_array;

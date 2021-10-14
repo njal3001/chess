@@ -39,10 +39,10 @@ namespace Game
 
         Vec2 atlas_size = font_atlas.get_size();
         unsigned char* atlas_pixels = font_atlas.get_pixels();
-        TextureArray text_array(1, atlas_size, GL_RED, GL_RED, 1);
-        TextureArray::Element font_texture = text_array.add(atlas_pixels, (int)atlas_size.x, (int)atlas_size.y);
+        m_text_array = new TextureArray(1, atlas_size, GL_RED, GL_RED, 1);
+        TextureArray::Element font_texture = m_text_array->add(atlas_pixels, (int)atlas_size.x, (int)atlas_size.y);
 
-        m_text_layer = new Layer(text_array.get_id(), m_text_shader, 
+        m_text_layer = new Layer(m_text_array->get_id(), m_text_shader, 
                 Mat4x4::create_orthographic(0.0f, 320.0f, 0.0f, 180.0f, -1.0f, 1.0f));
     }
 

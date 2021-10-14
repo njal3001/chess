@@ -5,7 +5,7 @@
 namespace Game
 {
 
-    King::King(Vec2i pos, Color color, Board* board)
+    King::King(const Vec2i& pos, Color color, Board* board)
         : Piece(pos, color, board, "res/textures/King.png")
     {}
 
@@ -15,7 +15,7 @@ namespace Game
             Vec2i(0, 1), Vec2i(0, -1), Vec2i(-1, 1), Vec2i(-1, -1), Vec2i(-1, 0)}, false, false);
     }
 
-    Pawn::Pawn(Vec2i pos, Color color, Board* board)
+    Pawn::Pawn(const Vec2i& pos, Color color, Board* board)
         : Piece(pos, color, board, "res/textures/Pawn.png")
     {}
 
@@ -27,15 +27,13 @@ namespace Game
 
     std::vector<Move> Pawn::valid_moves() const
     {
-        int dir = m_color == Color::White ? -1 : 1;
-
-        std::vector<Vec2i> empty_offset = {Vec2i(0, 1 * dir)};
+        std::vector<Vec2i> empty_offset = {Vec2i(0, 1 * m_forward)};
         if (!m_has_moved)
-            empty_offset.push_back(Vec2i(0, 2 * dir));
+            empty_offset.push_back(Vec2i(0, 2 * m_forward));
         
         std::vector<Move> moves = get_spot_moves(empty_offset, true, false);
 
-        std::vector<Move> threat_moves = get_spot_moves({Vec2i(1, dir), Vec2i(-1, dir)}, false, true);
+        std::vector<Move> threat_moves = get_spot_moves({Vec2i(1, m_forward), Vec2i(-1, m_forward)}, false, true);
 
         for (auto move: threat_moves)
             moves.push_back(move);
@@ -47,16 +45,16 @@ namespace Game
         Piece* left_piece = m_board->get_piece(left_pos);
 
         if (right_piece && right_piece->get_color() != m_color && right_piece->check_en_passant())
-            moves.push_back({right_pos + Vec2i(0, dir), right_piece});
+            moves.push_back({right_pos + Vec2i(0, m_forward), right_piece});
 
         if (left_piece && left_piece->get_color() != m_color && left_piece->check_en_passant())
-            moves.push_back({left_pos + Vec2i(0, dir), left_piece});
+            moves.push_back({left_pos + Vec2i(0, m_forward), left_piece});
 
         return moves;
     }
 
 
-    Bishop::Bishop(Vec2i pos, Color color, Board* board)
+    Bishop::Bishop(const Vec2i& pos, Color color, Board* board)
         : Piece(pos, color, board, "res/textures/Bishop.png")
     {}
 
@@ -73,7 +71,7 @@ namespace Game
         return get_beam_moves(step_dirs);
     }
 
-    Knight::Knight(Vec2i pos, Color color, Board* board)
+    Knight::Knight(const Vec2i& pos, Color color, Board* board)
         : Piece(pos, color, board, "res/textures/Horse.png")
     {}
 
@@ -97,7 +95,7 @@ namespace Game
     }
 
 
-    Rook::Rook(Vec2i pos, Color color, Board* board)
+    Rook::Rook(const Vec2i& pos, Color color, Board* board)
         : Piece(pos, color, board, "res/textures/Tower.png")
     {}
 
@@ -115,7 +113,7 @@ namespace Game
     }
 
 
-    Queen::Queen(Vec2i pos, Color color, Board* board)
+    Queen::Queen(const Vec2i& pos, Color color, Board* board)
         : Piece(pos, color, board, "res/textures/Queen.png")
     {}
 

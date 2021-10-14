@@ -13,8 +13,9 @@ namespace Game
 
         Color m_turn;
         Board* m_board;
-        const Piece* m_selected;
+        Piece* m_selected;
         std::vector<Move> m_valid_moves;
+        std::vector<std::string> m_history;
         
         bool m_prev_mouse_pressed;
 
@@ -30,7 +31,8 @@ namespace Game
 
         Vec2i moused_square() const;
         bool check_click();
-        void select_piece(const Piece* pice);
+        void select_piece(Piece* pice);
+        std::string create_state_hash();
 
         // Declare outside of class instead?
         friend void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,

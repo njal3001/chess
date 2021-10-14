@@ -238,12 +238,13 @@
     <Font Include="res\fonts\upheavtt.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\Bishop.png" />
     <Image Include="res\textures\Board.png" />
+    <Image Include="res\textures\Horse.png" />
     <Image Include="res\textures\King.png" />
     <Image Include="res\textures\Pawn.png" />
-    <Image Include="res\textures\test.png" />
-    <Image Include="res\textures\test2.png" />
-    <Image Include="res\textures\test3.png" />
+    <Image Include="res\textures\Queen.png" />
+    <Image Include="res\textures\Tower.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

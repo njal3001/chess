@@ -217,15 +217,6 @@
     <Font Include="res\fonts\upheavtt.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\textures\test.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\test2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\test3.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\textures\Pawn.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -233,6 +224,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\King.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Bishop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Horse.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Queen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Tower.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

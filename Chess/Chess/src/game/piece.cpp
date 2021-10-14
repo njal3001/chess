@@ -4,23 +4,24 @@
 
 namespace Game
 {
+    char Piece::id = 1;
+
     Color opposite(Color color)
     {
-        switch (color)
-        {
-            case Color::White : return Color::Black; break;
-            case Color::Black : return Color::White; break;
-        }
+        return (Color)(((int)color + 1) % 2);
     }
 
     Piece::Piece(const Vec2i& pos, Color color, const Board* board, const std::string& sprite_path)
-        :  m_color(color), m_board(board), m_prev_pos(pos), m_has_moved(false), m_was_moved_prev_turn(false)
+        :  m_color(color), m_board(board), m_prev_pos(pos), m_has_moved(false), m_was_moved_prev_turn(false), m_dead(false)
     {
         TextureArray::Element texture = board->get_texture_array()->add(sprite_path);
         m_sprite = new Sprite(Vec2(), Vec2(8, 8),
             color == Color::White ? Vec4(1, 1, 1, 1) : Vec4(0, 0, 0, 1),  texture);
 
         set_pos(pos);
+
+        m_id = id++;
+        m_forward = color == Color::White ? -1 : 1;
     }
 
     bool Piece::check_en_passant() const
@@ -72,10 +73,20 @@ namespace Game
         return m_sprite;
     }
 
-    void Piece::render(Vec2i pos, BatchRenderer2D* renderer)
+    char Piece::get_id() const
     {
-        m_sprite->position = Vec3(pos.x, pos.y, 0);
-        m_sprite->submit(renderer);
+        return m_id;
+    }
+
+    bool Piece::is_dead() const
+    {
+        return m_dead;
+    }
+
+    void Piece::kill() 
+    {
+        m_dead = true;
+        m_sprite->hidden = true;
     }
 
     std::vector<Move> Piece::get_beam_moves(const std::vector<Vec2i>& step_dirs) const
@@ -96,7 +107,7 @@ namespace Game
                 else if (m_board->has_color(new_pos, opposite(m_color)))
                 {
                     Piece* captured = m_board->get_piece(new_pos);
-                    Move move = {new_pos, captured};
+                    Move move = { new_pos, captured};
                     moves.push_back(move);
                     break;
                 }

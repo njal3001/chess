@@ -9,8 +9,8 @@ namespace Game
 
     enum class Color
     {
-        White,
-        Black
+        White = 0,
+        Black = 1
     };
 
     Color opposite(Color color);
@@ -24,14 +24,19 @@ namespace Game
     class Piece
     {
     protected:
-        bool m_was_moved_prev_turn;
-        bool m_has_moved;
-        Vec2i m_prev_pos;
         Vec2i m_pos;
+        Vec2i m_prev_pos;
+        char m_id;
         Color m_color;
         const Board* m_board;
+        bool m_was_moved_prev_turn;
+        bool m_has_moved;
+        int m_forward;
 
     private:
+        static char id;
+
+        bool m_dead;
         Sprite* m_sprite;
 
     protected:
@@ -45,14 +50,15 @@ namespace Game
         virtual bool check_castle(const Vec2i& new_pos) const;
         bool has_moved() const;
 
-        void render(Vec2i pos, BatchRenderer2D* renderer);
-
         void pass();
         void move(const Vec2i& new_pos);
         const Vec2i& get_pos() const;
 
         Color get_color() const;
         Sprite* get_sprite() const;
+        char get_id() const;
+        bool is_dead() const;
+        void kill();
 
     private: 
         void set_pos(const Vec2i& pos);
