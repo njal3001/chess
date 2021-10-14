@@ -107,7 +107,7 @@ namespace Game
                 else if (m_board->has_color(new_pos, opposite(m_color)))
                 {
                     Piece* captured = m_board->get_piece(new_pos);
-                    Move move = { new_pos, captured};
+                    Move move = {new_pos, captured};
                     moves.push_back(move);
                     break;
                 }
