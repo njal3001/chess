@@ -12,9 +12,9 @@ namespace Game
         ResourceManager* m_resource_manager;
 
         Color m_turn;
+        Vec2i m_selected;
         Board* m_board;
-        Piece* m_selected;
-        std::vector<Move> m_valid_moves;
+        std::unordered_map<Vec2i, std::vector<Move>> m_valid_moves;
         std::vector<std::string> m_history;
         
         bool m_prev_mouse_pressed;
@@ -31,7 +31,6 @@ namespace Game
 
         Vec2i moused_square() const;
         bool check_click();
-        void select_piece(Piece* pice);
         std::string create_state_hash();
 
         // Declare outside of class instead?

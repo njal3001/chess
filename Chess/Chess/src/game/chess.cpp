@@ -17,7 +17,7 @@ namespace Game
 
     Chess::Chess()
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
-            m_board(nullptr), m_selected(nullptr)
+            m_board(nullptr), m_selected(Vec2i(-1, -1)), m_prev_mouse_pressed(false)
     {}
 
     bool Chess::init()
@@ -62,8 +62,6 @@ namespace Game
 
         m_board = new Board(Vec2(0, 0), Vec2(1, 1), m_resource_manager);
 
-        srand((unsigned int)time(NULL));
-
         return true;
     }
 
@@ -82,38 +80,40 @@ namespace Game
         float secs = 0;
         unsigned int frames = 0;
 
+        m_valid_moves = m_board->valid_moves(m_turn);
         while (!m_window->closed())
         {
             render();
 
             if (check_click())
             {
-                Vec2i pos = moused_square();
-                Piece* clicked_piece = m_board->get_piece(pos);
+                Vec2i clicked_pos = moused_square();
+                Piece* clicked_piece = m_board->get_piece(clicked_pos);
 
                 std::cout << "Turn: " << (int)m_turn << std::endl;
-                std::cout << "Clicked square: " << pos << std::endl;
+                std::cout << "Clicked square: " << clicked_pos << std::endl;
 
                 if (clicked_piece && clicked_piece->get_color() == m_turn)
                 {
-                    select_piece(clicked_piece);
+                    m_selected = clicked_pos;
 
                     std::cout << "Valid moves: " << std::endl;
-                    for (auto& move : clicked_piece->valid_moves()) 
+                    for (auto& move : m_valid_moves[m_selected]) 
                         std::cout << move.new_pos << std::endl;
                 }
-                else if (m_selected)
+                else if (m_board->in_bound(m_selected))
                 {
-                    for (auto& move : m_valid_moves) 
+                    for (auto& move : m_valid_moves[m_selected]) 
                     {
-                        if (move.new_pos == pos)
+                        if (move.new_pos == clicked_pos)
                         {
                             std::string hash = create_state_hash();
                             if (m_board->move_piece(m_selected, move))
                             {
                                 m_turn = opposite(m_turn);
-                                select_piece(nullptr);
+                                m_selected = Vec2i(-1, -1);
                                 m_history.push_back(hash);
+                                m_valid_moves = m_board->valid_moves(m_turn);
                             }
 
                             break;
@@ -136,7 +136,20 @@ namespace Game
     {
         m_window->clear();
 
-        m_resource_manager->get_sprite_shader()->enable();
+
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                Vec2i pos = Vec2i(x, y);
+                Piece* piece = m_board->get_piece(pos);
+                if (piece)
+                {
+                    piece->get_sprite()->position = Vec3(pos.x * 8, pos.y * 8, 0);
+                }
+            }
+
+        }
         m_resource_manager->get_game_layer()->render();
 
         m_window->update();
@@ -161,13 +174,6 @@ namespace Game
         m_prev_mouse_pressed = pressed;
 
         return val;
-    }
-
-    void Chess::select_piece(Piece* piece)
-    {
-        m_selected = piece;
-        if (piece)
-            m_valid_moves = piece->valid_moves();
     }
 
     std::string Chess::create_state_hash()

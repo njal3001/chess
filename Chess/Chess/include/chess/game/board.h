@@ -26,19 +26,22 @@ namespace Game
         bool in_bound(const Vec2i& pos) const;
         bool has_color(const Vec2i& pos, Color color) const;
         bool is_vacant(const Vec2i& pos) const;
-        bool is_threatened(Piece* piece) const;
+        bool is_threatened(const Vec2i& pos) const;
 
-        bool move_piece(Piece* piece, const Move& move);
+        bool move_piece(const Vec2i& pos, const Move& move);
+        std::unordered_map<Vec2i, std::vector<Move>> valid_moves(Color color);
 
         Piece* get_piece(const Vec2i& pos) const;
+        Vec2i get_pos(const Piece* piece) const;
         ResourceManager* get_resource_manager() const;
         Group* get_group() const;
-        std::string get_prev_state(unsigned int index = 0);
+        // std::string get_prev_state(unsigned int index = 0);
     
     private:
         void create_pieces(Color color);
-        void pass_turn(Piece* moved_piece);
-        void add_piece(Piece* piece);
+        // void pass_turn(Piece* moved_piece);
+        void add_piece(Piece* piece, const Vec2i& pos);
         void set_pos(const Vec2i& pos, Piece* piece);
+        bool is_valid_move(const Vec2i& pos, const Move& move);
     };
 }

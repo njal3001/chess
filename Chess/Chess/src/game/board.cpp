@@ -45,32 +45,32 @@ namespace Game
         // Bishops
         for (int x = 2; x <= 5; x += 3)
         {
-            Bishop* bishop = new Bishop(Vec2i(x, start), color, this);
-            add_piece(bishop);
+            Bishop* bishop = new Bishop(color, this);
+            add_piece(bishop, Vec2i(x, start));
         }
 
         // Knights
         for (int x = 1; x <= 6; x += 5)
         {
-            Knight* knight = new Knight(Vec2i(x, start), color, this);
-            add_piece(knight);
+            Knight* knight = new Knight(color, this);
+            add_piece(knight, Vec2i(x, start));
         }
 
         // Rooks
         for (int x = 0; x <= 7; x += 7)
         {
-            Rook* rook = new Rook(Vec2i(x, start), color, this);
-            add_piece(rook);
+            Rook* rook = new Rook(color, this);
+            add_piece(rook, Vec2i(x, start));
         }
 
         // Queen
-        Queen* queen = new Queen(Vec2i(3, start), color, this);
-        add_piece(queen);
+        Queen* queen = new Queen(color, this);
+        add_piece(queen, Vec2i(3, start));
 
 
         // King
-        King* king = new King(Vec2i(4, start), color, this);
-        add_piece(king);
+        King* king = new King(color, this);
+        add_piece(king, Vec2i(4, start));
 
         if (color == Color::White)
             m_white_king = king;
@@ -80,21 +80,21 @@ namespace Game
         // Pawns
         for (int x = 0; x < 8; x++)
         {
-            Pawn* pawn = new Pawn(Vec2i(x, start + dir), color, this);
-            add_piece(pawn);
+            Pawn* pawn = new Pawn(color, this);
+            add_piece(pawn, Vec2i(x, start + dir));
         }
     }
 
-    void Board::add_piece(Piece* piece)
+    void Board::add_piece(Piece* piece, const Vec2i& pos)
     {
         m_pieces.push_back(piece);
-        const Vec2i& pos = piece->get_pos();
         m_board[pos.y][pos.x] = piece;
         m_group->add(piece->get_sprite());
     }
 
     Piece* Board::get_piece(const Vec2i& pos) const
     {
+        if (!in_bound(pos)) return nullptr;
         return m_board[pos.y][pos.x];
     }
 
@@ -107,7 +107,6 @@ namespace Game
     {
         return m_group;
     }
-
 
     bool Board::in_bound(const Vec2i& pos) const
     {
@@ -122,18 +121,27 @@ namespace Game
         return piece && piece->get_color() == color;
     }
     
-    bool Board::is_threatened(Piece* piece) const
+    bool Board::is_threatened(const Vec2i& pos) const
     {
-        for (Piece* p: m_pieces)
+        Piece* piece = get_piece(pos);
+        if (!piece)
+            return false;
+
+        for (int y = 0; y < 8; y++)
         {
-                if (!p->is_dead() && piece->get_color() != p->get_color())
+            for (int x = 0; x < 8; x++)
+            {
+                Vec2i other_pos = Vec2i(x, y); 
+                Piece* other_piece = get_piece(other_pos);
+                if (other_piece && piece->get_color() != other_piece->get_color())
                 {
-                    for (const auto& move : piece->valid_moves())
+                    for (const Move& move : other_piece->moves(other_pos))
                     {
-                        if (move.new_pos == piece->get_pos())
+                        if (move.new_pos == pos)
                             return true;
                     }
                 }
+            }
         }
 
         return false;
@@ -149,15 +157,73 @@ namespace Game
         m_board[pos.y][pos.x] = piece;
     }
 
-    bool Board::move_piece(Piece* piece, const Move& move)
+    // TODO: Make void instead?
+    bool Board::move_piece(const Vec2i& pos, const Move& move)
     {
+        Piece* piece = get_piece(pos);
         if (!piece)
             return false;
         
-        if (move.captured)
-            set_pos(move.captured->get_pos(), nullptr);
+        if (in_bound(move.captured_pos))
+            set_pos(move.captured_pos, nullptr);
 
-        set_pos(piece->get_pos(), nullptr);
+        set_pos(pos, nullptr);
+        set_pos(move.new_pos, piece);
+
+        return true;
+    }
+
+    std::unordered_map<Vec2i, std::vector<Move>> Board::valid_moves(Color color)
+    {
+        std::unordered_map<Vec2i, std::vector<Move>> valid_moves_map;
+        for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    Vec2i pos = Vec2i(x, y);
+                    Piece* piece = get_piece(pos);
+                    if (piece && piece->get_color() == color)
+                    {
+                        std::vector<Move> valid_moves;
+                        for (const Move& move : piece->moves(pos))
+                        {
+                            if (is_valid_move(pos, move))
+                                valid_moves.push_back(move);
+                        }
+                        valid_moves_map[pos] = valid_moves;
+                    }
+                }
+            }
+
+        return valid_moves_map;
+    }
+    
+    Vec2i Board::get_pos(const Piece* piece) const
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                Vec2i pos = Vec2i(x, y);
+                if (get_piece(pos) == piece) return pos;
+            }
+        }
+
+        return Vec2i(-1, -1);
+    }
+    
+    bool Board::is_valid_move(const Vec2i& pos, const Move& move)
+    {
+        Piece* piece = get_piece(pos);
+        if (!piece)
+            return false;
+        
+        Piece* captured = get_piece(pos);
+
+        if (captured) 
+            set_pos(move.captured_pos, nullptr);
+
+        set_pos(pos, nullptr);
         set_pos(move.new_pos, piece);
 
         King* king;
@@ -166,40 +232,15 @@ namespace Game
         else 
             king = m_white_king;
         
-        if (is_threatened(king))
-        {
-            std::cout << "Illegal move!" << std::endl;
-            // Undo move
-            set_pos(piece->get_pos(), piece);
-            set_pos(move.new_pos, nullptr);
+        bool valid = !is_threatened(get_pos(king));
 
-            if (move.captured)
-                set_pos(move.captured->get_pos(), move.captured);
+        // Undo move
+        set_pos(pos, piece);
+        set_pos(move.new_pos, nullptr);
 
-            return false;
-        }
-        else 
-        {
-            piece->move(move.new_pos);
-            if (move.captured)
-                move.captured->kill();
+        if (captured)
+            set_pos(move.captured_pos, captured);
 
-            pass_turn(piece);
-
-            return true;
-        }
-    }
-
-    void Board::pass_turn(Piece* moved_piece)
-    {
-        for (int y = 0; y < 8; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
-                Piece* curr_piece = m_board[y][x];
-                if (curr_piece && curr_piece != moved_piece && curr_piece->get_color() == moved_piece->get_color())
-                    curr_piece->pass();
-            }
-        }
+        return valid;
     }
 }
