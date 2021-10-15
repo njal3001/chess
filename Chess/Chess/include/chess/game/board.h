@@ -29,7 +29,7 @@ namespace Game
         bool is_threatened(const Vec2i& pos) const;
 
         bool move_piece(const Vec2i& pos, const Move& move);
-        std::unordered_map<Vec2i, std::vector<Move>> valid_moves(Color color);
+        std::unordered_map<Piece*, std::vector<Move>> valid_moves(Color color);
 
         Piece* get_piece(const Vec2i& pos) const;
         Vec2i get_pos(const Piece* piece) const;

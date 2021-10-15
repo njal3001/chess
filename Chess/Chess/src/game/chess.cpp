@@ -17,7 +17,7 @@ namespace Game
 
     Chess::Chess()
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
-            m_board(nullptr), m_selected(Vec2i(-1, -1)), m_prev_mouse_pressed(false)
+            m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false)
     {}
 
     bool Chess::init()
@@ -95,23 +95,24 @@ namespace Game
 
                 if (clicked_piece && clicked_piece->get_color() == m_turn)
                 {
-                    m_selected = clicked_pos;
+                    m_selected = clicked_piece;
+                    m_selected_pos = clicked_pos;
 
                     std::cout << "Valid moves: " << std::endl;
-                    for (auto& move : m_valid_moves[m_selected]) 
+                    for (auto& move : m_valid_moves[clicked_piece]) 
                         std::cout << move.new_pos << std::endl;
                 }
-                else if (m_board->in_bound(m_selected))
+                else if (m_selected)
                 {
                     for (auto& move : m_valid_moves[m_selected]) 
                     {
                         if (move.new_pos == clicked_pos)
                         {
                             std::string hash = create_state_hash();
-                            if (m_board->move_piece(m_selected, move))
+                            if (m_board->move_piece(m_selected_pos, move))
                             {
                                 m_turn = opposite(m_turn);
-                                m_selected = Vec2i(-1, -1);
+                                m_selected = nullptr;
                                 m_history.push_back(hash);
                                 m_valid_moves = m_board->valid_moves(m_turn);
                             }
@@ -136,7 +137,6 @@ namespace Game
     {
         m_window->clear();
 
-
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -145,7 +145,7 @@ namespace Game
                 Piece* piece = m_board->get_piece(pos);
                 if (piece)
                 {
-                    piece->get_sprite()->position = Vec3(pos.x * 8, pos.y * 8, 0);
+                    piece->get_sprite()->position = Vec3(pos.x * 8, 56 - pos.y * 8, 0);
                 }
             }
 

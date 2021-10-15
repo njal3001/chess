@@ -44,6 +44,6 @@ namespace Game
     public:
         Pawn(Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
-        bool check_en_passant() const override;
+        // bool check_en_passant() const override;
     };
 }

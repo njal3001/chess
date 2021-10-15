@@ -173,9 +173,9 @@ namespace Game
         return true;
     }
 
-    std::unordered_map<Vec2i, std::vector<Move>> Board::valid_moves(Color color)
+    std::unordered_map<Piece*, std::vector<Move>> Board::valid_moves(Color color)
     {
-        std::unordered_map<Vec2i, std::vector<Move>> valid_moves_map;
+        std::unordered_map<Piece*, std::vector<Move>> valid_moves_map;
         for (int y = 0; y < 8; y++)
             {
                 for (int x = 0; x < 8; x++)
@@ -190,7 +190,7 @@ namespace Game
                             if (is_valid_move(pos, move))
                                 valid_moves.push_back(move);
                         }
-                        valid_moves_map[pos] = valid_moves;
+                        valid_moves_map[piece] = valid_moves;
                     }
                 }
             }

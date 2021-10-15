@@ -12,9 +12,10 @@ namespace Game
         ResourceManager* m_resource_manager;
 
         Color m_turn;
-        Vec2i m_selected;
+        Piece* m_selected;
+        Vec2i m_selected_pos;
         Board* m_board;
-        std::unordered_map<Vec2i, std::vector<Move>> m_valid_moves;
+        std::unordered_map<Piece*, std::vector<Move>> m_valid_moves;
         std::vector<std::string> m_history;
         
         bool m_prev_mouse_pressed;
