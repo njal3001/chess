@@ -74,7 +74,7 @@ namespace Game
 
         if (color == Color::White)
             m_white_king = king;
-        if (color == Color::White)
+        if (color == Color::Black)
             m_black_king = king;
 
         // Pawns
@@ -96,6 +96,11 @@ namespace Game
     {
         if (!in_bound(pos)) return nullptr;
         return m_board[pos.y][pos.x];
+    }
+    
+    const King* Board::get_king(Color color) const
+    {
+        return color == Color::White ? m_white_king : m_black_king;
     }
 
     ResourceManager* Board::get_resource_manager() const
@@ -137,7 +142,7 @@ namespace Game
                 {
                     for (const Move& move : other_piece->moves(other_pos))
                     {
-                        if (move.new_pos == pos)
+                        if (move.captured_pos == pos)
                             return true;
                     }
                 }
@@ -145,6 +150,11 @@ namespace Game
         }
 
         return false;
+    }
+    
+    bool Board::king_threatened(Color color) const
+    {
+        return is_threatened(get_pos(get_king(color)));
     }
 
     bool Board::is_vacant(const Vec2i& pos) const
@@ -212,15 +222,35 @@ namespace Game
         return Vec2i(-1, -1);
     }
     
+    std::unordered_map<Piece*, Vec2i> Board::get_pieces() const
+    {
+        std::unordered_map<Piece*, Vec2i> pieces;
+        for (Piece* piece : m_pieces)
+            pieces[piece] = Vec2i(-1, -1);
+
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                Vec2i pos = Vec2i(x, y);
+                Piece* piece = get_piece(pos);
+                if (piece)
+                    pieces[piece] = pos;
+            }
+        }
+
+        return pieces;
+    }
+    
     bool Board::is_valid_move(const Vec2i& pos, const Move& move)
     {
         Piece* piece = get_piece(pos);
         if (!piece)
             return false;
         
-        Piece* captured = get_piece(pos);
+        Piece* captured = get_piece(move.captured_pos);
 
-        if (captured) 
+        if (captured)
             set_pos(move.captured_pos, nullptr);
 
         set_pos(pos, nullptr);
@@ -228,9 +258,9 @@ namespace Game
 
         King* king;
         if (piece->get_color() == Color::White)
-            king = m_black_king;
-        else 
             king = m_white_king;
+        else 
+            king = m_black_king;
         
         bool valid = !is_threatened(get_pos(king));
 

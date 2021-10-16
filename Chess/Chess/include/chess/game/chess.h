@@ -29,6 +29,7 @@ namespace Game
 
     private:
         void render() const;
+        void update_piece_sprites() const;
 
         Vec2i moused_square() const;
         bool check_click();

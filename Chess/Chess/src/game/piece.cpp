@@ -59,7 +59,7 @@ namespace Game
                 Vec2i new_pos = pos + step * step_count;
                 if (m_board->is_vacant(new_pos))
                 {
-                    Move move = {new_pos, Vec2i(-1, -1)};
+                    Move move = {new_pos, new_pos};
                     moves.push_back(move);
                 }
                 else if (m_board->has_color(new_pos, opposite(m_color)))
@@ -90,7 +90,7 @@ namespace Game
 
             if (m_board->is_vacant(new_pos) && !threat_only)
             {
-                moves.push_back({new_pos, Vec2i(-1, -1)});
+                moves.push_back({new_pos, new_pos});
             }
             else if (m_board->has_color(new_pos, opposite(m_color)) && !empty_only)
             {

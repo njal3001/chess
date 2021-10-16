@@ -81,6 +81,8 @@ namespace Game
         unsigned int frames = 0;
 
         m_valid_moves = m_board->valid_moves(m_turn);
+        update_piece_sprites();
+
         while (!m_window->closed())
         {
             render();
@@ -114,8 +116,30 @@ namespace Game
                                 m_turn = opposite(m_turn);
                                 m_selected = nullptr;
                                 m_history.push_back(hash);
+
                                 m_valid_moves = m_board->valid_moves(m_turn);
+                                update_piece_sprites();
+
+                                bool no_valid_moves = true;
+                                for (auto iter = m_valid_moves.begin(); iter != m_valid_moves.end(); iter++)
+                                {
+                                    const std::vector<Move>& valid_moves = iter->second;
+                                    if (valid_moves.size() > 0)
+                                    {
+                                        no_valid_moves = false;
+                                        break;
+                                    }
+                                }
+
+                                if (no_valid_moves)
+                                {
+                                    if (m_board->king_threatened(m_turn))
+                                        std::cout << "Checkmate!" << std::endl;
+                                    else 
+                                        std::cout << "Stalemate!" << std::endl;
+                                }
                             }
+
 
                             break;
                         }
@@ -137,22 +161,28 @@ namespace Game
     {
         m_window->clear();
 
-        for (int y = 0; y < 8; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
-                Vec2i pos = Vec2i(x, y);
-                Piece* piece = m_board->get_piece(pos);
-                if (piece)
-                {
-                    piece->get_sprite()->position = Vec3(pos.x * 8, 56 - pos.y * 8, 0);
-                }
-            }
-
-        }
         m_resource_manager->get_game_layer()->render();
 
         m_window->update();
+    }
+
+    void Chess::update_piece_sprites() const
+    {
+        std::unordered_map<Piece*, Vec2i> pieces = m_board->get_pieces();
+        for (auto iter = pieces.begin(); iter != pieces.end(); iter++)
+        {
+            Piece* piece = iter->first;
+            const Vec2i& pos = iter->second;
+            if (m_board->in_bound(pos))
+            {
+                piece->get_sprite()->hidden = false;
+                piece->get_sprite()->position = Vec3(pos.x * 8, 56 - pos.y * 8, 0);
+            }
+            else
+            {
+                piece->get_sprite()->hidden = true;
+            }
+        }
     }
 
     Vec2i Chess::moused_square() const

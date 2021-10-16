@@ -77,19 +77,17 @@ namespace Game
 
     std::vector<Move> Knight::moves(const Vec2i& pos) const
     {
-        std::vector<Vec2i> offsets;
-
-        for (int x = -2; x <= 2; x++)
+        std::vector<Vec2i> offsets =
         {
-            if (x == 0) continue;
-
-            for (int y = -2; y <= 2; y++)
-            {
-                if (y == 0) continue;
-
-                offsets.push_back(Vec2i(x, y));
-            }
-        }
+            Vec2i (-1, -2),
+            Vec2i (-2, -1),
+            Vec2i (-2, 1),
+            Vec2i (-1, 2),
+            Vec2i (1, 2),
+            Vec2i (2, 1),
+            Vec2i (2, -1),
+            Vec2i (1, -2),
+        };
 
         return get_spot_moves(pos, offsets, false, false);
     }
