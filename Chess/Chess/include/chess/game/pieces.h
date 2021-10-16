@@ -7,43 +7,44 @@ namespace Game
     class King : public Piece
     {
     public:
-        King(Color color, Board* board);
+        King(const Vec2i& start_pos, Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
+        bool check_castle(const Vec2i& pos, const Vec2i& new_pos) const override;
     };
 
     class Rook : public Piece
     {
     public:
-        Rook(Color color, Board* board);
+        Rook(const Vec2i& start_pos, Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
     };
     
     class Bishop : public Piece
     {
     public:
-        Bishop(Color color, Board* board);
+        Bishop(const Vec2i& start_pos, Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
     };
 
     class Queen : public Piece
     {
     public:
-        Queen(Color color, Board* board);
+        Queen(const Vec2i& start_pos, Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
     };
 
     class Knight : public Piece
     {
     public:
-        Knight(Color color, Board* board);
+        Knight(const Vec2i& start_pos, Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
     };
     
     class Pawn : public Piece
     {
     public:
-        Pawn(Color color, Board* board);
+        Pawn(const Vec2i& start_pos, Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
-        // bool check_en_passant() const override;
+        bool check_en_passant() const override;
     };
 }

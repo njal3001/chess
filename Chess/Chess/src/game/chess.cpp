@@ -17,7 +17,7 @@ namespace Game
 
     Chess::Chess()
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
-            m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false)
+            m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false), m_game_state(GameState::Playing)
     {}
 
     bool Chess::init()
@@ -80,73 +80,35 @@ namespace Game
         float secs = 0;
         unsigned int frames = 0;
 
-        m_valid_moves = m_board->valid_moves(m_turn);
-        update_piece_sprites();
+        new_turn(Color::White);
 
         while (!m_window->closed())
         {
             render();
-
-            if (check_click())
+            
+            if (m_game_state == GameState::Playing)
             {
-                Vec2i clicked_pos = moused_square();
-                Piece* clicked_piece = m_board->get_piece(clicked_pos);
-
-                std::cout << "Turn: " << (int)m_turn << std::endl;
-                std::cout << "Clicked square: " << clicked_pos << std::endl;
-
-                if (clicked_piece && clicked_piece->get_color() == m_turn)
+                do_turn();
+            }
+            else
+            {
+                std::cout << "Game Over!" << std::endl;
+                switch (m_game_state)
                 {
-                    m_selected = clicked_piece;
-                    m_selected_pos = clicked_pos;
+                case GameState::Checkmate:
+                    std::cout << get_color_string(opposite(m_turn)) << " won by checkmate!" << std::endl;
+                    break;
+                
+                case GameState::Stalemate:
+                    std::cout << "Draw by stalemate!" << std::endl;
+                    break;
 
-                    std::cout << "Valid moves: " << std::endl;
-                    for (auto& move : m_valid_moves[clicked_piece]) 
-                        std::cout << move.new_pos << std::endl;
-                }
-                else if (m_selected)
-                {
-                    for (auto& move : m_valid_moves[m_selected]) 
-                    {
-                        if (move.new_pos == clicked_pos)
-                        {
-                            std::string hash = create_state_hash();
-                            if (m_board->move_piece(m_selected_pos, move))
-                            {
-                                m_turn = opposite(m_turn);
-                                m_selected = nullptr;
-                                m_history.push_back(hash);
-
-                                m_valid_moves = m_board->valid_moves(m_turn);
-                                update_piece_sprites();
-
-                                bool no_valid_moves = true;
-                                for (auto iter = m_valid_moves.begin(); iter != m_valid_moves.end(); iter++)
-                                {
-                                    const std::vector<Move>& valid_moves = iter->second;
-                                    if (valid_moves.size() > 0)
-                                    {
-                                        no_valid_moves = false;
-                                        break;
-                                    }
-                                }
-
-                                if (no_valid_moves)
-                                {
-                                    if (m_board->king_threatened(m_turn))
-                                        std::cout << "Checkmate!" << std::endl;
-                                    else 
-                                        std::cout << "Stalemate!" << std::endl;
-                                }
-                            }
-
-
-                            break;
-                        }
-                    }
+                case GameState::ThreefoldRepetion:
+                    std::cout << "Draw by threefold repetition!" << std::endl;
+                    break;
                 }
             }
-
+            
             // frames++;
             // if (timer.elapsed() / 1000.0f > secs + 1.0f)
             // {
@@ -155,6 +117,63 @@ namespace Game
             //     frames = 0;
             // }
         } 
+    }
+
+    void Chess::do_turn()
+    {
+        if (check_click())
+        {
+            Vec2i clicked_pos = moused_square();
+            Piece* clicked_piece = m_board->get_piece(clicked_pos);
+
+            std::cout << "Turn: " << (int)m_turn << std::endl;
+            std::cout << "Clicked square: " << clicked_pos << std::endl;
+
+            if (clicked_piece && clicked_piece->get_color() == m_turn)
+            {
+                m_selected = clicked_piece;
+                m_selected_pos = clicked_pos;
+
+                std::cout << "Valid moves: " << std::endl;
+                for (auto& move : m_valid_moves[clicked_piece]) 
+                    std::cout << move.new_pos << std::endl;
+            }
+            else if (m_selected)
+            {
+                if (m_selected->check_castle(m_selected_pos, clicked_pos))
+                {
+                    m_board->castle(m_turn, Calc::sgn(clicked_pos.x - m_selected_pos.x));
+                    new_turn(opposite(m_turn));
+                }
+                else
+                {
+                    for (auto& move : m_valid_moves[m_selected]) 
+                    {
+                        if (move.new_pos == clicked_pos)
+                        {
+                            if (m_board->move_piece(m_selected_pos, move))
+                            {
+                                new_turn(opposite(m_turn));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    void Chess::new_turn(Color turn)
+    {
+        m_turn = turn;
+        std::string hash = m_board->create_state_hash();
+        m_selected = nullptr;
+        m_board->push_history(hash);
+
+        m_valid_moves = m_board->valid_moves(m_turn);
+        update_piece_sprites();
+
+        GameState game_state = check_game_state();
     }
 
     void Chess::render() const
@@ -206,20 +225,34 @@ namespace Game
         return val;
     }
 
-    std::string Chess::create_state_hash()
+
+    Chess::GameState Chess::check_game_state() const
     {
-        std::string hash;
-        for (int y = 0; y < 8; y++)
-            for (int x = 0; x < 8; x++)
+        bool no_valid_moves = true;
+        for (auto iter = m_valid_moves.begin(); iter != m_valid_moves.end(); iter++)
+        {
+            const std::vector<Move>& valid_moves = iter->second;
+            if (valid_moves.size() > 0)
             {
-                Piece* piece = m_board->get_piece(Vec2i(x, y));
-                if (piece)
-                    hash += piece->get_id();
-                else
-                    hash += (char)0;
+                no_valid_moves = false;
+                break;
             }
-        
-        return hash;
+        }
+
+        if (no_valid_moves)
+        {
+            if (m_board->king_threatened(m_turn))
+                return GameState::Checkmate;
+            else 
+                return GameState::Stalemate;
+        }
+
+        return GameState::Playing;
+    }
+
+    std::string Chess::get_color_string(Color color) const
+    {
+        return color == Color::White ? "White" : "Black";
     }
 
     void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,

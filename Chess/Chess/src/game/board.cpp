@@ -45,32 +45,32 @@ namespace Game
         // Bishops
         for (int x = 2; x <= 5; x += 3)
         {
-            Bishop* bishop = new Bishop(color, this);
-            add_piece(bishop, Vec2i(x, start));
+            Bishop* bishop = new Bishop(Vec2i(x, start), color, this);
+            add_piece(bishop);
         }
 
         // Knights
         for (int x = 1; x <= 6; x += 5)
         {
-            Knight* knight = new Knight(color, this);
-            add_piece(knight, Vec2i(x, start));
+            Knight* knight = new Knight(Vec2i(x, start), color, this);
+            add_piece(knight);
         }
 
         // Rooks
         for (int x = 0; x <= 7; x += 7)
         {
-            Rook* rook = new Rook(color, this);
-            add_piece(rook, Vec2i(x, start));
+            Rook* rook = new Rook(Vec2i(x, start), color, this);
+            add_piece(rook);
         }
 
         // Queen
-        Queen* queen = new Queen(color, this);
-        add_piece(queen, Vec2i(3, start));
+        Queen* queen = new Queen(Vec2i(3, start), color, this);
+        add_piece(queen);
 
 
         // King
-        King* king = new King(color, this);
-        add_piece(king, Vec2i(4, start));
+        King* king = new King(Vec2i(4, start), color, this);
+        add_piece(king);
 
         if (color == Color::White)
             m_white_king = king;
@@ -80,13 +80,14 @@ namespace Game
         // Pawns
         for (int x = 0; x < 8; x++)
         {
-            Pawn* pawn = new Pawn(color, this);
-            add_piece(pawn, Vec2i(x, start + dir));
+            Pawn* pawn = new Pawn(Vec2i(x, start + dir), color, this);
+            add_piece(pawn);
         }
     }
 
-    void Board::add_piece(Piece* piece, const Vec2i& pos)
+    void Board::add_piece(Piece* piece)
     {
+        const Vec2i& pos = piece->get_start_pos();
         m_pieces.push_back(piece);
         m_board[pos.y][pos.x] = piece;
         m_group->add(piece->get_sprite());
@@ -126,23 +127,19 @@ namespace Game
         return piece && piece->get_color() == color;
     }
     
-    bool Board::is_threatened(const Vec2i& pos) const
+    bool Board::is_threatened(const std::vector<Vec2i>& positions, Color color) const
     {
-        Piece* piece = get_piece(pos);
-        if (!piece)
-            return false;
-
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
             {
                 Vec2i other_pos = Vec2i(x, y); 
                 Piece* other_piece = get_piece(other_pos);
-                if (other_piece && piece->get_color() != other_piece->get_color())
+                if (other_piece && color != other_piece->get_color())
                 {
                     for (const Move& move : other_piece->moves(other_pos))
                     {
-                        if (move.captured_pos == pos)
+                        if (std::find(positions.begin(), positions.end(), move.captured_pos) != positions.end())
                             return true;
                     }
                 }
@@ -154,7 +151,7 @@ namespace Game
     
     bool Board::king_threatened(Color color) const
     {
-        return is_threatened(get_pos(get_king(color)));
+        return is_threatened({get_pos(get_king(color))}, color);
     }
 
     bool Board::is_vacant(const Vec2i& pos) const
@@ -208,14 +205,18 @@ namespace Game
         return valid_moves_map;
     }
     
-    Vec2i Board::get_pos(const Piece* piece) const
+    Vec2i Board::get_pos(const Piece* piece, int index) const
     {
+        if (m_history.size() < index + 1 || !piece)
+            return Vec2i(-1, -1);
+
+        const std::string& hash = m_history[m_history.size() - 1 - index];
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
             {
-                Vec2i pos = Vec2i(x, y);
-                if (get_piece(pos) == piece) return pos;
+                if (hash[x + y * 8] == piece->get_id())
+                    return Vec2i(x, y);
             }
         }
 
@@ -256,13 +257,7 @@ namespace Game
         set_pos(pos, nullptr);
         set_pos(move.new_pos, piece);
 
-        King* king;
-        if (piece->get_color() == Color::White)
-            king = m_white_king;
-        else 
-            king = m_black_king;
-        
-        bool valid = !is_threatened(get_pos(king));
+        bool valid = !king_threatened(piece->get_color());
 
         // Undo move
         set_pos(pos, piece);
@@ -272,5 +267,52 @@ namespace Game
             set_pos(move.captured_pos, captured);
 
         return valid;
+    }
+    
+    void Board::castle(Color color, int dir)
+    {
+        int y = color == Color::White ? 7 : 0;
+        int rook_x = dir == -1 ? 0 : 7;
+
+        Vec2i king_pos = Vec2i(4, y);
+        Vec2i rook_pos = Vec2i(rook_x, y);
+        Piece* king = get_piece(king_pos);
+        Piece* rook = get_piece(rook_pos);
+
+        Vec2i new_king_pos = Vec2i(4 + dir * 2, y);
+        set_pos(king_pos, nullptr);
+        set_pos(new_king_pos, king);
+
+        set_pos(rook_pos, nullptr);
+        set_pos(new_king_pos - Vec2i(dir, 0), rook);
+    }
+
+    std::string Board::create_state_hash() const
+    {
+        std::string hash;
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                Piece* piece = get_piece(Vec2i(x, y));
+                if (piece)
+                    hash += piece->get_id();
+                else
+                    hash += (char)0;
+            }
+        }
+
+        return hash;
+    }
+
+    void Board::push_history(const std::string& hash) 
+    {
+
+        m_history.push_back(hash);
+    }
+
+    const std::vector<std::string>& Board::get_history() const
+    {
+        return m_history;
     }
 }

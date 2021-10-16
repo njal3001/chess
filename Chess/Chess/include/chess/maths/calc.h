@@ -6,5 +6,6 @@ namespace Game
 	namespace Calc 
 	{
 		float to_radians(float degrees);
+		int sgn(int x);
 	}
 }

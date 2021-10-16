@@ -6,5 +6,10 @@ namespace Game
 	{
 		return (float)(degrees * M_PI / 180.0f);
 	}
+
+	int Calc::sgn(int x)
+	{
+		return (x < 0) ? -1 : 1;
+	}
 }
 

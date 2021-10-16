@@ -29,22 +29,24 @@ namespace Game
 
         bool move_piece(const Vec2i& pos, const Move& move);
         std::unordered_map<Piece*, std::vector<Move>> valid_moves(Color color);
+        void castle(Color color, int dir);
 
         Piece* get_piece(const Vec2i& pos) const;
         std::unordered_map<Piece*, Vec2i> get_pieces() const;
-        Vec2i get_pos(const Piece* piece) const;
+        Vec2i get_pos(const Piece* piece, int index = 0) const;
+        bool is_threatened(const std::vector<Vec2i>& positions, Color color) const;
         bool king_threatened(Color color) const;
         ResourceManager* get_resource_manager() const;
         Group* get_group() const;
-        // std::string get_prev_state(unsigned int index = 0);
+        std::string create_state_hash() const;
+        void push_history(const std::string& hash);
+        const std::vector<std::string>& get_history() const;
     
     private:
         void create_pieces(Color color);
-        // void pass_turn(Piece* moved_piece);
-        void add_piece(Piece* piece, const Vec2i& pos);
+        void add_piece(Piece* piece);
         void set_pos(const Vec2i& pos, Piece* piece);
         const King* get_king(Color color) const;
-        bool is_threatened(const Vec2i& pos) const;
         bool is_valid_move(const Vec2i& pos, const Move& move);
     };
 }

@@ -11,8 +11,8 @@ namespace Game
         return (Color)(((int)color + 1) % 2);
     }
 
-    Piece::Piece(Color color, const Board* board, const std::string& sprite_path)
-        :  m_color(color), m_board(board)
+    Piece::Piece(const Vec2i& start_pos, Color color, const Board* board, const std::string& sprite_path)
+        :  m_start_pos(start_pos), m_color(color), m_board(board)
     {
         TextureArray::Element texture = board->get_resource_manager()->get_sprite_array()->add(sprite_path);
         m_sprite = new Sprite(Vec2(), Vec2(8, 8),
@@ -27,9 +27,14 @@ namespace Game
         return false;
     }
 
-    bool Piece::check_castle(const Vec2i& new_pos) const
+    bool Piece::check_castle(const Vec2i& pos, const Vec2i& new_pos) const
     {
         return false;
+    }
+    
+    Vec2i Piece::get_start_pos() const
+    {
+        return m_start_pos;
     }
 
     Color Piece::get_color() const
@@ -100,5 +105,16 @@ namespace Game
         }
 
         return moves;
+    }
+        
+    bool Piece::has_moved() const
+    {
+        for (const std::string& hash : m_board->get_history()) 
+        {
+            if (hash[m_start_pos.y * 8 + m_start_pos.x] != m_id)
+                return true;
+        }
+
+        return false;
     }
 }
