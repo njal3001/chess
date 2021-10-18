@@ -18,7 +18,8 @@ namespace Game
     Chess::Chess()
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
             m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false), 
-            m_game_state(GameState::Playing), m_board_flipped(false)
+            m_game_state(GameState::Playing), m_board_flipped(false), m_is_promoting(false),
+            m_white_promotion_sprite(nullptr), m_black_promotion_sprite(nullptr)
     {}
 
     bool Chess::init()
@@ -63,6 +64,15 @@ namespace Game
 
         m_board = new Board(Vec2(0, 0), Vec2(1, 1), m_resource_manager);
 
+        TextureArray::Element white_promotion_tex = m_resource_manager->get_sprite_array()->add("res/textures/WhitePromotion.png");
+        TextureArray::Element black_promotion_tex = m_resource_manager->get_sprite_array()->add("res/textures/BlackPromotion.png");
+        m_white_promotion_sprite = new Sprite(Vec2(), Vec2(8, 32), white_promotion_tex);
+        m_black_promotion_sprite = new Sprite(Vec2(), Vec2(8, 32), black_promotion_tex);
+        m_white_promotion_sprite->hidden = true;
+        m_black_promotion_sprite->hidden = true;
+        m_resource_manager->get_game_layer()->add(m_white_promotion_sprite);
+        m_resource_manager->get_game_layer()->add(m_black_promotion_sprite);
+
         return true;
     }
 
@@ -89,6 +99,46 @@ namespace Game
             if (m_game_state == GameState::Playing)
             {
                 do_turn();
+            }
+            else if (m_game_state == GameState::Promoting)
+            {
+                if (check_click())
+                {
+                    Vec2i clicked_pos = moused_square();
+                    int y_diff = abs(clicked_pos.y - m_selected_pos.y);
+                    if (clicked_pos.x != m_selected_pos.x || y_diff > 3)
+                    {
+                        m_board->reset_to_prev_state();
+                        m_selected = nullptr;
+                        update_piece_sprites();
+
+                    }
+                    else
+                    {
+                        Piece* promotion = nullptr;
+                        switch (y_diff) 
+                        {
+                            case 0:
+                                promotion = new Queen(m_selected_pos, m_turn, m_board);
+                                break;
+                            case 1:
+                                promotion = new Bishop(m_selected_pos, m_turn, m_board);
+                                break;
+                            case 2:
+                                promotion = new Knight(m_selected_pos, m_turn, m_board);
+                                break;
+                            case 3:
+                                promotion = new Rook(m_selected_pos, m_turn, m_board);
+                                break;
+                        }
+
+                        m_board->promote(m_selected_pos, promotion);
+                        new_turn(opposite(m_turn));
+                    }
+
+                    m_game_state = GameState::Playing;
+                    hide_promotion_sprites();
+                }
             }
             else
             {
@@ -150,7 +200,18 @@ namespace Game
                         {
                             if (m_board->move_piece(m_selected_pos, move))
                             {
-                                new_turn(opposite(m_turn));
+                                if (m_selected->check_promote(clicked_pos))
+                                {
+                                    m_selected_pos = clicked_pos;
+                                    m_game_state = GameState::Promoting;
+                                    update_piece_sprites();
+                                    show_promotion_sprite(m_selected_pos, m_turn);
+                                }
+                                else
+                                {
+                                    new_turn(opposite(m_turn));
+                                }
+
                                 break;
                             }
                         }
@@ -282,6 +343,19 @@ namespace Game
         board_group->transform(Mat4x4::create_translation(Vec3(-32.0f, -32.0f, 0.0f)));
 
         m_board_flipped = !m_board_flipped;
+    }
+    
+    void Chess::show_promotion_sprite(const Vec2i& square, Color color)
+    {
+        Sprite* sprite = color == Color::White ? m_white_promotion_sprite : m_black_promotion_sprite;
+        sprite->position = Vec3(square.x * 8, 32, 1);
+        sprite->hidden = false;
+    }
+
+    void Chess::hide_promotion_sprites()
+    {
+        m_white_promotion_sprite->hidden = true;
+        m_black_promotion_sprite->hidden = true;
     }
 
     void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,

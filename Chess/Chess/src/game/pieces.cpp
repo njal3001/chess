@@ -51,13 +51,18 @@ namespace Game
 
     bool Pawn::check_en_passant() const
     {
-        Vec2i curr_pos = m_board->get_pos(this, 0);
-        Vec2i prev_pos = m_board->get_pos(this, 1);
+        Vec2i curr_pos = m_board->get_pos(this);
+        Vec2i prev_pos = m_board->get_prev_pos(this);
 
         if (!m_board->in_bound(prev_pos) || !m_board->in_bound(curr_pos))
             return false;
 
         return abs(curr_pos.y - prev_pos.y) == 2;
+    }
+
+    bool Pawn::check_promote(const Vec2i& pos) const
+    {
+        return m_color == Color::White ? pos.y == 0 : pos.y == 7;
     }
 
     std::vector<Move> Pawn::moves(const Vec2i& pos) const

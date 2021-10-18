@@ -31,6 +31,12 @@ namespace Game
     {
         return false;
     }
+
+
+   bool Piece::check_promote(const Vec2i& pos) const
+   {
+       return false;
+   }
     
     Vec2i Piece::get_start_pos() const
     {

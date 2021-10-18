@@ -33,7 +33,7 @@ namespace Game
             "res/shaders/text.frag");
 
         
-        m_sprite_array = new TextureArray(10, Vec2(64, 64), GL_RGBA, GL_RGBA, 4);
+        m_sprite_array = new TextureArray(10, Vec2(64, 64), GL_RGBA, GL_BGRA, 4);
         m_game_layer = new Layer(m_sprite_array->get_id(), m_sprite_shader, 
                 Mat4x4::create_orthographic(0.0f, 64.0f, 0.0f, 64.0f, -1.0f, 1.0f));
 

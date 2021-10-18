@@ -8,13 +8,26 @@ namespace Game
     {}
 
 
+	Sprite::Sprite(const Vec3& position, const Vec2& size, const Vec4& color)
+        : Sprite(position, size, color, {0, 0}) 
+    {}
+
     Sprite::Sprite(const Vec2& position, const Vec2& size, const TextureArray::Element& texture)
         : Sprite(position, size, Vec4(1.0f, 1.0f, 1.0f, 1.0f), texture) 
     {}
 
+	Sprite::Sprite(const Vec3& position, const Vec2& size, const TextureArray::Element& texture)
+        : Sprite(position, size, Vec4(1.0f, 1.0f, 1.0f, 1.0f), texture) 
+    {}
 
     Sprite::Sprite(const Vec2& position, const Vec2& size, const Vec4& color, const TextureArray::Element& texture)
         : position(Vec3(position.x, position.y, 0)), size(size), color(color), m_texture(texture), transform(Mat4x4::identity)
+    {
+        set_uv_defaults(); 
+    }
+
+	Sprite::Sprite(const Vec3& position, const Vec2& size, const Vec4& color, const TextureArray::Element& texture)
+        : position(position), size(size), color(color), m_texture(texture), transform(Mat4x4::identity)
     {
         set_uv_defaults(); 
     }

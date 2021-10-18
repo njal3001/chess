@@ -22,6 +22,7 @@ namespace Game
 		m_renderables.push_back(renderable);
 	}
 
+	// TODO: Z value ordering somehow
 	void Layer::render()
 	{
 		m_shader->enable();

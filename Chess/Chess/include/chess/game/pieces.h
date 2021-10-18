@@ -46,5 +46,6 @@ namespace Game
         Pawn(const Vec2i& start_pos, Color color, Board* board);
         std::vector<Move> moves(const Vec2i& pos) const override;
         bool check_en_passant() const override;
+        bool check_promote(const Vec2i& pos) const override;
     };
 }

@@ -44,6 +44,7 @@ namespace Game
         virtual std::vector<Move> moves(const Vec2i& pos) const = 0;
         virtual bool check_en_passant() const;
         virtual bool check_castle(const Vec2i& pos, const Vec2i& new_pos) const;
+        virtual bool check_promote(const Vec2i& pos) const;
         bool has_moved() const;
         Vec2i get_start_pos() const;
 

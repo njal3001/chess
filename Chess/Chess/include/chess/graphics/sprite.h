@@ -18,8 +18,13 @@ namespace Game
 		Mat4x4 transform;
 
 		Sprite(const Vec2& position, const Vec2& size, const Vec4& color);
+		Sprite(const Vec3& position, const Vec2& size, const Vec4& color);
+
 		Sprite(const Vec2& position, const Vec2& size, const TextureArray::Element& texture);
+		Sprite(const Vec3& position, const Vec2& size, const TextureArray::Element& texture);
+
 		Sprite(const Vec2& position, const Vec2& size, const Vec4& color, const TextureArray::Element& texture);
+		Sprite(const Vec3& position, const Vec2& size, const Vec4& color, const TextureArray::Element& texture);
 
 		void submit(BatchRenderer2D* renderer) const override;
 

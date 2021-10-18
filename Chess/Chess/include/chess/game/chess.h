@@ -12,6 +12,7 @@ namespace Game
         enum class GameState
         {
             Playing,
+            Promoting,
             Checkmate,
             Stalemate,
         };
@@ -25,10 +26,14 @@ namespace Game
         Vec2i m_selected_pos;
         Board* m_board;
         bool m_board_flipped;
+        bool m_is_promoting;
         GameState m_game_state;
         std::unordered_map<Piece*, std::vector<Move>> m_valid_moves;
         
         bool m_prev_mouse_pressed;
+
+        Sprite* m_white_promotion_sprite;
+        Sprite* m_black_promotion_sprite;
 
     public:
         Chess();
@@ -42,6 +47,8 @@ namespace Game
         void flip_board();
         void render() const;
         void update_piece_sprites() const;
+        void show_promotion_sprite(const Vec2i& square, Color color);
+        void hide_promotion_sprites();
 
         Vec2i moused_square() const;
         bool check_click();

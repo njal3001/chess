@@ -204,12 +204,12 @@ namespace Game
         return valid_moves_map;
     }
     
-    Vec2i Board::get_pos(const Piece* piece, int index) const
+    Vec2i Board::get_prev_pos(const Piece* piece) const
     {
-        if (m_history.size() < index + 1 || !piece)
+        if (m_history.size() < 2 || !piece)
             return Vec2i(-1, -1);
 
-        const std::string& hash = m_history[m_history.size() - 1 - index];
+        const std::string& hash = m_history[m_history.size() - 2];
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -222,6 +222,22 @@ namespace Game
         return Vec2i(-1, -1);
     }
     
+
+    Vec2i Board::get_pos(const Piece* piece) const
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                Vec2i pos = Vec2i(x, y);
+                if (get_piece(pos) == piece)
+                    return Vec2i(x, y);
+            }
+        }
+
+        return Vec2i(-1, -1);
+    }
+
     std::unordered_map<Piece*, Vec2i> Board::get_pieces() const
     {
         std::unordered_map<Piece*, Vec2i> pieces;
@@ -313,5 +329,41 @@ namespace Game
     const std::vector<std::string>& Board::get_history() const
     {
         return m_history;
+    }
+
+
+    void Board::promote(const Vec2i& pos, Piece* promotion)
+    {
+        set_pos(pos, nullptr);
+        add_piece(promotion);
+    }
+
+    void Board::reset_to_prev_state()
+    {
+        std::string prev_state = m_history[m_history.size() - 1];
+
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                char id = prev_state[y * 8 + x];
+                Vec2i pos = Vec2i(x, y);
+
+                if (id == (char)0)
+                {
+                    set_pos(pos, nullptr);
+                }
+                else
+                {
+                    for (Piece* piece : m_pieces)
+                    {
+                        if (piece->get_id() == id)
+                        {
+                            set_pos(pos, piece);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

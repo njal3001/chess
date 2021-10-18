@@ -33,7 +33,8 @@ namespace Game
 
         Piece* get_piece(const Vec2i& pos) const;
         std::unordered_map<Piece*, Vec2i> get_pieces() const;
-        Vec2i get_pos(const Piece* piece, int index = 0) const;
+        Vec2i get_pos(const Piece* piece) const;
+        Vec2i get_prev_pos(const Piece* piece) const;
         bool is_threatened(const std::vector<Vec2i>& positions, Color color) const;
         bool king_threatened(Color color) const;
         ResourceManager* get_resource_manager() const;
@@ -41,6 +42,8 @@ namespace Game
         std::string create_state_hash() const;
         void push_history(const std::string& hash);
         const std::vector<std::string>& get_history() const;
+        void promote(const Vec2i& pos, Piece* promotion);
+        void reset_to_prev_state();
     
     private:
         void create_pieces(Color color);
