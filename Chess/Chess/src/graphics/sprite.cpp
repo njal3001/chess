@@ -14,7 +14,7 @@ namespace Game
 
 
     Sprite::Sprite(const Vec2& position, const Vec2& size, const Vec4& color, const TextureArray::Element& texture)
-        : position(Vec3(position.x, position.y, 0)), size(size), color(color), m_texture(texture)
+        : position(Vec3(position.x, position.y, 0)), size(size), color(color), m_texture(texture), transform(Mat4x4::identity)
     {
         set_uv_defaults(); 
     }
@@ -31,10 +31,12 @@ namespace Game
     {
         if (hidden) return;
 
+        renderer->push_transformation(transform);
         if (m_texture.array_id != 0)
             renderer->submit(position, size, m_uv, color, m_texture);
         else
             renderer->submit(position, size, m_uv, color);
+        renderer->pop_transformation();
     }
 
     const std::vector<Vec2>& Sprite::get_uv() const

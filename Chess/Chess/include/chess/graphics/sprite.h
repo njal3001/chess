@@ -15,6 +15,7 @@ namespace Game
 		Vec3 position;
 		Vec2 size;
 		Vec4 color;
+		Mat4x4 transform;
 
 		Sprite(const Vec2& position, const Vec2& size, const Vec4& color);
 		Sprite(const Vec2& position, const Vec2& size, const TextureArray::Element& texture);

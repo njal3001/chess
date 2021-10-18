@@ -12,7 +12,6 @@ namespace Game
         m_group->add(m_sprite);
         m_resource_manager->get_game_layer()->add(m_group);
 
-
         for (int y = 0; y < 8; y++)
             for (int x = 0; x < 8; x++)
                 m_board[y][x] = nullptr;

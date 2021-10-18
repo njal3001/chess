@@ -16,6 +16,7 @@ namespace Game
 		void add(Renderable2D* renderable);
 		void submit(BatchRenderer2D* renderer) const override;
 
+		void transform(const Mat4x4& transform_matrix);
 		const Mat4x4& get_transformation_matrix() const;
 	};
 }

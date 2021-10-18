@@ -17,7 +17,8 @@ namespace Game
 
     Chess::Chess()
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
-            m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false), m_game_state(GameState::Playing)
+            m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false), 
+            m_game_state(GameState::Playing), m_board_flipped(false)
     {}
 
     bool Chess::init()
@@ -75,12 +76,11 @@ namespace Game
 
     void Chess::run()
     {
-
         Timer timer;
         float secs = 0;
         unsigned int frames = 0;
 
-        new_turn(Color::White);
+        new_turn(Color::White, false);
 
         while (!m_window->closed())
         {
@@ -102,10 +102,6 @@ namespace Game
                 case GameState::Stalemate:
                     std::cout << "Draw by stalemate!" << std::endl;
                     break;
-
-                case GameState::ThreefoldRepetion:
-                    std::cout << "Draw by threefold repetition!" << std::endl;
-                    break;
                 }
             }
             
@@ -118,6 +114,7 @@ namespace Game
             // }
         } 
     }
+
 
     void Chess::do_turn()
     {
@@ -163,7 +160,7 @@ namespace Game
         }
     }
     
-    void Chess::new_turn(Color turn)
+    void Chess::new_turn(Color turn, bool flip)
     {
         m_turn = turn;
         std::string hash = m_board->create_state_hash();
@@ -171,6 +168,9 @@ namespace Game
         m_board->push_history(hash);
 
         m_valid_moves = m_board->valid_moves(m_turn);
+
+        if (flip)
+            flip_board();
         update_piece_sprites();
 
         GameState game_state = check_game_state();
@@ -191,15 +191,31 @@ namespace Game
         for (auto iter = pieces.begin(); iter != pieces.end(); iter++)
         {
             Piece* piece = iter->first;
+            Sprite* sprite = piece->get_sprite();
             const Vec2i& pos = iter->second;
             if (m_board->in_bound(pos))
             {
-                piece->get_sprite()->hidden = false;
-                piece->get_sprite()->position = Vec3(pos.x * 8, 56 - pos.y * 8, 0);
+                sprite->hidden = false;
+                Vec3 sprite_pos = Vec3(pos.x * 8, 56 - pos.y * 8, 0);
+
+                if (m_board_flipped)
+                {
+                    Mat4x4 transform = Mat4x4::create_translation(Vec3(sprite_pos.x + 4, sprite_pos.y + 4, 0));
+                    transform *= Mat4x4::create_rotation(180, Vec3(0, 0, 1));
+                    transform *= Mat4x4::create_rotation(180, Vec3(0, 1, 0));
+                    transform *= Mat4x4::create_translation(Vec3(-sprite_pos.x - 4, -sprite_pos.y - 4, 0));
+                    sprite->transform = transform;
+                }
+                else 
+                {
+                    sprite->transform = Mat4x4::identity;
+                }
+
+                sprite->position = sprite_pos;
             }
             else
             {
-                piece->get_sprite()->hidden = true;
+                sprite->hidden = true;
             }
         }
     }
@@ -209,6 +225,8 @@ namespace Game
         Vec2 mouse_pos = m_window->get_mouse_pos();
         int x = (int)(mouse_pos.x / 64);
         int y = (int)(mouse_pos.y / 64);
+        if (m_board_flipped)
+            y = 7 - y;
         return Vec2i(x, y);
     }
 
@@ -253,6 +271,17 @@ namespace Game
     std::string Chess::get_color_string(Color color) const
     {
         return color == Color::White ? "White" : "Black";
+    }
+    
+    void Chess::flip_board()
+    {
+        Group* board_group = m_board->get_group();
+        board_group->transform(Mat4x4::create_translation(Vec3(32.0f, 32.0f, 0.0f)));
+        board_group->transform(Mat4x4::create_rotation(180.0f, Vec3(0.0f, 0.0f, 1.0f)));
+        board_group->transform(Mat4x4::create_rotation(180.0f, Vec3(0.0f, 1.0f, 0.0f)));
+        board_group->transform(Mat4x4::create_translation(Vec3(-32.0f, -32.0f, 0.0f)));
+
+        m_board_flipped = !m_board_flipped;
     }
 
     void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,

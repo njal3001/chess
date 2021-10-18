@@ -14,7 +14,6 @@ namespace Game
             Playing,
             Checkmate,
             Stalemate,
-            ThreefoldRepetion
         };
     
     private:
@@ -25,6 +24,7 @@ namespace Game
         Piece* m_selected;
         Vec2i m_selected_pos;
         Board* m_board;
+        bool m_board_flipped;
         GameState m_game_state;
         std::unordered_map<Piece*, std::vector<Move>> m_valid_moves;
         
@@ -39,6 +39,7 @@ namespace Game
 
     private:
         void do_turn();
+        void flip_board();
         void render() const;
         void update_piece_sprites() const;
 
@@ -46,7 +47,7 @@ namespace Game
         bool check_click();
         GameState check_game_state() const;
         std::string get_color_string(Color color) const;
-        void new_turn(Color turn);
+        void new_turn(Color turn, bool flip = true);
 
         // Declare outside of class instead?
         friend void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id,

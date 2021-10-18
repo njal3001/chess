@@ -60,7 +60,7 @@ namespace Game
 	{
 		return Vec3(
 			columns[0].x * rhs.x + columns[1].x * rhs.y + columns[2].x * rhs.z + columns[3].x,
-			columns[0].y * rhs.x + columns[1].y * rhs.y + columns[2].y * rhs.z + columns[3].x,
+			columns[0].y * rhs.x + columns[1].y * rhs.y + columns[2].y * rhs.z + columns[3].y,
 			columns[0].z * rhs.x + columns[1].z * rhs.y + columns[2].z * rhs.z + columns[3].z
 		);
 	}

@@ -29,6 +29,11 @@ namespace Game
 
 		renderer->pop_transformation();
 	}
+	
+	void Group::transform(const Mat4x4& transform_matrix)
+	{
+		m_transformation_matrix *= transform_matrix;
+	}
 
 	const Mat4x4& Group::get_transformation_matrix() const
 	{

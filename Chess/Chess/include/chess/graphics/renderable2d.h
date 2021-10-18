@@ -28,5 +28,6 @@ namespace Game
 		virtual ~Renderable2D() {};
 
 		virtual void submit(BatchRenderer2D* renderer) const = 0;
+
 	};
 }
