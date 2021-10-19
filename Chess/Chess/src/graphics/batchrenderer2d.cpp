@@ -3,7 +3,7 @@
 namespace Game
 {
 	BatchRenderer2D::BatchRenderer2D(GLuint texture_array_id)
-		: m_index_count(0), m_texture_array_id(texture_array_id)
+		: m_texture_array_id(texture_array_id)
 	{
 		m_transformation_stack.push_back(Mat4x4::identity);
 		m_transformation_back = Mat4x4::identity;
@@ -49,11 +49,6 @@ namespace Game
 		m_ibo = new IndexBuffer(indices, RENDERER_INDICES_SIZE);
 	}
 
-	void BatchRenderer2D::begin()
-	{
-		m_buffer_map = (VertexData*)m_vbo->map(GL_WRITE_ONLY);
-	}
-	
 	void BatchRenderer2D::submit(const Vec3& position,
 		const Vec2& size, const std::vector<Vec2>& uv, const Vec4& color)
 	{
@@ -82,53 +77,91 @@ namespace Game
 	void BatchRenderer2D::submit(const Vec3& position,
 		const Vec2& size, const std::vector<Vec2>& uv, const unsigned int color, const int texture_layer, const Vec2& uv_scale)
 	{
-		m_buffer_map->position = m_transformation_back * position;
-		m_buffer_map->uv = uv[0] * uv_scale;
-		m_buffer_map->texture_layer = texture_layer;
-		m_buffer_map->color = color;
-		m_buffer_map++;
+		VertexData vertex_data[4];
+		VertexData* vp = vertex_data;
+
+		vp->position = m_transformation_back * position;
+		float z = vp->position.z;
+
+		vp->uv = uv[0] * uv_scale;
+		vp->texture_layer = texture_layer;
+		vp->color = color;
+		vp++;
 		
-		m_buffer_map->position = m_transformation_back * Vec3(position.x, position.y + size.y, position.z);
-		m_buffer_map->uv = uv[1] * uv_scale;
-		m_buffer_map->texture_layer = texture_layer;
-		m_buffer_map->color = color;
-		m_buffer_map++;
+		vp->position = m_transformation_back * Vec3(position.x, position.y + size.y, position.z);
+		vp->uv = uv[1] * uv_scale;
+		vp->texture_layer = texture_layer;
+		vp->color = color;
+		vp++;
 
-		m_buffer_map->position = m_transformation_back * Vec3(position.x + size.x, position.y + size.y, position.z);
-		m_buffer_map->uv = uv[2] * uv_scale;
-		m_buffer_map->texture_layer = texture_layer;
-		m_buffer_map->color = color;
-		m_buffer_map++;
+		vp->position = m_transformation_back * Vec3(position.x + size.x, position.y + size.y, position.z);
+		vp->uv = uv[2] * uv_scale;
+		vp->texture_layer = texture_layer;
+		vp->color = color;
+		vp++;
 
-		m_buffer_map->position = m_transformation_back * Vec3(position.x + size.x, position.y, position.z);
-		m_buffer_map->uv = uv[3] * uv_scale;
-		m_buffer_map->texture_layer = texture_layer;
-		m_buffer_map->color = color;
-		m_buffer_map++;
+		vp->position = m_transformation_back * Vec3(position.x + size.x, position.y, position.z);
+		vp->uv = uv[3] * uv_scale;
+		vp->texture_layer = texture_layer;
+		vp->color = color;
+		vp++;
 
-		m_index_count += 6;
-	}
+		auto front = m_vertex_data.begin();
 
-	void BatchRenderer2D::end()
-	{
-		m_vbo->unmap();
+		while(front != m_vertex_data.end())
+		{
+			if (front->position.z > z)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					m_vertex_data.insert(front, vertex_data[i]);
+					std::next(front);
+				}
+
+				return;
+			}
+			
+			std::advance(front, 4);
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			m_vertex_data.insert(m_vertex_data.end(), vertex_data[i]);
+		}
 	}
 
 	void BatchRenderer2D::flush()
 	{
+		VertexData* buffer_map = (VertexData*)m_vbo->map(GL_WRITE_ONLY);
+
+		for (VertexData vd : m_vertex_data)
+		{
+			buffer_map->position = vd.position;
+			buffer_map->uv = vd.uv;
+			buffer_map->texture_layer = vd.texture_layer;
+			buffer_map->color = vd.color;
+			buffer_map++;
+		}
+
+		m_vbo->unmap();
+
+		int index_count = 6 * (m_vertex_data.size() / 4);
+		std::cout << index_count << std::endl;
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, m_texture_array_id);
 
 		m_vao->bind();
 		m_ibo->bind();
 
-		glDrawElements(GL_TRIANGLES, m_index_count, GL_UNSIGNED_SHORT, NULL);
+		glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_SHORT, NULL);
 
 		m_ibo->unbind();
 		m_vao->unbind();
 
 		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
-		m_index_count = 0;
+
+		m_vertex_data.clear();
 	}
 
 	void BatchRenderer2D::push_transformation(Mat4x4 matrix, bool absolute)

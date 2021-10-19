@@ -8,7 +8,7 @@ namespace Game
         m_group = new Group(Mat4x4::create_translation(
             Vec3(pos.x, pos.y, 0)) * Mat4x4::create_scale(Vec3(size.x, size.y, 1)));
         auto texture = m_resource_manager->get_sprite_array()->add("res/textures/Board.png");
-        m_sprite = new Sprite(Vec2(), Vec2(64, 64), texture);
+        m_sprite = new Sprite(Vec3(0, 0, 0), Vec2(64, 64), texture);
         m_group->add(m_sprite);
         m_resource_manager->get_game_layer()->add(m_group);
 

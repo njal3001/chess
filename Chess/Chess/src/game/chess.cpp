@@ -19,7 +19,7 @@ namespace Game
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
             m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false), 
             m_game_state(GameState::Playing), m_board_flipped(false), m_is_promoting(false),
-            m_white_promotion_sprite(nullptr), m_black_promotion_sprite(nullptr)
+            m_white_promotion_sprite(nullptr), m_black_promotion_sprite(nullptr), m_is_dragging(false)
     {}
 
     bool Chess::init()
@@ -111,7 +111,6 @@ namespace Game
                         m_board->reset_to_prev_state();
                         m_selected = nullptr;
                         update_piece_sprites();
-
                     }
                     else
                     {
@@ -168,41 +167,33 @@ namespace Game
 
     void Chess::do_turn()
     {
-        if (check_click())
+        if (check_click() || (m_is_dragging && !m_window->mouse_button_down(0) && m_selected))
         {
-            Vec2i clicked_pos = moused_square();
-            Piece* clicked_piece = m_board->get_piece(clicked_pos);
+            m_is_dragging = false;
+            Vec2i moused_pos = moused_square();
+            Piece* moused_piece = m_board->get_piece(moused_pos);
 
             std::cout << "Turn: " << (int)m_turn << std::endl;
-            std::cout << "Clicked square: " << clicked_pos << std::endl;
+            std::cout << "Clicked square: " << moused_pos << std::endl;
 
-            if (clicked_piece && clicked_piece->get_color() == m_turn)
+            if (m_selected)
             {
-                m_selected = clicked_piece;
-                m_selected_pos = clicked_pos;
-
-                std::cout << "Valid moves: " << std::endl;
-                for (auto& move : m_valid_moves[clicked_piece]) 
-                    std::cout << move.new_pos << std::endl;
-            }
-            else if (m_selected)
-            {
-                if (m_selected->check_castle(m_selected_pos, clicked_pos))
+                if (m_selected->check_castle(m_selected_pos, moused_pos))
                 {
-                    m_board->castle(m_turn, Calc::sgn(clicked_pos.x - m_selected_pos.x));
+                    m_board->castle(m_turn, Calc::sgn(moused_pos.x - m_selected_pos.x));
                     new_turn(opposite(m_turn));
                 }
                 else
                 {
                     for (auto& move : m_valid_moves[m_selected]) 
                     {
-                        if (move.new_pos == clicked_pos)
+                        if (move.new_pos == moused_pos)
                         {
                             if (m_board->move_piece(m_selected_pos, move))
                             {
-                                if (m_selected->check_promote(clicked_pos))
+                                if (m_selected->check_promote(moused_pos))
                                 {
-                                    m_selected_pos = clicked_pos;
+                                    m_selected_pos = moused_pos;
                                     m_game_state = GameState::Promoting;
                                     update_piece_sprites();
                                     show_promotion_sprite(m_selected_pos, m_turn);
@@ -212,11 +203,23 @@ namespace Game
                                     new_turn(opposite(m_turn));
                                 }
 
-                                break;
+                                return;
                             }
                         }
                     }
+
+                    deselect();
                 }
+            }
+            else if (moused_piece && moused_piece->get_color() == m_turn)
+            {
+                m_selected = moused_piece;
+                m_selected_pos = moused_pos;
+                m_is_dragging = true;
+
+                std::cout << "Valid moves: " << std::endl;
+                for (auto& move : m_valid_moves[moused_piece]) 
+                    std::cout << move.new_pos << std::endl;
             }
         }
     }
@@ -237,9 +240,38 @@ namespace Game
         GameState game_state = check_game_state();
     }
 
+    void Chess::deselect()
+    {
+        if (!m_selected) return;
+
+        Vec2 sprite_pos = Vec2(m_selected_pos.x * 8, 56 - m_selected_pos.y * 8);
+        update_piece_sprite(m_selected, sprite_pos);
+
+        m_selected = nullptr;
+    }
+
     void Chess::render() const
     {
         m_window->clear();
+
+        if (m_is_dragging && m_selected)
+        {
+            Sprite* sprite = m_selected->get_sprite();
+            Vec2 mouse_pos = m_window->get_mouse_pos();
+
+            float y = 0;
+            if (!m_board_flipped) 
+            {
+                y = 64 - mouse_pos.y/8 - 4;
+            }
+            else
+            {
+                y = mouse_pos.y/8 - 4;
+            }
+
+            Vec2 sprite_pos = Vec2(mouse_pos.x/8 - 4, y);
+            update_piece_sprite(m_selected, sprite_pos);
+        }
 
         m_resource_manager->get_game_layer()->render();
 
@@ -254,31 +286,41 @@ namespace Game
             Piece* piece = iter->first;
             Sprite* sprite = piece->get_sprite();
             const Vec2i& pos = iter->second;
+
             if (m_board->in_bound(pos))
             {
                 sprite->hidden = false;
-                Vec3 sprite_pos = Vec3(pos.x * 8, 56 - pos.y * 8, 0);
+                Vec2 sprite_pos = Vec2(pos.x * 8, 56 - pos.y * 8);
 
-                if (m_board_flipped)
-                {
-                    Mat4x4 transform = Mat4x4::create_translation(Vec3(sprite_pos.x + 4, sprite_pos.y + 4, 0));
-                    transform *= Mat4x4::create_rotation(180, Vec3(0, 0, 1));
-                    transform *= Mat4x4::create_rotation(180, Vec3(0, 1, 0));
-                    transform *= Mat4x4::create_translation(Vec3(-sprite_pos.x - 4, -sprite_pos.y - 4, 0));
-                    sprite->transform = transform;
-                }
-                else 
-                {
-                    sprite->transform = Mat4x4::identity;
-                }
-
-                sprite->position = sprite_pos;
+                update_piece_sprite(piece, sprite_pos);
             }
             else
             {
                 sprite->hidden = true;
             }
         }
+    }
+
+    void Chess::update_piece_sprite(Piece* piece, const Vec2& sprite_pos) const
+    {
+        if (m_board_flipped)
+        {
+            Mat4x4 transform = Mat4x4::create_translation(Vec3(sprite_pos.x + 4, sprite_pos.y + 4, 0));
+            transform *= Mat4x4::create_rotation(180, Vec3(0, 0, 1));
+            transform *= Mat4x4::create_rotation(180, Vec3(0, 1, 0));
+            transform *= Mat4x4::create_translation(Vec3(-sprite_pos.x - 4, -sprite_pos.y - 4, 0));
+            piece->get_sprite()->transform = transform;
+        }
+        else 
+        {
+            piece->get_sprite()->transform = Mat4x4::identity;
+        }
+
+        piece->get_sprite()->position.x = sprite_pos.x;
+        piece->get_sprite()->position.y = sprite_pos.y;
+
+        float z = piece->get_color() == m_turn ? 0.5 : 0.25;
+        piece->get_sprite()->position.z = z;
     }
 
     Vec2i Chess::moused_square() const

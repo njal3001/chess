@@ -27,24 +27,21 @@ namespace Game
 		VertexArray* m_vao;
 		Buffer* m_vbo;
 		IndexBuffer* m_ibo;
-		GLsizei m_index_count;
-		VertexData* m_buffer_map;
 		GLuint m_texture_array_id;
 
+		std::list<VertexData> m_vertex_data;
 		std::vector<Mat4x4> m_transformation_stack;
 		Mat4x4 m_transformation_back;
 
 	public:
 		BatchRenderer2D(GLuint texture_array_id);
 		~BatchRenderer2D();
-		void begin();
 		void submit(const Vec3& position,
 			const Vec2& size, const std::vector<Vec2>& uv, 
 			const Vec4& color);
 		void submit(const Vec3& position,
 			const Vec2& size, const std::vector<Vec2>& uv, 
 			const Vec4& color, const TextureArray::Element& texture);
-		void end();
 		void flush();
 
 		void push_transformation(Mat4x4 matrix, bool absolute = false);
