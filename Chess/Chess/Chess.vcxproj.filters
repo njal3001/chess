@@ -241,5 +241,14 @@
     <Image Include="res\textures\Tower.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\textures\WhitePromotion.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\BlackPromotion.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CanMove.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

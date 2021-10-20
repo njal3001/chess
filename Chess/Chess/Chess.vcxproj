@@ -240,12 +240,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\Bishop.png" />
+    <Image Include="res\textures\BlackPromotion.png" />
     <Image Include="res\textures\Board.png" />
+    <Image Include="res\textures\CanMove.png" />
     <Image Include="res\textures\Horse.png" />
     <Image Include="res\textures\King.png" />
     <Image Include="res\textures\Pawn.png" />
     <Image Include="res\textures\Queen.png" />
     <Image Include="res\textures\Tower.png" />
+    <Image Include="res\textures\WhitePromotion.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

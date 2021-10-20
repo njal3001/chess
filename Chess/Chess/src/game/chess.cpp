@@ -17,7 +17,7 @@ namespace Game
 
     Chess::Chess()
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
-            m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed(false), 
+            m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed{false, false}, 
             m_game_state(GameState::Playing), m_board_flipped(false), m_is_promoting(false),
             m_white_promotion_sprite(nullptr), m_black_promotion_sprite(nullptr), m_is_dragging(false)
     {}
@@ -74,6 +74,8 @@ namespace Game
         m_black_promotion_sprite->hidden = true;
         m_resource_manager->get_game_layer()->add(m_white_promotion_sprite);
         m_resource_manager->get_game_layer()->add(m_black_promotion_sprite);
+
+        m_can_move_tex = m_resource_manager->get_sprite_array()->add("res/textures/CanMove.png");
 
         return true;
     }
@@ -142,15 +144,24 @@ namespace Game
             }
             else if (m_game_state == GameState::Promoting)
             {
-                if (check_click())
+                if (check_click(1))
+                {
+                    m_board->reset_to_prev_state();
+                    m_selected = nullptr;
+                    update_piece_sprites();
+
+                    m_game_state = GameState::Playing;
+                    hide_promotion_sprites();
+                }
+                else if (check_click(0))
                 {
                     Vec2i clicked_pos = moused_square();
                     int y_diff = abs(clicked_pos.y - m_selected_pos.y);
                     if (clicked_pos.x != m_selected_pos.x || y_diff > 3)
                     {
                         m_board->reset_to_prev_state();
-                        m_selected = nullptr;
                         update_piece_sprites();
+                        m_selected_pos = m_board->get_pos(m_selected);
                     }
                     else
                     {
@@ -207,51 +218,23 @@ namespace Game
 
     void Chess::do_turn()
     {
-        if (check_click() || (m_is_dragging && !m_window->mouse_button_down(0) && m_selected))
+        if (check_click(1) && m_selected)
         {
             m_is_dragging = false;
-            Vec2i moused_pos = moused_square();
-            Piece* moused_piece = m_board->get_piece(moused_pos);
+            deselect();
+            return;
+        }
 
-            std::cout << "Turn: " << (int)m_turn << std::endl;
+        Vec2i moused_pos = moused_square();
+        Piece* moused_piece = m_board->get_piece(moused_pos);
+
+        if (check_click(0))
+        {
             std::cout << "Clicked square: " << moused_pos << std::endl;
-
-            if (m_selected)
-            {
-                if (m_selected->check_castle(m_selected_pos, moused_pos))
-                {
-                    m_board->castle(m_turn, Calc::sgn(moused_pos.x - m_selected_pos.x));
-                    new_turn(opposite(m_turn));
-                }
-                else
-                {
-                    for (auto& move : m_valid_moves[m_selected]) 
-                    {
-                        if (move.new_pos == moused_pos)
-                        {
-                            if (m_board->move_piece(m_selected_pos, move))
-                            {
-                                if (m_selected->check_promote(moused_pos))
-                                {
-                                    m_selected_pos = moused_pos;
-                                    m_game_state = GameState::Promoting;
-                                    update_piece_sprites();
-                                    show_promotion_sprite(m_selected_pos, m_turn);
-                                }
-                                else
-                                {
-                                    new_turn(opposite(m_turn));
-                                }
-
-                                return;
-                            }
-                        }
-                    }
-
-                    deselect();
-                }
-            }
-            else if (moused_piece && moused_piece->get_color() == m_turn)
+            if (try_move(moused_pos))
+                return;
+            
+            if (moused_piece && moused_piece->get_color() == m_turn)
             {
                 m_selected = moused_piece;
                 m_selected_pos = moused_pos;
@@ -262,6 +245,61 @@ namespace Game
                     std::cout << move.new_pos << std::endl;
             }
         }
+        else if (m_is_dragging && !m_window->mouse_button_down(0))
+        {
+            try_move(moused_pos);
+            stop_drag();
+        }
+    }
+    
+    bool Chess::try_move(const Vec2i& target_pos)
+    {
+        if (!m_selected)
+            return false;
+
+        if (m_selected->check_castle(m_selected_pos, target_pos))
+        {
+            m_board->castle(m_turn, Calc::sgn(target_pos.x - m_selected_pos.x));
+            new_turn(opposite(m_turn));
+        }
+        else
+        {
+            for (auto& move : m_valid_moves[m_selected]) 
+            {
+                if (move.new_pos == target_pos)
+                {
+                    if (m_board->move_piece(m_selected_pos, move))
+                    {
+                        if (m_selected->check_promote(target_pos))
+                        {
+                            m_selected_pos = target_pos;
+                            m_game_state = GameState::Promoting;
+                            update_piece_sprites();
+                            show_promotion_sprite(m_selected_pos, m_turn);
+                        }
+                        else
+                        {
+                            new_turn(opposite(m_turn));
+                        }
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    void Chess::stop_drag()
+    {
+        if (m_is_dragging && m_selected)
+        {
+            m_is_dragging = false;
+            Vec2 sprite_pos = Vec2(m_selected_pos.x * 8, 56 - m_selected_pos.y * 8);
+            update_piece_sprite(m_selected, sprite_pos);
+        }
+
     }
     
     void Chess::new_turn(Color turn, bool flip)
@@ -290,7 +328,7 @@ namespace Game
         m_selected = nullptr;
     }
 
-    void Chess::render() const
+    void Chess::render()
     {
         m_window->clear();
 
@@ -314,11 +352,32 @@ namespace Game
             update_piece_sprite(m_selected, sprite_pos);
         }
 
+        if (m_game_state == GameState::Playing)
+        {
+            if (m_selected)
+            {
+                float y = m_turn == Color::White ? 56 - m_selected_pos.y * 8 : m_selected_pos.y * 8;
+                Vec3 highlight_pos = Vec3(m_selected_pos.x * 8, y, 0.1f);
+                BatchRenderer2D* renderer = m_resource_manager->get_game_layer()->get_renderer();
+
+                Sprite highlight(highlight_pos, Vec2(8, 8), Vec4(153.0f/255.0f, 229.0f/255.0f, 80.0f/255.0f, 1.0f));
+                highlight.submit(renderer);
+
+                for (auto& move : m_valid_moves[m_selected])
+                {
+                    float y = m_turn == Color::White ? 56 - move.new_pos.y * 8 : move.new_pos.y * 8;
+                    Vec3 move_highlight_pos = Vec3(move.new_pos.x * 8, y, 0.6f);
+                    Sprite move_highlight(move_highlight_pos, Vec2(8, 8), m_can_move_tex);
+                    move_highlight.submit(renderer);
+                }
+            }
+        }
+
         m_resource_manager->get_game_layer()->render();
 
         m_window->update();
     }
-
+    
     void Chess::update_piece_sprites() const
     {
         std::unordered_map<Piece*, Vec2i> pieces = m_board->get_pieces();
@@ -378,15 +437,15 @@ namespace Game
         return Vec2i(x, y);
     }
 
-    bool Chess::check_click()
+    bool Chess::check_click(int button)
     {
         bool val = false;
-        bool pressed = m_window->mouse_button_down(0);
+        bool pressed = m_window->mouse_button_down(button);
 
-        if (pressed && !m_prev_mouse_pressed) 
+        if (pressed && !m_prev_mouse_pressed[button]) 
             val = true;
         
-        m_prev_mouse_pressed = pressed;
+        m_prev_mouse_pressed[button] = pressed;
 
         return val;
     }

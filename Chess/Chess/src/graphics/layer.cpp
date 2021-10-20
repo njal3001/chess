@@ -23,7 +23,11 @@ namespace Game
 		m_renderables.push_back(renderable);
 	}
 
-	// TODO: Z value ordering somehow
+	BatchRenderer2D* Layer::get_renderer() const
+	{
+		return m_renderer;
+	}
+
 	void Layer::render()
 	{
 		m_shader->enable();
