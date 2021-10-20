@@ -43,7 +43,7 @@ namespace Game
         TextureArray::Element font_texture = m_text_array->add(atlas_pixels, (int)atlas_size.x, (int)atlas_size.y);
 
         m_text_layer = new Layer(m_text_array->get_id(), m_text_shader, 
-                Mat4x4::create_orthographic(0.0f, 320.0f, 0.0f, 180.0f, -1.0f, 1.0f));
+                Mat4x4::create_orthographic(0.0f, 64.0f, 0.0f,  64.0f, -1.0f, 1.0f));
     }
 
     Shader* ResourceManager::get_sprite_shader() const

@@ -206,6 +206,7 @@
     <ClInclude Include="include\chess\graphics\fontatlas.h" />
     <ClInclude Include="include\chess\graphics\group.h" />
     <ClInclude Include="include\chess\graphics\image.h" />
+    <ClInclude Include="include\chess\graphics\iwindowresizelistener.h" />
     <ClInclude Include="include\chess\graphics\label.h" />
     <ClInclude Include="include\chess\graphics\layer.h" />
     <ClInclude Include="include\chess\graphics\renderable2d.h" />

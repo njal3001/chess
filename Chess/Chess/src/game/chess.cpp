@@ -32,12 +32,14 @@ namespace Game
 
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-        m_window = new Window("Chess", 512, 512);
+        m_window = new Window("Chess", Vec2i(512, 512), Vec2i(1, 1));
         if (!m_window->init())
         {
             std::cout << "Could not initialize Window!" << std::endl;
             return false;
         }
+
+        m_window->add_window_resize_listener(this);
 
         if (glewInit() != GLEW_OK)
         {
@@ -82,6 +84,44 @@ namespace Game
         delete m_resource_manager;
         delete m_window;
         glfwTerminate();
+    }
+
+    void Chess::on_resize(const Vec2i& new_size)
+    {
+        Vec2i window_size = m_window->get_size();
+
+        Vec2i scene_size = window_size; 
+        if (window_size.x > window_size.y)
+        {
+            scene_size.x = window_size.y;
+        }
+        else
+        {
+            scene_size.y = window_size.x;
+        }
+
+        Vec2 offset = Vec2((window_size.x - scene_size.x) / 2.0f, (window_size.y - scene_size.y) / 2.0f);
+        glViewport(offset.x, offset.y, scene_size.x, scene_size.y);
+    }
+
+    Vec2 Chess::window_to_world_pos(const Vec2& pos) const
+    {
+        Vec2i window_size = m_window->get_size();
+
+        Vec2i scene_size = window_size; 
+        if (window_size.x > window_size.y)
+        {
+            scene_size.x = window_size.y;
+        }
+        else
+        {
+            scene_size.y = window_size.x;
+        }
+
+        Vec2 offset = Vec2((window_size.x - scene_size.x) / 2.0f, (window_size.y - scene_size.y) / 2.0f);
+        Vec2 shifted_pos = pos - offset;
+
+        return Vec2((shifted_pos.x * 64) / scene_size.x, (shifted_pos.y * 64) / scene_size.y);
     }
 
     void Chess::run()
@@ -258,18 +298,19 @@ namespace Game
         {
             Sprite* sprite = m_selected->get_sprite();
             Vec2 mouse_pos = m_window->get_mouse_pos();
+            Vec2 world_pos = window_to_world_pos(mouse_pos);
 
             float y = 0;
             if (!m_board_flipped) 
             {
-                y = 64 - mouse_pos.y/8 - 4;
+                y = 64 - world_pos.y - 4;
             }
             else
             {
-                y = mouse_pos.y/8 - 4;
+                y = world_pos.y - 4;
             }
 
-            Vec2 sprite_pos = Vec2(mouse_pos.x/8 - 4, y);
+            Vec2 sprite_pos = Vec2(world_pos.x - 4, y);
             update_piece_sprite(m_selected, sprite_pos);
         }
 
@@ -326,10 +367,14 @@ namespace Game
     Vec2i Chess::moused_square() const
     {
         Vec2 mouse_pos = m_window->get_mouse_pos();
-        int x = (int)(mouse_pos.x / 64);
-        int y = (int)(mouse_pos.y / 64);
+        Vec2 world_pos = window_to_world_pos(mouse_pos);
+
+        int x = (int)(world_pos.x / 8);
+        int y = (int)(world_pos.y / 8);
+
         if (m_board_flipped)
             y = 7 - y;
+
         return Vec2i(x, y);
     }
 

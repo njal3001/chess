@@ -6,7 +6,7 @@
 namespace Game
 {
 
-    class Chess
+    class Chess : public IWindowResizeListener
     {
     private:
         enum class GameState
@@ -43,6 +43,8 @@ namespace Game
         bool init();
         void run();
 
+        void on_resize(const Vec2i& new_size) override;
+
     private:
         void do_turn();
         void flip_board();
@@ -52,6 +54,7 @@ namespace Game
         void show_promotion_sprite(const Vec2i& square, Color color);
         void hide_promotion_sprites();
         void deselect();
+        Vec2 window_to_world_pos(const Vec2& pos) const;
 
         Vec2i moused_square() const;
         bool check_click();

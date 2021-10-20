@@ -146,7 +146,6 @@ namespace Game
 		m_vbo->unmap();
 
 		int index_count = 6 * (m_vertex_data.size() / 4);
-		std::cout << index_count << std::endl;
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, m_texture_array_id);
