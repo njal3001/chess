@@ -2,6 +2,7 @@
 #include "chess/graphics/window.h"
 #include "chess/graphics/resourcemanager.h"
 #include "board.h"
+#include "chess/graphics/label.h"
 
 namespace Game
 {
@@ -11,10 +12,12 @@ namespace Game
     private:
         enum class GameState
         {
+            Menu,
             Playing,
             Promoting,
             Checkmate,
             Stalemate,
+            GameOver
         };
     
     private:
@@ -36,6 +39,8 @@ namespace Game
         Sprite* m_white_promotion_sprite;
         Sprite* m_black_promotion_sprite;
         TextureArray::Element m_can_move_tex;
+        Label* m_main_text;
+        Label* m_support_text;
 
     public:
         Chess();

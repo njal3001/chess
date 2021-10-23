@@ -18,7 +18,7 @@ namespace Game
     Chess::Chess()
         :  m_turn(Color::White), m_window(nullptr), m_resource_manager(nullptr), 
             m_board(nullptr), m_selected(nullptr), m_prev_mouse_pressed{false, false}, 
-            m_game_state(GameState::Playing), m_board_flipped(false), m_is_promoting(false),
+            m_game_state(GameState::Menu), m_board_flipped(false), m_is_promoting(false),
             m_white_promotion_sprite(nullptr), m_black_promotion_sprite(nullptr), m_is_dragging(false)
     {}
 
@@ -76,6 +76,15 @@ namespace Game
         m_resource_manager->get_game_layer()->add(m_black_promotion_sprite);
 
         m_can_move_tex = m_resource_manager->get_sprite_array()->add("res/textures/CanMove.png");
+
+        m_main_text = new Label(m_resource_manager->get_font_atlas(), m_resource_manager->get_font_texture(), "Chess",
+            Vec3(12.0f, 40.0f, 1.0f), Vec2(7.0f, 7.0f), Vec4(223.0f/255.0f, 113.0f/255.0f, 38.0f/255.0f, 1.0f));
+
+        m_support_text = new Label(m_resource_manager->get_font_atlas(), m_resource_manager->get_font_texture(), "Click to begin",
+            Vec3(5.0f, 34.0f, 1.0f), Vec2(3.0f, 3.0f), Vec4(223.0f/255.0f, 113.0f/255.0f, 38.0f/255.0f, 1.0f));
+        
+        m_resource_manager->get_text_layer()->add(m_main_text);
+        m_resource_manager->get_text_layer()->add(m_support_text);
 
         return true;
     }
@@ -138,7 +147,16 @@ namespace Game
         {
             render();
             
-            if (m_game_state == GameState::Playing)
+            if (m_game_state == GameState::Menu)
+            {
+                if (check_click(0))
+                {
+                    m_main_text->hidden = true;
+                    m_support_text->hidden = true;
+                    m_game_state = GameState::Playing;
+                }
+            }
+            else if (m_game_state == GameState::Playing)
             {
                 do_turn();
             }
@@ -190,28 +208,36 @@ namespace Game
                     hide_promotion_sprites();
                 }
             }
-            else
+            else if (m_game_state != GameState::GameOver)
             {
-                std::cout << "Game Over!" << std::endl;
+                m_main_text->text = "Game Over";
+                m_main_text->position = Vec3(6.0f, 40.0f, 1.0f);
+                m_main_text->size = Vec2(5.0f, 5.0f);
+                m_support_text->position = Vec3(9.0f, 34.0f, 1.0f);
+
                 switch (m_game_state)
                 {
                 case GameState::Checkmate:
-                    std::cout << get_color_string(opposite(m_turn)) << " won by checkmate!" << std::endl;
+                    m_support_text->text = get_color_string(opposite(m_turn)) + " won by\n  checkmate!";
                     break;
                 
                 case GameState::Stalemate:
-                    std::cout << "Draw by stalemate!" << std::endl;
+                    m_support_text->text = "   Draw by\n  stalemate";
                     break;
                 }
+
+                m_main_text->hidden = false;
+                m_support_text->hidden = false;
+                m_game_state = GameState::GameOver;
             }
             
-            // frames++;
-            // if (timer.elapsed() / 1000.0f > secs + 1.0f)
-            // {
-            //     secs++;
-            //     std::cout << frames << " fps" << std::endl;
-            //     frames = 0;
-            // }
+            frames++;
+            if (timer.elapsed() / 1000.0f > secs + 1.0f)
+            {
+                secs++;
+                std::cout << frames << " fps" << std::endl;
+                frames = 0;
+            }
         } 
     }
 
@@ -230,7 +256,6 @@ namespace Game
 
         if (check_click(0))
         {
-            std::cout << "Clicked square: " << moused_pos << std::endl;
             if (try_move(moused_pos))
                 return;
             
@@ -239,10 +264,6 @@ namespace Game
                 m_selected = moused_piece;
                 m_selected_pos = moused_pos;
                 m_is_dragging = true;
-
-                std::cout << "Valid moves: " << std::endl;
-                for (auto& move : m_valid_moves[moused_piece]) 
-                    std::cout << move.new_pos << std::endl;
             }
         }
         else if (m_is_dragging && !m_window->mouse_button_down(0))
@@ -315,7 +336,7 @@ namespace Game
             flip_board();
         update_piece_sprites();
 
-        GameState game_state = check_game_state();
+        m_game_state = check_game_state();
     }
 
     void Chess::deselect()
@@ -374,6 +395,7 @@ namespace Game
         }
 
         m_resource_manager->get_game_layer()->render();
+        m_resource_manager->get_text_layer()->render();
 
         m_window->update();
     }
@@ -453,6 +475,9 @@ namespace Game
 
     Chess::GameState Chess::check_game_state() const
     {
+        if (m_game_state == GameState::Menu)
+            return GameState::Menu;
+
         bool no_valid_moves = true;
         for (auto iter = m_valid_moves.begin(); iter != m_valid_moves.end(); iter++)
         {

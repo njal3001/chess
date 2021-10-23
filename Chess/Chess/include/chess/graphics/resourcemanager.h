@@ -15,6 +15,8 @@ namespace Game
         TextureArray* m_text_array;
         Layer* m_game_layer;
         Layer* m_text_layer;
+        FontAtlas* m_font_atlas;
+        TextureArray::Element m_font_texture;
 
     public:
         ResourceManager();
@@ -30,5 +32,8 @@ namespace Game
 
         Layer* get_game_layer() const;
         Layer* get_text_layer() const;
+
+        FontAtlas* get_font_atlas() const;
+        TextureArray::Element get_font_texture() const;
     };
 }
